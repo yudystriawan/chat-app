@@ -19,21 +19,19 @@ class AuthFirebaseServiceImpl implements AuthService {
     try {
       final signInAccount = await _googleSignIn.signIn();
 
-      if (signInAccount != null) {
-        final googleAuth = await signInAccount.authentication;
+      if (signInAccount == null) return null;
 
-        final credential = GoogleAuthProvider.credential(
-          idToken: googleAuth.idToken,
-          accessToken: googleAuth.accessToken,
-        );
+      final googleAuth = await signInAccount.authentication;
 
-        final userCredential =
-            await _firebaseAuth.signInWithCredential(credential);
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
 
-        return userCredential.user;
-      }
+      final userCredential =
+          await _firebaseAuth.signInWithCredential(credential);
 
-      return null;
+      return userCredential.user;
     } catch (e) {
       throw const Failure.unexpectedError();
     }
