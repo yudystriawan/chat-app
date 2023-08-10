@@ -1,16 +1,15 @@
-import 'package:chat_app/core/errors/failure.dart';
-import 'package:chat_app/core/usecases/usecase.dart';
-import 'package:chat_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
-import '../entities/user.dart';
+import '../../../../core/errors/failure.dart';
+import '../../../../core/usecases/usecase.dart';
+import '../repositories/auth_repository.dart';
 
-class LoginWithGoogle implements Usecase<User, NoParams> {
+class LoginWithGoogle implements Usecase<Unit, NoParams> {
   final AuthRepository _repository;
 
   LoginWithGoogle(this._repository);
   @override
-  Future<Either<Failure, User>> call(NoParams params) async {
+  Future<Either<Failure, Unit>> call(NoParams params) async {
     return await _repository.loginWithGoogle();
   }
 }

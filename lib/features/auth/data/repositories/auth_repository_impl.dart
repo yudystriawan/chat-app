@@ -1,9 +1,8 @@
-import 'package:chat_app/core/errors/failure.dart';
-import 'package:chat_app/features/auth/data/datasources/auth_remote_datasource.dart';
-import 'package:chat_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
-import '../../domain/entities/user.dart';
+import '../../../../core/errors/failure.dart';
+import '../../domain/repositories/auth_repository.dart';
+import '../datasources/auth_remote_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDatasource _remoteDatasource;
@@ -11,13 +10,13 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this._remoteDatasource);
 
   @override
-  Future<Either<Failure, User>> loginWithGoogle() async {
+  Future<Either<Failure, Unit>> loginWithGoogle() async {
     try {
       final user = await _remoteDatasource.loginWithGoogle();
 
       if (user == null) return left(const Failure.canceledByUser());
 
-      return right(user.toDomain());
+      return right(unit);
     } on Failure catch (e) {
       return left(e);
     } catch (e) {
