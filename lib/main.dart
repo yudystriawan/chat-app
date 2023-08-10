@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_app/firebase_options.dart';
-import 'package:chat_app/routes/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import 'firebase_options.dart';
+import 'routes/routes.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

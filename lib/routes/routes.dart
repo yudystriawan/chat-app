@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_app/routes/routes.gr.dart';
+
+import 'routes.gr.dart';
 
 @AutoRouterConfig()
 class AppRouter extends $AppRouter {

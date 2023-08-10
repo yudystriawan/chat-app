@@ -1,6 +1,7 @@
-import 'package:chat_app/core/errors/failure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../errors/failure.dart';
 
 abstract class AuthService {
   Future<User?> loginWithGoogle();

@@ -1,6 +1,5 @@
-import 'package:chat_app/core/errors/failure.dart';
-import 'package:chat_app/core/services/firebase_services/auth_service.dart';
-
+import '../../../../core/errors/failure.dart';
+import '../../../../core/services/firebase_services/auth_service.dart';
 import '../models/model.dart';
 
 abstract class AuthRemoteDatasource {
