@@ -32,5 +32,6 @@ build/
 # generated files
 **/*.gr.dart
 **/*.g.dart
+**/*.gm.dart
 **/*.config.dart
 **/*.freezed.dart

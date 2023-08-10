@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../utils/di/injection.dart';
 import '../bloc/sign_in_form/sign_in_form_bloc.dart';
 
+@RoutePage()
 class SignInPage extends StatelessWidget implements AutoRouteWrapper {
   const SignInPage({super.key});
 
@@ -24,7 +25,7 @@ class SignInPage extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) => BlocProvider(
-        create: (context) => getIt!<SignInFormBloc>(),
+        create: (context) => getIt<SignInFormBloc>(),
         child: this,
       );
 }
