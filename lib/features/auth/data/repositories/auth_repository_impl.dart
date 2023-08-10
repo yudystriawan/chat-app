@@ -1,11 +1,13 @@
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../../../core/errors/failure.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_datasource.dart';
 
+@Injectable(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDatasource _remoteDatasource;
+  final AuthRemoteDataSource _remoteDatasource;
 
   AuthRepositoryImpl(this._remoteDatasource);
 

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:injectable/injectable.dart';
 
 import '../../errors/failure.dart';
 
@@ -9,6 +10,7 @@ abstract class AuthService {
   Stream<User?> listenUserChanges();
 }
 
+@Injectable(as: AuthService)
 class AuthFirebaseServiceImpl implements AuthService {
   final GoogleSignIn _googleSignIn;
   final FirebaseAuth _firebaseAuth;

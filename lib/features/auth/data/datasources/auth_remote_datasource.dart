@@ -1,15 +1,18 @@
+import 'package:injectable/injectable.dart';
+
 import '../../../../core/errors/failure.dart';
 import '../../../../core/services/firebase_services/auth_service.dart';
 import '../models/model.dart';
 
-abstract class AuthRemoteDatasource {
+abstract class AuthRemoteDataSource {
   Future<UserDto?> loginWithGoogle();
 }
 
-class AuthFirebaseDatasource implements AuthRemoteDatasource {
+@Injectable(as: AuthRemoteDataSource)
+class AuthFirebaseDataSource implements AuthRemoteDataSource {
   final AuthService _service;
 
-  AuthFirebaseDatasource(this._service);
+  AuthFirebaseDataSource(this._service);
 
   @override
   Future<UserDto?> loginWithGoogle() async {
