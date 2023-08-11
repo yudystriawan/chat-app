@@ -249,7 +249,7 @@ packages:
     source: hosted
     version: "0.3.1"
   equatable:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: equatable
       sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
@@ -273,7 +273,7 @@ packages:
     source: hosted
     version: "7.0.0"
   firebase_auth:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_auth
       sha256: "49fd35ce06f2530dd460e5dc123235731cb61dd7c76b0af4b6e190404880d04d"
@@ -281,7 +281,7 @@ packages:
     source: hosted
     version: "4.7.2"
   firebase_auth_mocks:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: firebase_auth_mocks
       sha256: b5a9ed7002be84ea82f023c8d5313f06d400bbe6df485618021c4c0fb80cabc1
@@ -416,7 +416,7 @@ packages:
     source: hosted
     version: "0.2.1"
   google_sign_in:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_sign_in
       sha256: aab6fdc41374014494f9e9026b9859e7309639d50a0bf4a2a412467a5ae4abc6
@@ -440,7 +440,7 @@ packages:
     source: hosted
     version: "5.6.2"
   google_sign_in_mocks:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_sign_in_mocks
       sha256: "09312785f1076b0646bb675a324355c33524bbdb760d1c6ebd5e4dcf04d9a343"
