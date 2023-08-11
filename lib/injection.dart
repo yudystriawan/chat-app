@@ -1,13 +1,6 @@
-import 'package:core/core.dart' as core;
-import 'package:get_it/get_it.dart';
+import 'package:chat_app/injection.config.dart';
+import 'package:core/core.dart';
 import 'package:injectable/injectable.dart';
 
-import 'injection.config.dart';
-
-final getIt = GetIt.instance;
-
 @InjectableInit()
-void configurableDependencies() {
-  getIt.init();
-  core.configureDependencies(getIt);
-}
+Future<void> configurableDependencies() async => getIt.init();

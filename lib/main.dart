@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:core/core.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,8 @@ import 'routes/routes.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  configurableDependencies();
+  await configurableDependencies();
+  await getIt.allReady();
 
   // setup firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
