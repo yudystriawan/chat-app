@@ -35,3 +35,4 @@ build/
 **/*.gm.dart
 **/*.config.dart
 **/*.freezed.dart
+**/*.module.dart
