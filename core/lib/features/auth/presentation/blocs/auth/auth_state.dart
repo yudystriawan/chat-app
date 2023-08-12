@@ -21,5 +21,5 @@ class AuthState with _$AuthState {
 enum AuthStatus {
   initial,
   authenticated,
-  unAuthenticated,
+  unauthenticated,
 }

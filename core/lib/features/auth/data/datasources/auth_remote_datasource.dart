@@ -47,7 +47,7 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
   @override
   Stream<UserDto?> watchUser() {
     return _service.listenUserChanges().map((user) {
-      if (user == null) return null;
+      if (user == null) throw const Failure.unauthenticated();
       return UserDto.fromFirebase(user);
     }).onErrorReturnWith(
       (error, stackTrace) => throw Failure.serverError(

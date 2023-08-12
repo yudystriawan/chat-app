@@ -20,4 +20,6 @@ class User with _$User {
         photoUrl: '',
         phoneNumber: '',
       );
+
+  bool get isEmpty => this == User.empty();
 }

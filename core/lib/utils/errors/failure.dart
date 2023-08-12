@@ -8,4 +8,5 @@ class Failure with _$Failure {
       _ServerError;
   const factory Failure.unexpectedError() = _UnexpectedError;
   const factory Failure.canceledByUser() = _CanceledByUser;
+  const factory Failure.unauthenticated() = _Unauthenticated;
 }

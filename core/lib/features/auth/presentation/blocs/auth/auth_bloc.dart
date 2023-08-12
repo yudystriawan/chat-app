@@ -54,7 +54,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (l) => state,
       (_) => state.copyWith(
         user: User.empty(),
-        status: AuthStatus.unAuthenticated,
+        status: AuthStatus.unauthenticated,
       ),
     ));
     _authProvider.statusChanged(state.isAuthenticated);
@@ -67,12 +67,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(event.failureOrUser.fold(
       (f) => state.copyWith(
         failureOption: optionOf(f),
-        status: AuthStatus.unAuthenticated,
+        status: AuthStatus.unauthenticated,
       ),
       (user) => state.copyWith(
         failureOption: none(),
         user: user,
-        status: AuthStatus.authenticated,
+        status: user.isEmpty
+            ? AuthStatus.unauthenticated
+            : AuthStatus.authenticated,
       ),
     ));
     _authProvider.statusChanged(state.isAuthenticated);
