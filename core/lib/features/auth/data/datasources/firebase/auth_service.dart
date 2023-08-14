@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:core/features/auth/data/models/model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
@@ -14,8 +16,13 @@ abstract class AuthService {
 class AuthFirebaseServiceImpl implements AuthService {
   final GoogleSignIn _googleSignIn;
   final FirebaseAuth _firebaseAuth;
+  final FirebaseFirestore _firestore;
 
-  AuthFirebaseServiceImpl(this._googleSignIn, this._firebaseAuth);
+  AuthFirebaseServiceImpl(
+    this._googleSignIn,
+    this._firebaseAuth,
+    this._firestore,
+  );
 
   @override
   Future<User?> loginWithGoogle() async {
@@ -34,7 +41,17 @@ class AuthFirebaseServiceImpl implements AuthService {
       final userCredential =
           await _firebaseAuth.signInWithCredential(credential);
 
-      return userCredential.user;
+      final user = userCredential.user;
+
+      // store data new user
+      if ((userCredential.additionalUserInfo?.isNewUser ?? false) &&
+          user != null) {
+        await _firestore.collection('users').doc(user.uid).set(
+              UserDto.fromFirebase(user).toJson(),
+            );
+      }
+
+      return user;
     } catch (e) {
       throw const Failure.unexpectedError();
     }
