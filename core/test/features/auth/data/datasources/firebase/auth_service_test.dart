@@ -1,4 +1,5 @@
 import 'package:core/features/auth/data/datasources/firebase/auth_service.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in_mocks/google_sign_in_mocks.dart';
@@ -6,6 +7,7 @@ import 'package:google_sign_in_mocks/google_sign_in_mocks.dart';
 void main() {
   late MockFirebaseAuth mockFirebaseAuth;
   late MockGoogleSignIn mockGoogleSignIn;
+  late FakeFirebaseFirestore mockFirebaseFirestore;
   late AuthService sut;
 
   setUp(() {
@@ -17,7 +19,12 @@ void main() {
       ),
     );
     mockGoogleSignIn = MockGoogleSignIn();
-    sut = AuthFirebaseServiceImpl(mockGoogleSignIn, mockFirebaseAuth);
+    mockFirebaseFirestore = FakeFirebaseFirestore();
+    sut = AuthFirebaseServiceImpl(
+      mockGoogleSignIn,
+      mockFirebaseAuth,
+      mockFirebaseFirestore,
+    );
   });
 
   group('loginWithGoogle', () {
