@@ -7,6 +7,8 @@ class User with _$User {
   const User._();
   const factory User({
     required String id,
+    required String username,
+    required String bio,
     required String name,
     required String email,
     required String photoUrl,
@@ -15,6 +17,8 @@ class User with _$User {
 
   factory User.empty() => const User(
         id: '',
+        username: '',
+        bio: '',
         name: '',
         email: '',
         photoUrl: '',

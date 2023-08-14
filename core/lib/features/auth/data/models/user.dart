@@ -5,6 +5,8 @@ class UserDto with _$UserDto {
   const UserDto._();
   const factory UserDto({
     String? id,
+    String? username,
+    String? bio,
     String? name,
     String? email,
     String? photoUrl,
@@ -16,6 +18,8 @@ class UserDto with _$UserDto {
 
   factory UserDto.fromFirebase(f_auth.User user) {
     return UserDto(
+      bio: '',
+      username: '',
       id: user.uid,
       name: user.displayName,
       email: user.email,
@@ -27,6 +31,8 @@ class UserDto with _$UserDto {
   User toDomain() {
     final empty = User.empty();
     return User(
+      bio: bio ?? empty.bio,
+      username: username ?? empty.username,
       id: id ?? empty.id,
       name: name ?? empty.name,
       email: email ?? empty.email,
