@@ -28,6 +28,7 @@ dependencies:
   equatable: ^2.0.5
   cloud_firestore: ^4.8.4
   flutter_screenutil: ^5.8.4
+  coolicons: ^1.0.0
 
 dev_dependencies:
   flutter_test:
