@@ -4,6 +4,7 @@ import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'firebase_options.dart';
 import 'injection.dart';
@@ -37,15 +38,22 @@ class _MyAppState extends State<MyApp> {
     return BlocProvider(
       create: (context) =>
           getIt<AuthBloc>()..add(const AuthEvent.watchUserStarted()),
-      child: MaterialApp.router(
-        routerConfig: _appRouter.config(
-          reevaluateListenable: getIt<AuthProvider>(),
-        ),
-        title: 'Chat App',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
+      child: ScreenUtilInit(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (BuildContext context, Widget? child) {
+          return MaterialApp.router(
+            routerConfig: _appRouter.config(
+              reevaluateListenable: getIt<AuthProvider>(),
+            ),
+            title: 'Chat App',
+            theme: ThemeData(
+              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              useMaterial3: true,
+            ),
+          );
+        },
       ),
     );
   }
