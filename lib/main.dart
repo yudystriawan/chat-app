@@ -34,7 +34,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('build main');
     return BlocProvider(
       create: (context) =>
           getIt<AuthBloc>()..add(const AuthEvent.watchUserStarted()),
