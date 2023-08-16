@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:core/features/auth/domain/entities/user.dart';
+import 'package:core/features/auth/domain/usecases/get_signed_in_user.dart';
 import 'package:core/features/auth/domain/usecases/sign_out.dart';
 import 'package:core/features/auth/domain/usecases/watch_user_auth.dart';
 import 'package:core/utils/errors/failure.dart';
@@ -20,6 +21,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignOut _signOut;
   final WatchUserAuth _watchUserAuth;
   final AuthProvider _authProvider;
+  final GetSignedInUser _getSignedInUser;
 
   StreamSubscription<Either<Failure, User>>? _userAuthSubscription;
 
@@ -29,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._signOut,
     this._watchUserAuth,
     this._authProvider,
+    this._getSignedInUser,
   ) : super(AuthState.initial()) {
     on<_WatchUserStarted>(_onWatchUserStarted);
     on<_SignOut>(_onSignOut);
@@ -64,19 +67,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     _UserReceived event,
     Emitter<AuthState> emit,
   ) async {
-    emit(event.failureOrUser.fold(
-      (f) => state.copyWith(
-        failureOption: optionOf(f),
-        status: AuthStatus.unauthenticated,
+    emit(
+      await event.failureOrUser.fold(
+        (f) async => state.copyWith(
+          failureOption: optionOf(f),
+          status: AuthStatus.unauthenticated,
+        ),
+        (_) async {
+          final failureOrUser = await _getSignedInUser(const NoParams());
+          return failureOrUser.fold(
+            (f) => state.copyWith(
+              failureOption: optionOf(f),
+              status: AuthStatus.unauthenticated,
+            ),
+            (user) => state.copyWith(
+              failureOption: none(),
+              user: user,
+              status: user.isEmpty
+                  ? AuthStatus.unauthenticated
+                  : AuthStatus.authenticated,
+            ),
+          );
+        },
       ),
-      (user) => state.copyWith(
-        failureOption: none(),
-        user: user,
-        status: user.isEmpty
-            ? AuthStatus.unauthenticated
-            : AuthStatus.authenticated,
-      ),
-    ));
+    );
     _authProvider.statusChanged(state.isAuthenticated);
   }
 }

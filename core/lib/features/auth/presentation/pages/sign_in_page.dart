@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,20 +17,32 @@ class SignInPage extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignInFormBloc, SignInFormState>(
-      listenWhen: (p, c) =>
-          p.failureOrSuccessOption != c.failureOrSuccessOption,
-      listener: (context, state) {
-        state.failureOrSuccessOption.fold(
-          () => null,
-          (either) => either.fold(
-            (l) {
-              //show something
-            },
-            (_) => onResult?.call(true),
-          ),
-        );
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SignInFormBloc, SignInFormState>(
+          listenWhen: (p, c) =>
+              p.failureOrSuccessOption != c.failureOrSuccessOption,
+          listener: (context, state) {
+            state.failureOrSuccessOption.fold(
+              () => null,
+              (either) => either.fold(
+                (l) {
+                  // show something
+                },
+                (_) {
+                  // show snackbar
+                },
+              ),
+            );
+          },
+        ),
+        BlocListener<AuthBloc, AuthState>(
+          listenWhen: (p, c) => p.isAuthenticated != c.isAuthenticated,
+          listener: (context, state) {
+            if (state.isAuthenticated) onResult?.call(true);
+          },
+        ),
+      ],
       child: Scaffold(
         body: Center(
           child: ElevatedButton(

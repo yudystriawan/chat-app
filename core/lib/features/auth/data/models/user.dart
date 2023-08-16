@@ -16,7 +16,7 @@ class UserDto with _$UserDto {
   factory UserDto.fromJson(Map<String, dynamic> json) =>
       _$UserDtoFromJson(json);
 
-  factory UserDto.fromFirebase(f_auth.User user) {
+  factory UserDto.fromFirebaseAuth(f_auth.User user) {
     return UserDto(
       bio: '',
       username: '',
@@ -26,6 +26,11 @@ class UserDto with _$UserDto {
       photoUrl: user.photoURL,
       phoneNumber: user.phoneNumber,
     );
+  }
+
+  factory UserDto.fromFirestore(DocumentSnapshot doc) {
+    return UserDto.fromJson(doc.data() as Map<String, dynamic>)
+        .copyWith(id: doc.id);
   }
 
   User toDomain() {
