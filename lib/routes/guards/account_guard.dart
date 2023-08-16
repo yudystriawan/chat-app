@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/features/account/domain/entities/account.dart';
 import 'package:chat_app/routes/routes.gr.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,7 +17,10 @@ class AccountGuard extends AutoRouteGuard {
         return;
       }
 
+      final account = Account.fromUser(user);
+
       resolver.redirect(ProfileRoute(
+        initialAccount: account,
         onResult: (isSuccess) => resolver.next(isSuccess),
       ));
     }
