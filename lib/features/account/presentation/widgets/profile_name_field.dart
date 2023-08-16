@@ -19,6 +19,11 @@ class ProfileNameField extends HookWidget {
         return AppTextField(
           controller: controller,
           placeholder: 'Name (required)',
+          onChange: (value) => context
+              .read<ProfileFormBloc>()
+              .add(ProfileFormEvent.nameChanged(value)),
+          validator: (value) =>
+              (value?.isEmpty ?? false) ? 'Tidak boleh kosong' : null,
         );
       },
     );

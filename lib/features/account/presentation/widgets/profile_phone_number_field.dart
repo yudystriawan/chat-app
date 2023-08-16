@@ -19,6 +19,12 @@ class ProfilePhoneNumberField extends HookWidget {
         return AppTextField(
           controller: controller,
           placeholder: 'Phone number (required)',
+          validator: (value) =>
+              (value?.isEmpty ?? false) ? 'Tidak boleh kosong' : null,
+          onChange: (value) => context
+              .read<ProfileFormBloc>()
+              .add(ProfileFormEvent.phoneNumberChanged(value)),
+          keyboardType: TextInputType.number,
         );
       },
     );

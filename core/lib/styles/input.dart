@@ -13,6 +13,8 @@ class AppTextField extends StatelessWidget {
     this.autoFocus = false,
     this.readOnly = false,
     this.placeholder,
+    this.validator,
+    this.keyboardType,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -21,6 +23,8 @@ class AppTextField extends StatelessWidget {
   final bool autoFocus;
   final bool readOnly;
   final String? placeholder;
+  final String? Function(String? value)? validator;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +33,7 @@ class AppTextField extends StatelessWidget {
       focusNode: focusNode,
       autofocus: autoFocus,
       readOnly: readOnly,
+      keyboardType: keyboardType,
       style: AppTypography.bodyText1.copyWith(
         color: readOnly ? NeutralColor.disabled : null,
       ),
@@ -48,8 +53,26 @@ class AppTextField extends StatelessWidget {
           horizontal: 8.w,
         ),
         filled: true,
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: AccentColor.danger,
+            width: 1.w,
+          ),
+          borderRadius: BorderRadius.circular(4.r),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: AccentColor.danger,
+            width: 1.w,
+          ),
+          borderRadius: BorderRadius.circular(4.r),
+        ),
+        errorStyle: AppTypography.metadata2.copyWith(
+          color: AccentColor.danger,
+        ),
       ),
       onChanged: onChange,
+      validator: validator,
     );
   }
 }

@@ -19,6 +19,9 @@ class ProfileBioField extends HookWidget {
         return AppTextField(
           controller: controller,
           placeholder: 'Bio (optional)',
+          onChange: (value) => context
+              .read<ProfileFormBloc>()
+              .add(ProfileFormEvent.bioChanged(value)),
         );
       },
     );

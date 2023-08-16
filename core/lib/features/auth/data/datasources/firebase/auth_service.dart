@@ -10,6 +10,7 @@ abstract class AuthService {
   Future<User?> loginWithGoogle();
   Future<void> signOut();
   Stream<User?> listenUserChanges();
+  Future<User?> getCurrentUser();
 }
 
 @Injectable(as: AuthService)
@@ -73,6 +74,15 @@ class AuthFirebaseServiceImpl implements AuthService {
   Stream<User?> listenUserChanges() {
     try {
       return _firebaseAuth.authStateChanges();
+    } catch (e) {
+      throw const Failure.unexpectedError();
+    }
+  }
+
+  @override
+  Future<User?> getCurrentUser() async {
+    try {
+      return _firebaseAuth.currentUser;
     } catch (e) {
       throw const Failure.unexpectedError();
     }

@@ -22,22 +22,49 @@ class ProfilePage extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const MyAppBar(
-        title: Text('Your Profile'),
-      ),
-      body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 24.w),
-          child: const ProfileFormWidget()),
-      floatingActionButton: Container(
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        child: PrimaryButton(
-          onPressed: () {},
-          child: const Text('Save'),
+    return BlocListener<ProfileFormBloc, ProfileFormState>(
+      listenWhen: (p, c) =>
+          p.failureOrSuccessOption != c.failureOrSuccessOption,
+      listener: (context, state) {
+        state.failureOrSuccessOption.fold(
+          () => null,
+          (either) => either.fold(
+            (f) => null,
+            (_) {
+              if (onResult != null) {
+                onResult!.call(true);
+                return;
+              }
+
+              context.router.pop();
+            },
+          ),
+        );
+      },
+      child: Scaffold(
+        appBar: const MyAppBar(
+          title: Text('Your Profile'),
         ),
+        body: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: const ProfileFormWidget()),
+        floatingActionButton: Container(
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: BlocBuilder<ProfileFormBloc, ProfileFormState>(
+            buildWhen: (p, c) => p.isSubmitting != c.isSubmitting,
+            builder: (context, state) {
+              return PrimaryButton(
+                onPressed: () => context
+                    .read<ProfileFormBloc>()
+                    .add(const ProfileFormEvent.submitted()),
+                child: const Text('Save'),
+              );
+            },
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 

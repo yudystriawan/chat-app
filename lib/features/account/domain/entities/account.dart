@@ -39,4 +39,10 @@ class Account with _$Account {
   }
 
   bool get isEmpty => this == Account.empty();
+  bool get isValid {
+    return username.isNotEmpty &&
+        name.isNotEmpty &&
+        email.isNotEmpty &&
+        phoneNumber.isNotEmpty;
+  }
 }

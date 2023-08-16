@@ -19,6 +19,11 @@ class ProfileEmailField extends HookWidget {
         return AppTextField(
           controller: controller,
           placeholder: 'Email (required)',
+          onChange: (value) => context
+              .read<ProfileFormBloc>()
+              .add(ProfileFormEvent.emailChanged(value)),
+          validator: (value) =>
+              (value?.isEmpty ?? false) ? 'Tidak boleh kosong' : null,
         );
       },
     );
