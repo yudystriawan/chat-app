@@ -27,11 +27,18 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Row(
               children: [
                 if (canPop) ...[
-                  leading ??
-                      Icon(
-                        Coolicons.chevron_left,
-                        size: 24.w,
-                      ),
+                  GestureDetector(
+                    onTap: () => context.router.pop(),
+                    child: SizedBox(
+                      width: 24.w,
+                      height: 24.w,
+                      child: leading ??
+                          Icon(
+                            Coolicons.chevron_left,
+                            size: 24.w,
+                          ),
+                    ),
+                  ),
                   SizedBox(
                     width: 8.w,
                   ),
