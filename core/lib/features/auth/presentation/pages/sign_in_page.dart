@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,26 +19,19 @@ class SignInPage extends StatelessWidget implements AutoRouteWrapper {
     return MultiBlocListener(
       listeners: [
         BlocListener<SignInFormBloc, SignInFormState>(
-          listenWhen: (p, c) =>
-              p.failureOrSuccessOption != c.failureOrSuccessOption,
+          listenWhen: (p, c) => p.failureOrUserOption != c.failureOrUserOption,
           listener: (context, state) {
-            state.failureOrSuccessOption.fold(
+            state.failureOrUserOption.fold(
               () => null,
               (either) => either.fold(
                 (l) {
                   // show something
                 },
                 (_) {
-                  // show snackbar
+                  onResult?.call(true);
                 },
               ),
             );
-          },
-        ),
-        BlocListener<AuthBloc, AuthState>(
-          listenWhen: (p, c) => p.isAuthenticated != c.isAuthenticated,
-          listener: (context, state) {
-            if (state.isAuthenticated) onResult?.call(true);
           },
         ),
       ],

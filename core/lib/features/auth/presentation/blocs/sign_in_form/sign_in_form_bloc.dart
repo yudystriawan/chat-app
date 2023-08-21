@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 
 import '../../../../../utils/errors/failure.dart';
 import '../../../../../utils/usecases/usecase.dart';
+import '../../../domain/entities/user.dart';
 import '../../../domain/usecases/login_with_google.dart';
 
 part 'sign_in_form_bloc.freezed.dart';
@@ -26,14 +27,14 @@ class SignInFormBloc extends Bloc<SignInFormEvent, SignInFormState> {
   ) async {
     emit(state.copyWith(
       isSubmitting: true,
-      failureOrSuccessOption: none(),
+      failureOrUserOption: none(),
     ));
 
-    final failureOrSuccess = await _loginWithGoogle(const NoParams());
+    final failureOrUser = await _loginWithGoogle(const NoParams());
 
     emit(state.copyWith(
       isSubmitting: false,
-      failureOrSuccessOption: optionOf(failureOrSuccess),
+      failureOrUserOption: optionOf(failureOrUser),
     ));
   }
 }
