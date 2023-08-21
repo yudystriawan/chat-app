@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/routes/routes.gr.dart';
+import 'package:chat_app/shared/bottom_navigation_bar.dart';
 import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -65,17 +67,18 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () =>
-              context.read<AuthBloc>().add(const AuthEvent.signOut()),
-          child: const Text('Sign Out'),
-        ),
-      ),
+    return AutoTabsScaffold(
+      routes: const [
+        ContactsRoute(),
+        ChatRoute(),
+        PreferencesRoute(),
+      ],
+      bottomNavigationBuilder: (context, tabsRouter) {
+        return AppBottomNavigationBar(
+          activeIndex: tabsRouter.activeIndex,
+          onNavPressed: (index) => tabsRouter.setActiveIndex(index),
+        );
+      },
     );
   }
 }

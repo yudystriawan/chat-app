@@ -14,10 +14,18 @@ class AppRouter extends $AppRouter {
   List<AutoRoute> get routes {
     return [
       AutoRoute(page: SplashRoute.page, initial: true),
-      AutoRoute(page: HomeRoute.page, guards: [
-        AuthGuard(),
-        AccountGuard(),
-      ]),
+      AutoRoute(
+        page: HomeRoute.page,
+        guards: [
+          AuthGuard(),
+          AccountGuard(),
+        ],
+        children: [
+          AutoRoute(page: ContactsRoute.page, initial: true),
+          AutoRoute(page: ChatRoute.page),
+          AutoRoute(page: PreferencesRoute.page),
+        ],
+      ),
       AutoRoute(page: SignInRoute.page),
       AutoRoute(page: ProfileRoute.page),
     ];
