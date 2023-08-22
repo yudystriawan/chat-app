@@ -24,4 +24,15 @@ class AccountRepositoryImpl implements AccountRepository {
       return left(const Failure.unexpectedError());
     }
   }
+
+  @override
+  Stream<Either<Failure, Account>> watchAccount() {
+    return _remoteDataSource.watchCurrentAccount().map((accountDto) {
+      if (accountDto == null) {
+        return left<Failure, Account>(const Failure.serverError());
+      }
+
+      return right<Failure, Account>(accountDto.toDomain());
+    });
+  }
 }

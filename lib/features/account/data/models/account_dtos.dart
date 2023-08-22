@@ -31,4 +31,17 @@ class AccountDto with _$AccountDto {
       phoneNumber: account.phoneNumber,
     );
   }
+
+  Account toDomain() {
+    final empty = Account.empty();
+    return Account(
+      id: id ?? empty.id,
+      username: username ?? empty.username,
+      bio: bio ?? empty.bio,
+      name: name ?? empty.name,
+      email: email ?? empty.email,
+      photoUrl: photoUrl ?? empty.photoUrl,
+      phoneNumber: phoneNumber ?? empty.phoneNumber,
+    );
+  }
 }

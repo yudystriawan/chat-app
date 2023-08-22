@@ -1,13 +1,13 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_app/features/account/domain/entities/account.dart';
 import 'package:chat_app/routes/routes.gr.dart';
 import 'package:coolicons/coolicons.dart';
-import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
 
 class AccountInfoWidget extends StatelessWidget {
   const AccountInfoWidget({
@@ -16,16 +16,14 @@ class AccountInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AuthBloc, AuthState>(
-      buildWhen: (p, c) => p.user != c.user,
+    return BlocBuilder<AccountWatcherBloc, AccountWatcherState>(
+      buildWhen: (p, c) => p.account != c.account,
       builder: (context, state) {
-        final user = state.user;
+        final account = state.account;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () => context.pushRoute(
-            ProfileRoute(
-              initialAccount: Account.fromUser(user),
-            ),
+            ProfileRoute(initialAccount: account),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -36,17 +34,18 @@ class AccountInfoWidget extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: NeutralColor.line,
-                  image: user.photoUrl.isEmpty
+                  image: account.photoUrl.isEmpty
                       ? null
                       : DecorationImage(
                           fit: BoxFit.cover,
                           image: NetworkImage(
-                            user.photoUrl,
+                            account.photoUrl,
                           ),
                         ),
                 ),
-                child:
-                    user.photoUrl.isEmpty ? const Icon(Coolicons.user) : null,
+                child: account.photoUrl.isEmpty
+                    ? const Icon(Coolicons.user)
+                    : null,
               ),
               SizedBox(
                 width: 20.w,
@@ -56,11 +55,11 @@ class AccountInfoWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      user.name,
+                      account.name,
                       style: AppTypography.bodyText1,
                     ),
                     Text(
-                      user.phoneNumber,
+                      account.phoneNumber,
                       style: AppTypography.metadata1
                           .copyWith(color: NeutralColor.disabled),
                     ),

@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/features/account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
 import 'package:chat_app/routes/routes.gr.dart';
 import 'package:chat_app/shared/bottom_navigation_bar.dart';
 import 'package:core/core.dart';
@@ -62,7 +63,7 @@ class _MyAppState extends State<MyApp> {
 }
 
 @RoutePage()
-class HomePage extends StatelessWidget {
+class HomePage extends StatelessWidget implements AutoRouteWrapper {
   const HomePage({super.key});
 
   @override
@@ -79,6 +80,15 @@ class HomePage extends StatelessWidget {
           onNavPressed: (index) => tabsRouter.setActiveIndex(index),
         );
       },
+    );
+  }
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return BlocProvider(
+      create: (context) =>
+          getIt<AccountWatcherBloc>()..add(const AccountWatcherEvent.started()),
+      child: this,
     );
   }
 }
