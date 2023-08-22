@@ -1,3 +1,6 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/features/account/domain/entities/account.dart';
+import 'package:chat_app/routes/routes.gr.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/styles/colors.dart';
@@ -19,7 +22,11 @@ class AccountInfoWidget extends StatelessWidget {
         final user = state.user;
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
-          onTap: () {},
+          onTap: () => context.pushRoute(
+            ProfileRoute(
+              initialAccount: Account.fromUser(user),
+            ),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
