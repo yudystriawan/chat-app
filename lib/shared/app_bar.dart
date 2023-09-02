@@ -9,10 +9,12 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     Key? key,
     this.leading,
     required this.title,
+    this.trailing,
   }) : super(key: key);
 
   final Widget? leading;
   final Widget title;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +51,12 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     child: title,
                   ),
                 ),
+                if (trailing != null) ...[
+                  SizedBox(
+                    width: 8.w,
+                  ),
+                  trailing!,
+                ]
               ],
             ),
           );
