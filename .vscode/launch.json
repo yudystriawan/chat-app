@@ -21,25 +21,5 @@
             "type": "dart",
             "flutterMode": "release"
         },
-        {
-            "name": "core",
-            "cwd": "core",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "core (profile mode)",
-            "cwd": "core",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "core (release mode)",
-            "cwd": "core",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        }
     ]
 }
