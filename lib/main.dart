@@ -4,6 +4,7 @@ import 'package:chat_app/routes/routes.gr.dart';
 import 'package:chat_app/shared/bottom_navigation_bar.dart';
 import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
+import 'package:core/styles/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,7 +53,10 @@ class _MyAppState extends State<MyApp> {
             ),
             title: 'Chat App',
             theme: ThemeData(
-              colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: BrandColor.dark,
+                background: NeutralColor.white,
+              ),
               useMaterial3: true,
             ),
           );
