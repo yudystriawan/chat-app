@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'colors.dart';
 
-class AppTextField extends StatelessWidget {
+class AppTextField extends StatefulWidget {
   const AppTextField({
     Key? key,
     this.controller,
@@ -15,6 +15,7 @@ class AppTextField extends StatelessWidget {
     this.placeholder,
     this.validator,
     this.keyboardType,
+    this.prefixIcon,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -25,21 +26,47 @@ class AppTextField extends StatelessWidget {
   final String? placeholder;
   final String? Function(String? value)? validator;
   final TextInputType? keyboardType;
+  final Widget? prefixIcon;
+
+  @override
+  State<AppTextField> createState() => _AppTextFieldState();
+}
+
+class _AppTextFieldState extends State<AppTextField> {
+  late FocusNode _focusNode;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode = widget.focusNode ?? FocusNode();
+    _focusNode.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      focusNode: focusNode,
-      autofocus: autoFocus,
-      readOnly: readOnly,
-      keyboardType: keyboardType,
+      controller: widget.controller,
+      focusNode: _focusNode,
+      autofocus: widget.autoFocus,
+      readOnly: widget.readOnly,
+      keyboardType: widget.keyboardType,
       style: AppTypography.bodyText1.copyWith(
-        color: readOnly ? NeutralColor.disabled : null,
+        color: widget.readOnly ? NeutralColor.disabled : null,
       ),
       cursorColor: BrandColor.dark,
       decoration: InputDecoration(
-        hintText: placeholder ?? 'Placeholder',
+        hintText: widget.placeholder ?? 'Placeholder',
+        prefixIcon: widget.prefixIcon,
+        prefixIconColor:
+            _focusNode.hasFocus ? NeutralColor.active : NeutralColor.disabled,
         hintStyle: AppTypography.bodyText1.copyWith(
           color: NeutralColor.disabled,
         ),
@@ -71,8 +98,8 @@ class AppTextField extends StatelessWidget {
           color: AccentColor.danger,
         ),
       ),
-      onChanged: onChange,
-      validator: validator,
+      onChanged: widget.onChange,
+      validator: widget.validator,
     );
   }
 }
