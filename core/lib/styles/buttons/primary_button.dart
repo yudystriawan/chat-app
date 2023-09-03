@@ -9,17 +9,22 @@ class PrimaryButton extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.child,
+    this.padding,
   }) : super(key: key);
 
   final VoidCallback? onPressed;
   final Widget? child;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
     final isDisabled = onPressed == null;
 
+    final defaultTextColor =
+        NeutralColor.offWhite.withOpacity(isDisabled ? 0.5 : 1);
+
     final defaultTextStyle = AppTypography.subHeading2.copyWith(
-      color: NeutralColor.offWhite.withOpacity(isDisabled ? 0.5 : 1),
+      color: defaultTextColor,
     );
 
     Widget? child = this.child;
@@ -27,7 +32,8 @@ class PrimaryButton extends StatelessWidget {
       child = Text(
         child.data!,
         textAlign: TextAlign.center,
-        style: defaultTextStyle,
+        style:
+            child.style?.copyWith(color: defaultTextColor) ?? defaultTextStyle,
       );
     }
 
@@ -43,10 +49,11 @@ class PrimaryButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30.r),
           onTap: onPressed,
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 12.w,
-              horizontal: 48.w,
-            ),
+            padding: padding ??
+                EdgeInsets.symmetric(
+                  vertical: 12.w,
+                  horizontal: 48.w,
+                ),
             child: child,
           ),
         ),

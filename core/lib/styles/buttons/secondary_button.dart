@@ -9,27 +9,31 @@ class SecondaryButton extends StatelessWidget {
     Key? key,
     required this.onPressed,
     required this.child,
+    this.padding,
   }) : super(key: key);
 
   final VoidCallback? onPressed;
   final Widget? child;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
     final isDisabled = onPressed == null;
 
-    final defaultTextStyle = AppTypography.subHeading2.copyWith(
-      color: BrandColor.neutral.withOpacity(
-        isDisabled ? 0.5 : 1,
-      ),
+    final defaultTextColor = BrandColor.neutral.withOpacity(
+      isDisabled ? 0.5 : 1,
     );
+
+    final defaultTextStyle =
+        AppTypography.subHeading2.copyWith(color: defaultTextColor);
 
     Widget? child = this.child;
     if (child is Text) {
       child = Text(
         child.data!,
         textAlign: TextAlign.center,
-        style: defaultTextStyle,
+        style:
+            child.style?.copyWith(color: defaultTextColor) ?? defaultTextStyle,
       );
     }
 
@@ -48,10 +52,11 @@ class SecondaryButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(30.r),
           onTap: onPressed,
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              vertical: 12.w,
-              horizontal: 48.w,
-            ),
+            padding: padding ??
+                EdgeInsets.symmetric(
+                  vertical: 12.w,
+                  horizontal: 48.w,
+                ),
             child: child,
           ),
         ),
