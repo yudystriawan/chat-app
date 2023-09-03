@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:chat_app/features/account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
+import 'package:chat_app/features/contacts/presentation/blocs/contact_watcher/contact_watcher_bloc.dart';
 import 'package:chat_app/routes/routes.gr.dart';
 import 'package:chat_app/shared/bottom_navigation_bar.dart';
 import 'package:core/core.dart';
@@ -89,9 +90,17 @@ class HomePage extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          getIt<AccountWatcherBloc>()..add(const AccountWatcherEvent.started()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<AccountWatcherBloc>()
+            ..add(const AccountWatcherEvent.started()),
+        ),
+        BlocProvider(
+          create: (context) => getIt<ContactWatcherBloc>()
+            ..add(const ContactWatcherEvent.watchAllStarted()),
+        )
+      ],
       child: this,
     );
   }

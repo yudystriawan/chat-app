@@ -14,4 +14,14 @@ class Contact with _$Contact {
     required String photoUrl,
     required String phoneNumber,
   }) = _Contact;
+
+  factory Contact.empty() => const Contact(
+        id: '',
+        username: '',
+        bio: '',
+        name: '',
+        email: '',
+        photoUrl: '',
+        phoneNumber: '',
+      );
 }
