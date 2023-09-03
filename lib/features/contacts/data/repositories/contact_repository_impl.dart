@@ -13,8 +13,8 @@ class ContactRepositoryImpl implements ContactRepository {
 
   ContactRepositoryImpl(this._remoteDataSource);
   @override
-  Stream<Either<Failure, KtList<Contact>>> getContacts() {
-    return _remoteDataSource.watchContacts().map(
+  Stream<Either<Failure, KtList<Contact>>> getContacts({String? username}) {
+    return _remoteDataSource.watchContacts(username: username).map(
       (contactsDto) {
         if (contactsDto == null || contactsDto.isEmpty) {
           return right<Failure, KtList<Contact>>(const KtList.empty());

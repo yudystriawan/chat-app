@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/features/contacts/domain/usecases/watch_contacts.dart';
 import 'package:core/utils/errors/failure.dart';
-import 'package:core/utils/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
@@ -35,8 +34,9 @@ class ContactWatcherBloc
   ) async {
     emit(const ContactWatcherState.loadInProgress());
     await _contactStreamSubsctipion?.cancel();
-    _contactStreamSubsctipion = _watchContacts(const NoParams()).listen(
-        (contacts) => add(ContactWatcherEvent.contactsReceived(contacts)));
+    _contactStreamSubsctipion = _watchContacts(const WatchContactsParams())
+        .listen(
+            (contacts) => add(ContactWatcherEvent.contactsReceived(contacts)));
   }
 
   void _onContactsReceived(
