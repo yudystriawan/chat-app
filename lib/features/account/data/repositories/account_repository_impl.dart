@@ -5,6 +5,8 @@ import 'package:chat_app/features/account/domain/repositories/account_repository
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
+import 'package:kt_dart/collection.dart';
+import 'package:rxdart/rxdart.dart';
 
 @Injectable(as: AccountRepository)
 class AccountRepositoryImpl implements AccountRepository {
@@ -33,6 +35,24 @@ class AccountRepositoryImpl implements AccountRepository {
       }
 
       return right<Failure, Account>(accountDto.toDomain());
+    });
+  }
+
+  @override
+  Stream<Either<Failure, KtList<Account>>> watchAccounts({String? username}) {
+    return _remoteDataSource.watchAccounts(username: username).map((accounts) {
+      if (accounts == null) {
+        return right<Failure, KtList<Account>>(const KtList.empty());
+      }
+
+      final domain = accounts.map((e) => e.toDomain()).toImmutableList();
+      return right<Failure, KtList<Account>>(domain);
+    }).onErrorReturnWith((error, stackTrace) {
+      if (error is Failure) {
+        return left<Failure, KtList<Account>>(error);
+      }
+
+      return left<Failure, KtList<Account>>(const Failure.serverError());
     });
   }
 }
