@@ -16,20 +16,25 @@ class SignInPage extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignInFormBloc, SignInFormState>(
-      listenWhen: (p, c) =>
-          p.failureOrSuccessOption != c.failureOrSuccessOption,
-      listener: (context, state) {
-        state.failureOrSuccessOption.fold(
-          () => null,
-          (either) => either.fold(
-            (l) {
-              //show something
-            },
-            (_) => onResult?.call(true),
-          ),
-        );
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SignInFormBloc, SignInFormState>(
+          listenWhen: (p, c) => p.failureOrUserOption != c.failureOrUserOption,
+          listener: (context, state) {
+            state.failureOrUserOption.fold(
+              () => null,
+              (either) => either.fold(
+                (l) {
+                  // show something
+                },
+                (_) {
+                  onResult?.call(true);
+                },
+              ),
+            );
+          },
+        ),
+      ],
       child: Scaffold(
         body: Center(
           child: ElevatedButton(
