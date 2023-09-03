@@ -34,10 +34,12 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
       // get the user data of contacts
       if (contacts == null || contacts.isEmpty) return Stream.value(null);
 
-      return _service.instance.userCollection
-          .where('contacts', arrayContains: contacts)
-          .snapshots()
-          .map(
+      final query = _service.instance.userCollection
+          .where('contacts', arrayContains: contacts);
+
+      if (username != null) query.where('username', isEqualTo: username);
+
+      return query.snapshots().map(
             (snap) => snap.docs
                 .map(
                   (doc) => ContactDto.fromJson(doc as Map<String, dynamic>),
