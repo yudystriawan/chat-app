@@ -31,8 +31,28 @@ class ContactRepositoryImpl implements ContactRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> addContact(String userId) {
-    // TODO: implement addContact
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> addContact(String userId) async {
+    try {
+      await _remoteDataSource.addContact(userId);
+      return right(unit);
+    } on Failure catch (e) {
+      return left(e);
+    } catch (e) {
+      return left(const Failure.unexpectedError());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Contact>> findContact(String username) async {
+    try {
+      final result = await _remoteDataSource.findContact(username);
+      if (result == null) return left(const Failure.serverError());
+      final contact = result.toDomain();
+      return right(contact);
+    } on Failure catch (e) {
+      return left(e);
+    } catch (e) {
+      return left(const Failure.unexpectedError());
+    }
   }
 }

@@ -13,6 +13,7 @@ abstract class ContactRemoteDataSource {
     String? username,
   });
   Future<void> addContact(String userId);
+  Future<ContactDto?> findContact(String username);
 }
 
 @Injectable(as: ContactRemoteDataSource)
@@ -72,6 +73,21 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
           await userRef.update({'contacts': contacts});
         }
       }
+    } catch (e) {
+      throw const Failure.serverError();
+    }
+  }
+
+  @override
+  Future<ContactDto?> findContact(String username) async {
+    try {
+      var querySnapshot = await _service.instance.userCollection
+          .where('username', isEqualTo: username)
+          .get();
+
+      var contactDto =
+          ContactDto.fromJson(querySnapshot as Map<String, dynamic>);
+      return contactDto;
     } catch (e) {
       throw const Failure.serverError();
     }
