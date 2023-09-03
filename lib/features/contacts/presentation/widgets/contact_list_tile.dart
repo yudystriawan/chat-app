@@ -15,6 +15,7 @@ class ContactListTile extends StatelessWidget {
     this.isOnline = false,
     this.hasStory = false,
     this.chatCount,
+    this.trailing,
   }) : super(key: key);
 
   final Widget title;
@@ -24,6 +25,7 @@ class ContactListTile extends StatelessWidget {
   final bool isOnline;
   final bool hasStory;
   final int? chatCount;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class ContactListTile extends StatelessWidget {
     if (isOnline && subtitle == null) {
       subtitle = const Text('Online');
     }
+
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -88,6 +91,10 @@ class ContactListTile extends StatelessWidget {
             ],
           ),
         ),
+        if (trailing != null) ...[
+          SizedBox(width: 8.w),
+          trailing!,
+        ],
       ],
     );
   }
