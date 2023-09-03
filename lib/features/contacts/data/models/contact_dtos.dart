@@ -1,6 +1,7 @@
 import 'package:chat_app/features/account/domain/entities/account.dart';
 import 'package:chat_app/features/contacts/domain/entities/contact.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kt_dart/collection.dart';
 
 part 'contact_dtos.freezed.dart';
 part 'contact_dtos.g.dart';
@@ -16,6 +17,7 @@ class ContactDto with _$ContactDto {
     String? email,
     String? photoUrl,
     String? phoneNumber,
+    List<String>? contacts,
   }) = _ContactDto;
 
   factory ContactDto.fromJson(Map<String, dynamic> json) =>
@@ -30,6 +32,7 @@ class ContactDto with _$ContactDto {
       email: account.email,
       photoUrl: account.photoUrl,
       phoneNumber: account.phoneNumber,
+      contacts: account.contacts.iter.toList(),
     );
   }
 
@@ -43,6 +46,7 @@ class ContactDto with _$ContactDto {
       email: email ?? empty.email,
       photoUrl: photoUrl ?? empty.photoUrl,
       phoneNumber: phoneNumber ?? empty.phoneNumber,
+      contacts: contacts?.toImmutableList() ?? empty.contacts,
     );
   }
 }

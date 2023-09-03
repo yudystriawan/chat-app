@@ -3,8 +3,27 @@ import 'package:kt_dart/collection.dart';
 
 part 'user.freezed.dart';
 
+mixin BaseUser {
+  String get id;
+  String get username;
+  String get bio;
+  String get name;
+  String get email;
+  String get photoUrl;
+  String get phoneNumber;
+  KtList<String> get contacts;
+
+  bool get isValid =>
+      username.isNotEmpty &&
+      name.isNotEmpty &&
+      email.isNotEmpty &&
+      phoneNumber.isNotEmpty;
+
+  bool get isNotValid => !isValid;
+}
+
 @freezed
-class User with _$User {
+class User with _$User, BaseUser {
   const User._();
   const factory User({
     required String id,
@@ -29,12 +48,4 @@ class User with _$User {
       );
 
   bool get isEmpty => this == User.empty();
-
-  bool get isValid =>
-      username.isNotEmpty &&
-      name.isNotEmpty &&
-      email.isNotEmpty &&
-      phoneNumber.isNotEmpty;
-
-  bool get isNotValid => !isValid;
 }

@@ -1,5 +1,6 @@
 import 'package:chat_app/features/account/domain/entities/account.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kt_dart/collection.dart';
 
 part 'account_dtos.freezed.dart';
 part 'account_dtos.g.dart';
@@ -15,6 +16,7 @@ class AccountDto with _$AccountDto {
     String? email,
     String? photoUrl,
     String? phoneNumber,
+    List<String>? contacts,
   }) = _AccountDto;
 
   factory AccountDto.fromJson(Map<String, dynamic> json) =>
@@ -42,6 +44,7 @@ class AccountDto with _$AccountDto {
       email: email ?? empty.email,
       photoUrl: photoUrl ?? empty.photoUrl,
       phoneNumber: phoneNumber ?? empty.phoneNumber,
+      contacts: contacts?.toImmutableList() ?? empty.contacts,
     );
   }
 }

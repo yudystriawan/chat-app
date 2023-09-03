@@ -1,9 +1,11 @@
+import 'package:core/features/auth/domain/entities/user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kt_dart/collection.dart';
 
 part 'contact.freezed.dart';
 
 @freezed
-class Contact with _$Contact {
+class Contact with _$Contact, BaseUser {
   const Contact._();
   const factory Contact({
     required String id,
@@ -13,6 +15,7 @@ class Contact with _$Contact {
     required String email,
     required String photoUrl,
     required String phoneNumber,
+    required KtList<String> contacts,
   }) = _Contact;
 
   factory Contact.empty() => const Contact(
@@ -23,5 +26,6 @@ class Contact with _$Contact {
         email: '',
         photoUrl: '',
         phoneNumber: '',
+        contacts: KtList.empty(),
       );
 }

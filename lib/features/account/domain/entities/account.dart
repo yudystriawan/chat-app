@@ -1,10 +1,11 @@
 import 'package:core/features/auth/domain/entities/user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kt_dart/collection.dart';
 
 part 'account.freezed.dart';
 
 @freezed
-class Account with _$Account {
+class Account with _$Account, BaseUser {
   const Account._();
   const factory Account({
     required String id,
@@ -14,6 +15,7 @@ class Account with _$Account {
     required String email,
     required String photoUrl,
     required String phoneNumber,
+    required KtList<String> contacts,
   }) = _Account;
 
   factory Account.empty() => const Account(
@@ -24,6 +26,7 @@ class Account with _$Account {
         email: '',
         photoUrl: '',
         phoneNumber: '',
+        contacts: KtList.empty(),
       );
 
   factory Account.fromUser(User user) {
@@ -35,14 +38,9 @@ class Account with _$Account {
       email: user.email,
       photoUrl: user.photoUrl,
       phoneNumber: user.phoneNumber,
+      contacts: user.contacts,
     );
   }
 
   bool get isEmpty => this == Account.empty();
-  bool get isValid {
-    return username.isNotEmpty &&
-        name.isNotEmpty &&
-        email.isNotEmpty &&
-        phoneNumber.isNotEmpty;
-  }
 }
