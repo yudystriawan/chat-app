@@ -28,6 +28,12 @@ class ContactWatcherBloc
     on<_ContactsReceived>(_onContactsReceived);
   }
 
+  @override
+  Future<void> close() async {
+    await _contactStreamSubsctipion?.cancel();
+    return super.close();
+  }
+
   void _onWatchAllStarted(
     _WatchAllStarted event,
     Emitter<ContactWatcherState> emit,
