@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:chat_app/features/contacts/presentation/blocs/contact_watcher/contact_watcher_bloc.dart';
 import 'package:chat_app/features/contacts/presentation/widgets/contact_list_widget.dart';
+import 'package:chat_app/routes/routes.gr.dart';
 import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
@@ -19,7 +20,7 @@ class ContactsPage extends StatelessWidget {
       appBar: MyAppBar(
         title: const Text('Contact'),
         trailing: GhostButton(
-          onPressed: () {},
+          onPressed: () => context.pushRoute(const AddContactRoute()),
           child: Icon(
             Coolicons.plus,
             size: 24.w,
