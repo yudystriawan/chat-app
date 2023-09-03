@@ -14,6 +14,7 @@ class AppTextField extends StatefulWidget {
     this.readOnly = false,
     this.placeholder,
     this.validator,
+    this.onFieldSubmitted,
     this.keyboardType,
     this.prefixIcon,
   }) : super(key: key);
@@ -25,6 +26,7 @@ class AppTextField extends StatefulWidget {
   final bool readOnly;
   final String? placeholder;
   final String? Function(String? value)? validator;
+  final Function(String value)? onFieldSubmitted;
   final TextInputType? keyboardType;
   final Widget? prefixIcon;
 
@@ -99,6 +101,7 @@ class _AppTextFieldState extends State<AppTextField> {
         ),
       ),
       onChanged: widget.onChange,
+      onFieldSubmitted: widget.onFieldSubmitted,
       validator: widget.validator,
     );
   }
