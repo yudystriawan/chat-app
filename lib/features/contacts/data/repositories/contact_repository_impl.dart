@@ -1,6 +1,6 @@
 import 'package:chat_app/features/contacts/data/datasources/contact_remote_datasource.dart';
 import 'package:chat_app/features/contacts/domain/entities/contact.dart';
-import 'package:chat_app/features/contacts/domain/repositories/contact_repostory.dart';
+import 'package:chat_app/features/contacts/domain/repositories/contact_repository.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
