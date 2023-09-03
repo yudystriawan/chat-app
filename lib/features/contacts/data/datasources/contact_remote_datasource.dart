@@ -85,10 +85,13 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
           .where('username', isEqualTo: username)
           .get();
 
-      var contactDto =
-          ContactDto.fromJson(querySnapshot as Map<String, dynamic>);
+      if (querySnapshot.docs.isEmpty) return null;
+
+      var contactDto = ContactDto.fromJson(
+          querySnapshot.docs[0].data() as Map<String, dynamic>);
       return contactDto;
-    } catch (e) {
+    } catch (e, s) {
+      log('error occured', error: e, stackTrace: s);
       throw const Failure.serverError();
     }
   }
