@@ -40,9 +40,17 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          getIt<AuthBloc>()..add(const AuthEvent.watchUserStarted()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              getIt<AuthBloc>()..add(const AuthEvent.watchUserStarted()),
+        ),
+        BlocProvider(
+          create: (context) => getIt<AccountWatcherBloc>()
+            ..add(const AccountWatcherEvent.started()),
+        ),
+      ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
         minTextAdapt: true,
@@ -93,12 +101,9 @@ class HomePage extends StatelessWidget implements AutoRouteWrapper {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => getIt<AccountWatcherBloc>()
-            ..add(const AccountWatcherEvent.started()),
-        ),
-        BlocProvider(
           create: (context) => getIt<ContactWatcherBloc>()
             ..add(const ContactWatcherEvent.watchAllStarted()),
+          child: Container(),
         )
       ],
       child: this,
