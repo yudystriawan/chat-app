@@ -78,3 +78,9 @@ class AppTypography {
     );
   }
 }
+
+extension TextStyleX on TextStyle {
+  TextStyle get bold {
+    return copyWith(fontWeight: FontWeight.w600);
+  }
+}
