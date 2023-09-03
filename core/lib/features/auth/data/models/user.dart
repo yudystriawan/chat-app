@@ -11,6 +11,7 @@ class UserDto with _$UserDto {
     String? email,
     String? photoUrl,
     String? phoneNumber,
+    List<String>? contacts,
   }) = _UserDto;
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>
@@ -43,6 +44,7 @@ class UserDto with _$UserDto {
       email: email ?? empty.email,
       photoUrl: photoUrl ?? empty.photoUrl,
       phoneNumber: phoneNumber ?? empty.phoneNumber,
+      contacts: contacts?.map((e) => e).toImmutableList() ?? empty.contacts,
     );
   }
 }

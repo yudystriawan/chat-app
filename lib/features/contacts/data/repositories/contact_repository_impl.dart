@@ -29,4 +29,10 @@ class ContactRepositoryImpl implements ContactRepository {
       ),
     );
   }
+
+  @override
+  Future<Either<Failure, Unit>> addContact(String userId) {
+    // TODO: implement addContact
+    throw UnimplementedError();
+  }
 }

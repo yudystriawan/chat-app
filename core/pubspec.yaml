@@ -25,6 +25,7 @@ dependencies:
   google_sign_in_mocks: ^0.3.0
   injectable: ^2.2.0
   json_annotation: ^4.8.1
+  kt_dart: ^1.1.0
   mockito: ^5.4.2
   rxdart: ^0.27.7
 

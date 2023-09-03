@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kt_dart/collection.dart';
 
 part 'user.freezed.dart';
 
@@ -13,6 +14,7 @@ class User with _$User {
     required String email,
     required String photoUrl,
     required String phoneNumber,
+    required KtList<String> contacts,
   }) = _User;
 
   factory User.empty() => const User(
@@ -23,6 +25,7 @@ class User with _$User {
         email: '',
         photoUrl: '',
         phoneNumber: '',
+        contacts: KtList.empty(),
       );
 
   bool get isEmpty => this == User.empty();

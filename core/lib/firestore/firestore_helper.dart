@@ -4,11 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 extension FirestoreX on FirebaseFirestore {
   CollectionReference get userCollection => collection('users');
+
+  User? get currentUser => getIt<FirebaseAuth>().currentUser;
+
   Future<DocumentReference> userDocument() async {
-    final user = getIt<FirebaseAuth>().currentUser;
+    if (currentUser == null) throw const Failure.unauthenticated();
 
-    if (user == null) throw const Failure.unauthenticated();
-
-    return userCollection.doc(user.uid);
+    return userCollection.doc(currentUser!.uid);
   }
 }

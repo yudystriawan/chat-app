@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:core/core.dart';
-import 'package:core/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:core/features/auth/data/models/model.dart';
 import 'package:core/firestore/firestore_helper.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../models/contact_dtos.dart';
 
@@ -9,27 +12,66 @@ abstract class ContactRemoteDataSource {
   Stream<List<ContactDto>?> watchContacts({
     String? username,
   });
+  Future<void> addContact(String userId);
 }
 
 @Injectable(as: ContactRemoteDataSource)
 class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
   final FirestoreService _service;
-  final AuthRemoteDataSource _remoteDataSource;
 
-  ContactRemoteDataSourceImpl(this._service, this._remoteDataSource);
+  ContactRemoteDataSourceImpl(this._service);
+
   @override
   Stream<List<ContactDto>?> watchContacts({String? username}) async* {
-    final currentUser = await _remoteDataSource.getCurrentUser();
+    final userRef = await _service.instance.userDocument();
 
-    final query = _service.instance.userCollection
-        .where('id', isNotEqualTo: currentUser?.id);
+    yield* userRef.snapshots().map((userDoc) {
+      // get array userId in contacts
+      final user = UserDto.fromFirestore(userDoc);
+      final contacts = user.contacts;
+      return contacts;
+    }).switchMap((contacts) {
+      // get the user data of contacts
+      if (contacts == null || contacts.isEmpty) return Stream.value(null);
 
-    if (username != null) {
-      query.where('username', isEqualTo: username);
+      return _service.instance.userCollection
+          .where('contacts', arrayContains: contacts)
+          .snapshots()
+          .map(
+            (snap) => snap.docs
+                .map(
+                  (doc) => ContactDto.fromJson(doc as Map<String, dynamic>),
+                )
+                .toList(),
+          );
+    }).onErrorReturnWith((error, stackTrace) {
+      log('error occured', error: error, stackTrace: stackTrace);
+      throw Failure.serverError(message: error.toString());
+    });
+  }
+
+  @override
+  Future<void> addContact(String userId) async {
+    try {
+      final userRef = await _service.instance.userDocument();
+
+      final userDoc = await userRef.get();
+
+      if (userDoc.exists) {
+        var user = UserDto.fromFirestore(userDoc);
+
+        final contacts = user.contacts ?? [];
+
+        if (contacts.contains(userId)) {
+          // friend is not in contacts, add them
+          contacts.add(userId);
+
+          // Update the user's document with the new contacts array
+          await userRef.update({'contacts': contacts});
+        }
+      }
+    } catch (e) {
+      throw const Failure.serverError();
     }
-
-    yield* query.snapshots().map((snapshot) => snapshot.docs
-        .map((e) => ContactDto.fromJson(e.data() as Map<String, dynamic>))
-        .toList());
   }
 }

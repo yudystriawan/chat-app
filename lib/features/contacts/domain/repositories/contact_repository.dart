@@ -6,4 +6,5 @@ import '../entities/contact.dart';
 
 abstract class ContactRepository {
   Stream<Either<Failure, KtList<Contact>>> getContacts({String? username});
+  Future<Either<Failure, Unit>> addContact(String userId);
 }

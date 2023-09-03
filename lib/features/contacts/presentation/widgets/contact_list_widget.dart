@@ -1,8 +1,9 @@
 import 'package:chat_app/features/contacts/domain/entities/contact.dart';
 import 'package:core/styles/colors.dart';
+import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kt_dart/src/collection/kt_list.dart';
+import 'package:kt_dart/collection.dart';
 
 import 'contact_list_tile.dart';
 
@@ -16,7 +17,20 @@ class ContactListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (contacts.isEmpty()) return const Text('No Contact');
+    if (contacts.isEmpty()) {
+      return Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(
+                'No Contact',
+                style: AppTypography.bodyText1,
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return ListView.separated(
       itemCount: contacts.size,
