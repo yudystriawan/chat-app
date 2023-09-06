@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 extension FirestoreX on FirebaseFirestore {
   CollectionReference get userCollection => collection('users');
+  CollectionReference get roomCollection => collection('rooms');
 
   User? get currentUser => getIt<FirebaseAuth>().currentUser;
 
