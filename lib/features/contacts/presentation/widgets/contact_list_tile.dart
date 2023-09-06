@@ -16,6 +16,7 @@ class ContactListTile extends StatelessWidget {
     this.hasStory = false,
     this.chatCount,
     this.trailing,
+    this.onTap,
   }) : super(key: key);
 
   final Widget title;
@@ -26,6 +27,7 @@ class ContactListTile extends StatelessWidget {
   final bool hasStory;
   final int? chatCount;
   final Widget? trailing;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -34,68 +36,73 @@ class ContactListTile extends StatelessWidget {
       subtitle = const Text('Online');
     }
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Avatar(
-          imageUrl: imageUrl ?? 'http://via.placeholder.com/640x640',
-          hasStory: hasStory,
-          isOnline: isOnline,
-        ),
-        SizedBox(
-          width: 12.w,
-        ),
-        Expanded(
-          child: Column(
-            children: [
-              Row(
+    return Material(
+      child: InkWell(
+        onTap: onTap,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Avatar(
+              imageUrl: imageUrl ?? 'http://via.placeholder.com/640x640',
+              hasStory: hasStory,
+              isOnline: isOnline,
+            ),
+            SizedBox(
+              width: 12.w,
+            ),
+            Expanded(
+              child: Column(
                 children: [
-                  Expanded(
-                    child: DefaultTextStyle(
-                      style: AppTypography.bodyText1,
-                      child: title,
-                    ),
-                  ),
-                  if (date != null) ...[
-                    SizedBox(width: 2.w),
-                    Text(
-                      date!,
-                      style: AppTypography.metadata2.copyWith(
-                        color: NeutralColor.weak,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DefaultTextStyle(
+                          style: AppTypography.bodyText1,
+                          child: title,
+                        ),
                       ),
+                      if (date != null) ...[
+                        SizedBox(width: 2.w),
+                        Text(
+                          date!,
+                          style: AppTypography.metadata2.copyWith(
+                            color: NeutralColor.weak,
+                          ),
+                        ),
+                      ]
+                    ],
+                  ),
+                  if (subtitle != null) ...[
+                    SizedBox(
+                      height: 2.w,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DefaultTextStyle(
+                            style: AppTypography.metadata1.copyWith(
+                              color: NeutralColor.disabled,
+                            ),
+                            child: subtitle,
+                          ),
+                        ),
+                        if (chatCount != null) ...[
+                          SizedBox(width: 2.w),
+                          AppBadge(count: chatCount),
+                        ]
+                      ],
                     ),
                   ]
                 ],
               ),
-              if (subtitle != null) ...[
-                SizedBox(
-                  height: 2.w,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: DefaultTextStyle(
-                        style: AppTypography.metadata1.copyWith(
-                          color: NeutralColor.disabled,
-                        ),
-                        child: subtitle,
-                      ),
-                    ),
-                    if (chatCount != null) ...[
-                      SizedBox(width: 2.w),
-                      AppBadge(count: chatCount),
-                    ]
-                  ],
-                ),
-              ]
+            ),
+            if (trailing != null) ...[
+              SizedBox(width: 8.w),
+              trailing!,
             ],
-          ),
+          ],
         ),
-        if (trailing != null) ...[
-          SizedBox(width: 8.w),
-          trailing!,
-        ],
-      ],
+      ),
     );
   }
 }
