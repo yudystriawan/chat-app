@@ -30,6 +30,7 @@ class AppRouter extends $AppRouter {
       AutoRoute(page: ProfileRoute.page),
       AutoRoute(page: AccountRoute.page),
       AutoRoute(page: AddContactRoute.page),
+      AutoRoute(page: RoomRoute.page),
     ];
   }
 }

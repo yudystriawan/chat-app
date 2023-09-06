@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:chat_app/features/contacts/domain/entities/contact.dart';
+import 'package:chat_app/routes/routes.gr.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
@@ -48,6 +50,7 @@ class ContactListWidget extends StatelessWidget {
             title: Text(contact.name),
             imageUrl: contact.photoUrl,
             subtitle: Text(contact.bio),
+            onTap: () => context.pushRoute(RoomRoute(contact: contact)),
           ),
         );
       },
