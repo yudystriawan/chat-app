@@ -19,7 +19,7 @@ class Avatar extends StatelessWidget {
     return Container(
       width: 56.w,
       height: 56.w,
-      color: hasStory ? null : NeutralColor.white,
+      // color: hasStory ? null : NeutralColor.white,
       decoration: hasStory
           ? BoxDecoration(
               color: NeutralColor.white,
