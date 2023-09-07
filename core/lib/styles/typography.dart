@@ -11,6 +11,7 @@ class AppTypography {
       fontSize: 32.sp,
       fontWeight: FontWeight.w700,
       color: NeutralColor.active,
+      leadingDistribution: TextLeadingDistribution.even,
     );
   }
 
@@ -19,6 +20,7 @@ class AppTypography {
       fontSize: 24.sp,
       fontWeight: FontWeight.w700,
       color: NeutralColor.active,
+      leadingDistribution: TextLeadingDistribution.even,
     );
   }
 
@@ -27,6 +29,8 @@ class AppTypography {
       fontSize: 18.sp,
       fontWeight: FontWeight.w600,
       color: NeutralColor.active,
+      height: 30.sp / 18.sp,
+      leadingDistribution: TextLeadingDistribution.even,
     );
   }
 
@@ -35,6 +39,8 @@ class AppTypography {
       fontSize: 16.sp,
       fontWeight: FontWeight.w600,
       color: NeutralColor.active,
+      height: 28.sp / 16.sp,
+      leadingDistribution: TextLeadingDistribution.even,
     );
   }
 
@@ -43,6 +49,8 @@ class AppTypography {
       fontSize: 14.sp,
       fontWeight: FontWeight.w600,
       color: NeutralColor.active,
+      height: 24.sp / 14.sp,
+      leadingDistribution: TextLeadingDistribution.even,
     );
   }
 
@@ -51,6 +59,8 @@ class AppTypography {
       fontSize: 14.sp,
       fontWeight: FontWeight.w400,
       color: NeutralColor.active,
+      height: 24.sp / 14.sp,
+      leadingDistribution: TextLeadingDistribution.even,
     );
   }
 
@@ -59,6 +69,8 @@ class AppTypography {
       fontSize: 12.sp,
       fontWeight: FontWeight.w400,
       color: NeutralColor.active,
+      height: 20.sp / 12.sp,
+      leadingDistribution: TextLeadingDistribution.even,
     );
   }
 
@@ -67,6 +79,8 @@ class AppTypography {
       fontSize: 10.sp,
       fontWeight: FontWeight.w400,
       color: NeutralColor.active,
+      height: 16.sp / 10.sp,
+      leadingDistribution: TextLeadingDistribution.even,
     );
   }
 
@@ -75,6 +89,8 @@ class AppTypography {
       fontSize: 10.sp,
       fontWeight: FontWeight.w600,
       color: NeutralColor.active,
+      height: 16.sp / 10.sp,
+      leadingDistribution: TextLeadingDistribution.even,
     );
   }
 }
