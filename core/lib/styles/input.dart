@@ -62,7 +62,9 @@ class _AppTextFieldState extends State<AppTextField> {
       keyboardType: widget.keyboardType,
       style: AppTypography.bodyText1.copyWith(
         color: widget.readOnly ? NeutralColor.disabled : null,
+        height: 1,
       ),
+      cursorHeight: AppTypography.bodyText1.fontSize,
       cursorColor: BrandColor.dark,
       decoration: InputDecoration(
         hintText: widget.placeholder ?? 'Placeholder',
@@ -71,6 +73,7 @@ class _AppTextFieldState extends State<AppTextField> {
             _focusNode.hasFocus ? NeutralColor.active : NeutralColor.disabled,
         hintStyle: AppTypography.bodyText1.copyWith(
           color: NeutralColor.disabled,
+          height: 1,
         ),
         fillColor: NeutralColor.offWhite,
         border: OutlineInputBorder(
