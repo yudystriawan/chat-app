@@ -45,9 +45,9 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
       // add createdBy with current userId
       final request = room.copyWith(
         id: roomId,
-        createdAt: DateTime.now().toIso8601String(),
         createdBy: user.uid,
         members: members,
+        createdAt: FieldValue.serverTimestamp(),
       );
 
       await _service.instance.roomCollection
