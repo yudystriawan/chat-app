@@ -1,4 +1,5 @@
 import 'package:chat_app/features/chat/domain/entities/room.dart';
+import 'package:core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kt_dart/collection.dart';
 
@@ -11,9 +12,11 @@ class RoomDto with _$RoomDto {
   const factory RoomDto({
     String? id,
     List<String>? members,
-    String? createdAt,
-    String? createdBy,
     int? type,
+    String? roomName,
+    String? roomDescription,
+    String? createdBy,
+    @ServerTimestampConverter() FieldValue? createdAt,
   }) = _RoomDto;
 
   factory RoomDto.fromJson(Map<String, dynamic> json) =>
@@ -29,4 +32,14 @@ class RoomDto with _$RoomDto {
       type: RoomType.fromValue(type),
     );
   }
+}
+
+class ServerTimestampConverter implements JsonConverter<FieldValue, Object> {
+  const ServerTimestampConverter();
+
+  @override
+  FieldValue fromJson(Object json) => FieldValue.serverTimestamp();
+
+  @override
+  Object toJson(FieldValue object) => object;
 }
