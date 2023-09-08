@@ -1,9 +1,11 @@
 import 'package:chat_app/features/chat/data/datasources/room_remote_datasource.dart';
 import 'package:chat_app/features/chat/data/models/room_dtos.dart';
+import 'package:chat_app/features/chat/domain/entities/room.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../../domain/reporitories/chat_repository.dart';
 
@@ -23,12 +25,12 @@ class ChatRepositoryImpl implements ChatRepository {
 
   @override
   Future<Either<Failure, String>> addRoom({
-    required KtList<String> userIds,
+    required KtList<String> members,
     required int type,
   }) async {
     try {
       final bodyRequest = RoomDto(
-        userIds: userIds.iter.toList(),
+        members: members.iter.toList(),
         type: type,
       );
 
@@ -52,5 +54,22 @@ class ChatRepositoryImpl implements ChatRepository {
     } catch (e) {
       return left(const Failure.unexpectedError());
     }
+  }
+
+  @override
+  Stream<Either<Failure, KtList<Room>>> getChatRooms() {
+    return _roomRemoteDataSource.fetchRooms().map((rooms) {
+      if (rooms == null) {
+        return right<Failure, KtList<Room>>(const KtList.empty());
+      }
+
+      final data = rooms.map((room) => room.toDomain()).toImmutableList();
+
+      return right<Failure, KtList<Room>>(data);
+    }).onErrorReturnWith((error, stackTrace) {
+      if (error is Failure) return left(error);
+
+      return left(const Failure.unexpectedError());
+    });
   }
 }

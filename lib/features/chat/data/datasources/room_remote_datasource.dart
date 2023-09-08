@@ -8,6 +8,7 @@ import 'package:injectable/injectable.dart';
 abstract class RoomRemoteDataSource {
   Future<String> createRoom(RoomDto room);
   Future<void> deleteRoom(String roomId);
+  Stream<List<RoomDto>?> fetchRooms();
 }
 
 @Injectable(as: RoomRemoteDataSource)
@@ -21,14 +22,14 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
     try {
       // get current user
       final user = _service.instance.currentUser!;
-      final userIds = room.userIds?.toList();
-      userIds?.add(user.uid);
+      final members = room.members?.toList();
+      members?.add(user.uid);
 
-      // check if room exist, return the existing id
+      // check if room exist, return the existing members
       final snapshot = await _service.instance.roomCollection
           .where(
-            'userIds',
-            arrayContainsAny: userIds,
+            'members',
+            arrayContainsAny: members,
           )
           .get();
       if (snapshot.docs.isNotEmpty && snapshot.docs.first.exists) {
@@ -46,7 +47,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
         id: roomId,
         createdAt: DateTime.now().toIso8601String(),
         createdBy: user.uid,
-        userIds: userIds,
+        members: members,
       );
 
       await _service.instance.roomCollection
@@ -68,5 +69,19 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
     } catch (e) {
       throw const Failure.serverError();
     }
+  }
+
+  @override
+  Stream<List<RoomDto>?> fetchRooms() {
+    // get current user id
+    final userId = _service.instance.currentUser!.uid;
+
+    // get room documents
+    return _service.instance.roomCollection
+        .where('members', arrayContains: userId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => RoomDto.fromJson(doc.data() as Map<String, dynamic>))
+            .toList());
   }
 }

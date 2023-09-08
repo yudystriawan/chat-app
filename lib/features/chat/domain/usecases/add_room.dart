@@ -16,21 +16,21 @@ class AddRoom implements Usecase<String, CreateRoomParams> {
   @override
   Future<Either<Failure, String>> call(params) {
     return _repository.addRoom(
-      userIds: params.userIds,
+      members: params.members,
       type: params.type.value,
     );
   }
 }
 
 class CreateRoomParams extends Equatable {
-  final KtList<String> userIds;
+  final KtList<String> members;
   final RoomType type;
 
   const CreateRoomParams({
-    required this.userIds,
+    required this.members,
     required this.type,
   });
 
   @override
-  List<Object> get props => [userIds, type];
+  List<Object> get props => [members, type];
 }

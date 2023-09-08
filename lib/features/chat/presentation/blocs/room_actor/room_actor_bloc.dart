@@ -30,7 +30,7 @@ class RoomActorBloc extends Bloc<RoomActorEvent, RoomActorState> {
     emit(const RoomActorState.actionInProgress());
 
     final failureOrSuccess = await _createRoom(CreateRoomParams(
-      userIds: event.userIds,
+      members: event.userIds,
       type: event.type,
     ));
 

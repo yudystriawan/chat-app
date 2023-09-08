@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:chat_app/features/account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
+import 'package:chat_app/features/chat/presentation/blocs/room_actor/room_actor_bloc.dart';
+import 'package:chat_app/features/chat/presentation/blocs/room_watcher/room_watcher_bloc.dart';
 import 'package:chat_app/features/contacts/presentation/blocs/contact_watcher/contact_watcher_bloc.dart';
 import 'package:chat_app/routes/routes.gr.dart';
 import 'package:chat_app/shared/bottom_navigation_bar.dart';
@@ -81,18 +83,49 @@ class HomePage extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) {
-    return AutoTabsScaffold(
-      routes: const [
-        ContactsRoute(),
-        ChatRoute(),
-        PreferencesRoute(),
-      ],
-      bottomNavigationBuilder: (context, tabsRouter) {
-        return AppBottomNavigationBar(
-          activeIndex: tabsRouter.activeIndex,
-          onNavPressed: (index) => tabsRouter.setActiveIndex(index),
+    return BlocListener<RoomActorBloc, RoomActorState>(
+      listener: (context, state) {
+        state.map(
+          initial: (_) {},
+          actionInProgress: (_) {},
+          actionFailure: (_) {},
+          removeRoomSuccess: (_) {},
+          addRoomSuccess: (value) =>
+              context.pushRoute(RoomRoute(roomId: value.roomId)),
         );
       },
+      child: Stack(
+        children: [
+          AutoTabsScaffold(
+            routes: const [
+              ContactsRoute(),
+              ChatRoute(),
+              PreferencesRoute(),
+            ],
+            bottomNavigationBuilder: (context, tabsRouter) {
+              return AppBottomNavigationBar(
+                activeIndex: tabsRouter.activeIndex,
+                onNavPressed: (index) => tabsRouter.setActiveIndex(index),
+              );
+            },
+          ),
+          BlocBuilder<RoomActorBloc, RoomActorState>(
+            builder: (context, state) {
+              return state.maybeMap(
+                orElse: () => const SizedBox(),
+                actionInProgress: (_) => Center(
+                  child: Card(
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0.w),
+                      child: const CircularProgressIndicator(),
+                    ),
+                  ),
+                ),
+              );
+            },
+          )
+        ],
+      ),
     );
   }
 
@@ -103,8 +136,14 @@ class HomePage extends StatelessWidget implements AutoRouteWrapper {
         BlocProvider(
           create: (context) => getIt<ContactWatcherBloc>()
             ..add(const ContactWatcherEvent.watchAllStarted()),
-          child: Container(),
-        )
+        ),
+        BlocProvider(
+          create: (context) => getIt<RoomWatcherBloc>()
+            ..add(const RoomWatcherEvent.watchAllStarted()),
+        ),
+        BlocProvider(
+          create: (context) => getIt<RoomActorBloc>(),
+        ),
       ],
       child: this,
     );

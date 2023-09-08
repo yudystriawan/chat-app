@@ -1,12 +1,13 @@
-import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/features/chat/domain/entities/room.dart';
 import 'package:chat_app/features/contacts/domain/entities/contact.dart';
-import 'package:chat_app/routes/routes.gr.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kt_dart/collection.dart';
 
+import '../../../chat/presentation/blocs/room_actor/room_actor_bloc.dart';
 import 'contact_list_tile.dart';
 
 class ContactListWidget extends StatelessWidget {
@@ -50,7 +51,10 @@ class ContactListWidget extends StatelessWidget {
             title: Text(contact.name),
             imageUrl: contact.photoUrl,
             subtitle: Text(contact.bio),
-            onTap: () => context.pushRoute(RoomRoute(contact: contact)),
+            onTap: () => context.read<RoomActorBloc>().add(
+                RoomActorEvent.roomAdded(
+                    userIds: KtList.from([contact.id]),
+                    type: RoomType.private)),
           ),
         );
       },

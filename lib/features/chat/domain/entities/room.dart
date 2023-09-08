@@ -15,6 +15,9 @@ enum RoomType {
   factory RoomType.fromValue(int? value) =>
       RoomType.values.singleWhereOrNull((element) => element.value == value) ??
       RoomType.nan;
+
+  bool get isPrivate => this == RoomType.private;
+  bool get isGroup => this == RoomType.group;
 }
 
 @freezed
@@ -22,7 +25,7 @@ class Room with _$Room {
   const Room._();
   const factory Room({
     required String id,
-    required KtList<String> userId,
+    required KtList<String> members,
     required String createdBy,
     required RoomType type,
     DateTime? createdAt,
@@ -30,7 +33,7 @@ class Room with _$Room {
 
   factory Room.empty() => const Room(
         id: '',
-        userId: KtList.empty(),
+        members: KtList.empty(),
         createdBy: '',
         type: RoomType.nan,
       );
