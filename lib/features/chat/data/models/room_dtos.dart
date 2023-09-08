@@ -1,7 +1,8 @@
-import 'package:chat_app/features/chat/domain/entities/room.dart';
 import 'package:core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kt_dart/collection.dart';
+
+import '../../domain/entities/entity.dart';
 
 part 'room_dtos.freezed.dart';
 part 'room_dtos.g.dart';

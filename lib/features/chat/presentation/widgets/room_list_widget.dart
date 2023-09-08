@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kt_dart/collection.dart';
 
-import '../../domain/entities/room.dart';
+import '../../domain/entities/entity.dart';
 
 class RoomListWidget extends StatelessWidget {
   const RoomListWidget({

@@ -9,7 +9,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
 
-import '../../../domain/entities/room.dart';
+import '../../../domain/entities/entity.dart';
 
 part 'room_watcher_bloc.freezed.dart';
 part 'room_watcher_event.dart';

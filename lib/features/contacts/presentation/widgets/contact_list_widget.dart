@@ -1,4 +1,3 @@
-import 'package:chat_app/features/chat/domain/entities/room.dart';
 import 'package:chat_app/features/contacts/domain/entities/contact.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
@@ -7,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kt_dart/collection.dart';
 
+import '../../../chat/domain/entities/entity.dart';
 import '../../../chat/presentation/blocs/room_actor/room_actor_bloc.dart';
 import 'contact_list_tile.dart';
 

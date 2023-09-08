@@ -5,7 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
 
-import '../entities/room.dart';
+import '../entities/entity.dart';
 
 @injectable
 class GetChatRooms implements StreamUsecase<KtList<Room>, NoParams> {

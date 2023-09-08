@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
-import 'package:chat_app/features/chat/domain/entities/room.dart';
 import 'package:chat_app/features/chat/domain/usecases/add_room.dart';
 import 'package:chat_app/features/chat/domain/usecases/remove_room.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
+
+import '../../../domain/entities/entity.dart';
 
 part 'room_actor_bloc.freezed.dart';
 part 'room_actor_event.dart';

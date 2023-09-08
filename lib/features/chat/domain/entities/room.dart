@@ -1,8 +1,4 @@
-import 'package:collection/collection.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:kt_dart/collection.dart';
-
-part 'room.freezed.dart';
+part of 'entity.dart';
 
 enum RoomType {
   nan(0),

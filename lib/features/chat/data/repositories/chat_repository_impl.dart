@@ -1,12 +1,12 @@
 import 'package:chat_app/features/chat/data/datasources/room_remote_datasource.dart';
 import 'package:chat_app/features/chat/data/models/room_dtos.dart';
-import 'package:chat_app/features/chat/domain/entities/room.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../domain/entities/entity.dart';
 import '../../domain/reporitories/chat_repository.dart';
 
 @Injectable(as: ChatRepository)
