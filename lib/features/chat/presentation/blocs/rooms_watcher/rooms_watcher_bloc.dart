@@ -11,19 +11,19 @@ import 'package:kt_dart/collection.dart';
 
 import '../../../domain/entities/entity.dart';
 
-part 'room_watcher_bloc.freezed.dart';
-part 'room_watcher_event.dart';
-part 'room_watcher_state.dart';
+part 'rooms_watcher_bloc.freezed.dart';
+part 'rooms_watcher_event.dart';
+part 'rooms_watcher_state.dart';
 
 @injectable
-class RoomWatcherBloc extends Bloc<RoomWatcherEvent, RoomWatcherState> {
+class RoomsWatcherBloc extends Bloc<RoomsWatcherEvent, RoomsWatcherState> {
   final GetChatRooms _getChatRooms;
 
   StreamSubscription<Either<Failure, KtList<Room>>>? _roomsStreamSubscription;
 
-  RoomWatcherBloc(
+  RoomsWatcherBloc(
     this._getChatRooms,
-  ) : super(RoomWatcherState.initial()) {
+  ) : super(RoomsWatcherState.initial()) {
     on<_WatchAllStarted>(_onWatchAllStarted);
     on<_SearchTermChanged>(_onSearchTermChanged);
     on<_RoomsReceived>(_onRoomsReceived);
@@ -31,24 +31,24 @@ class RoomWatcherBloc extends Bloc<RoomWatcherEvent, RoomWatcherState> {
 
   void _onWatchAllStarted(
     _WatchAllStarted event,
-    Emitter<RoomWatcherState> emit,
+    Emitter<RoomsWatcherState> emit,
   ) async {
     emit(state.copyWith(isLoading: true));
 
     await _roomsStreamSubscription?.cancel();
     _roomsStreamSubscription = _getChatRooms(const NoParams()).listen(
         (failureOrRooms) =>
-            add(RoomWatcherEvent.roomsReceived(failureOrRooms)));
+            add(RoomsWatcherEvent.roomsReceived(failureOrRooms)));
   }
 
   void _onSearchTermChanged(
     _SearchTermChanged event,
-    Emitter<RoomWatcherState> emit,
+    Emitter<RoomsWatcherState> emit,
   ) async {}
 
   void _onRoomsReceived(
     _RoomsReceived event,
-    Emitter<RoomWatcherState> emit,
+    Emitter<RoomsWatcherState> emit,
   ) async {
     final newState = state.copyWith(failureOption: none(), isLoading: false);
 
