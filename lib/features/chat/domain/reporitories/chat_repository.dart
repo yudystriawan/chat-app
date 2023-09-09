@@ -15,5 +15,6 @@ abstract class ChatRepository {
   });
   Future<Either<Failure, Unit>> removeRoom(String roomId);
   Stream<Either<Failure, KtList<Room>>> getChatRooms();
+  Stream<Either<Failure, Room>> getChatRoom(String roomId);
   Stream<Either<Failure, KtList<Member>>> getMembers(KtList<String> ids);
 }

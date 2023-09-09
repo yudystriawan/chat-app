@@ -11,6 +11,7 @@ abstract class RoomRemoteDataSource {
   Future<String> createRoom(RoomDto room);
   Future<void> deleteRoom(String roomId);
   Stream<List<RoomDto>?> fetchRooms();
+  Stream<RoomDto?> fetchRoom(String roomId);
   Stream<List<MemberDto>?> fetchMembers(List<String> ids);
 }
 
@@ -101,6 +102,19 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
             .map(
                 (doc) => MemberDto.fromJson(doc.data() as Map<String, dynamic>))
             .toList())
+        .onErrorReturnWith((error, stackTrace) {
+      log('an error occured', error: error, stackTrace: stackTrace);
+      throw const Failure.serverError();
+    });
+  }
+
+  @override
+  Stream<RoomDto?> fetchRoom(String roomId) {
+    return _service.instance.roomCollection
+        .doc(roomId)
+        .snapshots()
+        .map((snapshot) =>
+            RoomDto.fromJson(snapshot.data() as Map<String, dynamic>))
         .onErrorReturnWith((error, stackTrace) {
       log('an error occured', error: error, stackTrace: stackTrace);
       throw const Failure.serverError();

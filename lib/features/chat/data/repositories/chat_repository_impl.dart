@@ -89,4 +89,19 @@ class ChatRepositoryImpl implements ChatRepository {
       return left(const Failure.unexpectedError());
     });
   }
+
+  @override
+  Stream<Either<Failure, Room>> getChatRoom(String roomId) {
+    return _roomRemoteDataSource.fetchRoom(roomId).map((room) {
+      if (room == null) {
+        return left<Failure, Room>(const Failure.notFound());
+      }
+
+      return right<Failure, Room>(room.toDomain());
+    }).onErrorReturnWith((error, stackTrace) {
+      if (error is Failure) return left(error);
+
+      return left(const Failure.unexpectedError());
+    });
+  }
 }
