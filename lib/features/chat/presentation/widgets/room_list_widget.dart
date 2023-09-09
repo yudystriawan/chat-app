@@ -45,30 +45,15 @@ class RoomListWidget extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final room = rooms[index];
 
-        String roomName = _getRoomName(room);
-
         return Padding(
           padding: EdgeInsets.only(top: 16.w, bottom: 12.w),
           child: RoomListTile(
-            title: Text(roomName),
+            title: Text(room.name),
+            imageUrl: room.imageUrl,
             onTap: () => context.pushRoute(RoomRoute(roomId: room.id)),
           ),
         );
       },
     );
-  }
-
-  /// if type is personal
-  /// return the recipient
-  String _getRoomName(Room room) {
-    if (room.type.isPrivate) {
-      final createdBy = room.createdBy;
-      final recipient =
-          room.members.filterNot((id) => id == createdBy).joinToString();
-      return recipient;
-    }
-
-    //TODO: get room name when it group;
-    return '';
   }
 }
