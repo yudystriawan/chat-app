@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../blocs/room_watcher/room_watcher_bloc.dart';
+import '../blocs/rooms_watcher/rooms_watcher_bloc.dart';
 
 @RoutePage()
 class ChatPage extends StatelessWidget implements AutoRouteWrapper {
@@ -48,7 +48,7 @@ class ChatPage extends StatelessWidget implements AutoRouteWrapper {
               ),
             )
           ],
-          body: BlocBuilder<RoomWatcherBloc, RoomWatcherState>(
+          body: BlocBuilder<RoomsWatcherBloc, RoomsWatcherState>(
             builder: (context, state) {
               if (state.isLoading) {
                 return const Center(
