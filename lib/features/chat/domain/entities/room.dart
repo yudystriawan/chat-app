@@ -24,6 +24,9 @@ class Room with _$Room {
     required KtList<String> members,
     required String createdBy,
     required RoomType type,
+    required String name,
+    required String description,
+    required String imageUrl,
     DateTime? createdAt,
   }) = _Room;
 
@@ -32,5 +35,8 @@ class Room with _$Room {
         members: KtList.empty(),
         createdBy: '',
         type: RoomType.nan,
+        description: '',
+        imageUrl: '',
+        name: '',
       );
 }

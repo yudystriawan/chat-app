@@ -16,6 +16,7 @@ class RoomDto with _$RoomDto {
     int? type,
     String? roomName,
     String? roomDescription,
+    String? roomImageUrl,
     String? createdBy,
     @ServerTimestampConverter() FieldValue? createdAt,
   }) = _RoomDto;
@@ -31,6 +32,9 @@ class RoomDto with _$RoomDto {
       members: members?.toImmutableList() ?? empty.members,
       createdBy: createdBy ?? empty.createdBy,
       type: RoomType.fromValue(type),
+      description: roomDescription ?? empty.description,
+      imageUrl: roomImageUrl ?? empty.imageUrl,
+      name: roomName ?? empty.name,
     );
   }
 }
