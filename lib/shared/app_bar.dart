@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:coolicons/coolicons.dart';
+import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,6 +25,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           final canPop = context.router.canPop();
 
           return Container(
+            color: NeutralColor.white,
             padding: EdgeInsets.symmetric(vertical: 13.w, horizontal: 16.w),
             constraints: BoxConstraints(minHeight: 30.w),
             child: Row(
