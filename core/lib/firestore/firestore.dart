@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
 
-export 'package:cloud_firestore/cloud_firestore.dart' show FieldValue;
+export 'package:cloud_firestore/cloud_firestore.dart'
+    show FieldValue, FieldPath;
 
 @injectable
 class FirestoreService {
