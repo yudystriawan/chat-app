@@ -9,7 +9,7 @@ class MemberDto with _$MemberDto {
   const MemberDto._();
   const factory MemberDto({
     String? name,
-    String? imageUrl,
+    @JsonKey(name: 'photoUrl') String? imageUrl,
     String? id,
   }) = _MemberDto;
 

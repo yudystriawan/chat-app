@@ -1,14 +1,17 @@
 import 'dart:developer';
 
+import 'package:chat_app/features/chat/data/models/member_dtos.dart';
 import 'package:chat_app/features/chat/data/models/room_dtos.dart';
 import 'package:core/core.dart';
 import 'package:core/firestore/firestore_helper.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 
 abstract class RoomRemoteDataSource {
   Future<String> createRoom(RoomDto room);
   Future<void> deleteRoom(String roomId);
   Stream<List<RoomDto>?> fetchRooms();
+  Stream<List<MemberDto>?> fetchMembers(List<String> ids);
 }
 
 @Injectable(as: RoomRemoteDataSource)
@@ -82,6 +85,25 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => RoomDto.fromJson(doc.data() as Map<String, dynamic>))
-            .toList());
+            .toList())
+        .onErrorReturnWith((error, stackTrace) {
+      log('an error occured', error: error, stackTrace: stackTrace);
+      throw const Failure.serverError();
+    });
+  }
+
+  @override
+  Stream<List<MemberDto>?> fetchMembers(List<String> ids) {
+    return _service.instance.userCollection
+        .where(FieldPath.documentId, whereIn: ids)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map(
+                (doc) => MemberDto.fromJson(doc.data() as Map<String, dynamic>))
+            .toList())
+        .onErrorReturnWith((error, stackTrace) {
+      log('an error occured', error: error, stackTrace: stackTrace);
+      throw const Failure.serverError();
+    });
   }
 }

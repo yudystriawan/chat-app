@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/room_list_widget.dart';
 import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
+import 'package:core/core.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
 import 'package:core/styles/input.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +13,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../blocs/room_watcher/room_watcher_bloc.dart';
 
 @RoutePage()
-class ChatPage extends StatelessWidget {
+class ChatPage extends StatelessWidget implements AutoRouteWrapper {
   const ChatPage({super.key});
 
   @override
@@ -65,6 +67,14 @@ class ChatPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return BlocProvider(
+      create: (context) => getIt<MemberWatcherBloc>(),
+      child: this,
     );
   }
 }
