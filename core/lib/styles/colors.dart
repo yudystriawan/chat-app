@@ -41,6 +41,9 @@ class NeutralColor {
 
   // use for background.
   static Color white = Colors.white;
+
+  // use for background.
+  static Color secondaryBG = const Color(0xFFF7F7FC);
 }
 
 class AccentColor {
