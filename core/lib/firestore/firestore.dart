@@ -22,10 +22,4 @@ class ServerTimestampConverter implements JsonConverter<Timestamp, Object> {
 
   @override
   Object toJson(Timestamp object) => FieldValue.serverTimestamp();
-
-  // @override
-  // FieldValue fromJson(Object json) => FieldValue.serverTimestamp();
-
-  // @override
-  // Object toJson(FieldValue object) => object;
 }
