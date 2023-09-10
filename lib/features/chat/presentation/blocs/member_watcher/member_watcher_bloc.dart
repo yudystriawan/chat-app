@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:chat_app/features/chat/domain/usecases/get_members.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
@@ -24,8 +25,14 @@ class MemberWatcherBloc extends Bloc<MemberWatcherEvent, MemberWatcherState> {
   MemberWatcherBloc(
     this._getMembers,
   ) : super(MemberWatcherState.initial()) {
-    on<_WatchAllStarted>(_onWatchAllStarted);
-    on<_MembersReceived>(_onMembersReceived);
+    on<_WatchAllStarted>(_onWatchAllStarted, transformer: concurrent());
+    on<_MembersReceived>(_onMembersReceived, transformer: concurrent());
+  }
+
+  @override
+  Future<void> close() async {
+    await _membersStreamSubscription?.cancel();
+    return super.close();
   }
 
   void _onWatchAllStarted(
