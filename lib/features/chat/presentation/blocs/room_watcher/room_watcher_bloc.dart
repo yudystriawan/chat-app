@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:chat_app/features/chat/domain/usecases/get_chat_room.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
@@ -22,8 +23,8 @@ class RoomWatcherBloc extends Bloc<RoomWatcherEvent, RoomWatcherState> {
   RoomWatcherBloc(
     this._getChatRoom,
   ) : super(RoomWatcherState.initial()) {
-    on<_WatchStarted>(_onWatchStarted);
-    on<_RoomReceived>(_onRoomReceived);
+    on<_WatchStarted>(_onWatchStarted, transformer: concurrent());
+    on<_RoomReceived>(_onRoomReceived, transformer: concurrent());
   }
 
   void _onWatchStarted(
