@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:chat_app/features/chat/presentation/blocs/messages_watcher/messages_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/blocs/room_watcher/room_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/widgets/chat_bubble.dart';
 import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/core.dart';
@@ -80,31 +79,7 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
             Expanded(
               child: Container(
                 color: NeutralColor.secondaryBG,
-                child: BlocBuilder<MessagesWatcherBloc, MessagesWatcherState>(
-                  buildWhen: (p, c) => p.messages != c.messages,
-                  builder: (context, state) {
-                    final messages = state.messages;
-
-                    if (state.isLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-
-                    if (messages.isEmpty()) return const SizedBox();
-
-                    return ChatsContainer(
-                      chats: messages.iter
-                          .map(
-                            (message) => ChatBubble(
-                              body: Text(message.data),
-                              sentAt: message.sentAt,
-                            ),
-                          )
-                          .toList(),
-                    );
-                  },
-                ),
+                child: const ChatsContainer(),
               ),
             ),
             Container(
