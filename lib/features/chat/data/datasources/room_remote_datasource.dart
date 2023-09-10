@@ -87,12 +87,14 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
     // get room documents
     return _service.instance.roomCollection
         .where('members', arrayContains: userId)
+        .where('messageCount', isNull: false)
+        .where('messageCount', isGreaterThan: 0)
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => RoomDto.fromJson(doc.data() as Map<String, dynamic>))
             .toList())
         .onErrorReturnWith((error, stackTrace) {
-      log('an error occured', error: error, stackTrace: stackTrace);
+      log('fetchRooms', error: error, stackTrace: stackTrace);
       throw const Failure.serverError();
     });
   }
@@ -107,7 +109,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
                 (doc) => MemberDto.fromJson(doc.data() as Map<String, dynamic>))
             .toList())
         .onErrorReturnWith((error, stackTrace) {
-      log('an error occured', error: error, stackTrace: stackTrace);
+      log('fetchMembers', error: error, stackTrace: stackTrace);
       throw const Failure.serverError();
     });
   }
@@ -122,7 +124,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
 
       return RoomDto.fromJson(snapshot.data() as Map<String, dynamic>);
     }).onErrorReturnWith((error, stackTrace) {
-      log('an error occured', error: error, stackTrace: stackTrace);
+      log('fetchRoom', error: error, stackTrace: stackTrace);
       throw const Failure.serverError();
     });
   }
