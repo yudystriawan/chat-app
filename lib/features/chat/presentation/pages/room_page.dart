@@ -79,21 +79,21 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
             Expanded(
               child: Container(
                 color: NeutralColor.secondaryBG,
-                child: ChatsContainer(
-                  chats: [
-                    ChatBubble(
-                      body: const Text(
-                          'But don’t worry cause we are all learning here'),
-                      sentAt: DateTime.now(),
-                    ),
-                    ChatBubble(
-                      isSender: false,
-                      imageUrl: '',
-                      body: const Text('Look at how chocho sleep in my arms!'),
-                      sentAt: DateTime.now(),
-                      recipientName: 'hohoh',
-                    ),
-                  ],
+                child: BlocBuilder<RoomWatcherBloc, RoomWatcherState>(
+                  buildWhen: (p, c) => p.room.messages != c.room.messages,
+                  builder: (context, state) {
+                    final messages = state.room.messages;
+
+                    if (messages.isEmpty()) return const SizedBox();
+
+                    return ChatsContainer(
+                      chats: messages.iter
+                          .map(
+                            (message) => ChatBubble(body: Text(message.data)),
+                          )
+                          .toList(),
+                    );
+                  },
                 ),
               ),
             ),

@@ -4,12 +4,14 @@ import 'package:chat_app/features/chat/data/models/message_dtos.dart';
 import 'package:core/core.dart';
 import 'package:core/firestore/firestore_helper.dart';
 import 'package:injectable/injectable.dart';
+import 'package:rxdart/rxdart.dart';
 
 abstract class MessageRemoteDataSource {
   Future<void> createMessage({
     required String roomId,
     required MessageDto message,
   });
+  Stream<List<MessageDto>?> fetchMessages(String roomId);
 }
 
 @Injectable(as: MessageRemoteDataSource)
@@ -47,5 +49,21 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
           name: runtimeType.toString(), error: e, stackTrace: s);
       throw const Failure.serverError();
     }
+  }
+
+  @override
+  Stream<List<MessageDto>?> fetchMessages(String roomId) {
+    return _service.instance.roomCollection
+        .doc(roomId)
+        .collection('messages')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => MessageDto.fromJson(doc.data()))
+            .toList())
+        .onErrorReturnWith((error, stackTrace) {
+      log('fetchMessages',
+          name: runtimeType.toString(), error: error, stackTrace: stackTrace);
+      throw const Failure.serverError();
+    });
   }
 }
