@@ -1,4 +1,6 @@
+import 'package:chat_app/features/chat/data/datasources/message_remote_dataasource.dart';
 import 'package:chat_app/features/chat/data/datasources/room_remote_datasource.dart';
+import 'package:chat_app/features/chat/data/models/message_dtos.dart';
 import 'package:chat_app/features/chat/data/models/room_dtos.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
@@ -12,15 +14,35 @@ import '../../domain/reporitories/chat_repository.dart';
 @Injectable(as: ChatRepository)
 class ChatRepositoryImpl implements ChatRepository {
   final RoomRemoteDataSource _roomRemoteDataSource;
+  final MessageRemoteDataSource _messageRemoteDataSource;
 
-  ChatRepositoryImpl(this._roomRemoteDataSource);
+  ChatRepositoryImpl(
+    this._roomRemoteDataSource,
+    this._messageRemoteDataSource,
+  );
   @override
   Future<Either<Failure, Unit>> createMessage({
     required String roomId,
     required String message,
-  }) {
-    // TODO: implement createMessage
-    throw UnimplementedError();
+    required MessageType type,
+  }) async {
+    try {
+      final data = MessageDto(
+        data: message,
+        type: type.value,
+      );
+
+      await _messageRemoteDataSource.createMessage(
+        roomId: roomId,
+        message: data,
+      );
+
+      return right(unit);
+    } on Failure catch (e) {
+      return left(e);
+    } catch (e) {
+      return left(const Failure.unexpectedError());
+    }
   }
 
   @override
