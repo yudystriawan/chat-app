@@ -20,7 +20,7 @@ class RoomDto with _$RoomDto {
     String? roomImageUrl,
     String? createdBy,
     List<MessageDto>? messages,
-    @ServerTimestampConverter() FieldValue? createdAt,
+    @ServerTimestampConverter() Timestamp? createdAt,
   }) = _RoomDto;
 
   factory RoomDto.fromJson(Map<String, dynamic> json) =>
@@ -42,14 +42,4 @@ class RoomDto with _$RoomDto {
               empty.messages,
     );
   }
-}
-
-class ServerTimestampConverter implements JsonConverter<FieldValue, Object> {
-  const ServerTimestampConverter();
-
-  @override
-  FieldValue fromJson(Object json) => FieldValue.serverTimestamp();
-
-  @override
-  Object toJson(FieldValue object) => object;
 }
