@@ -37,9 +37,7 @@ class RoomDto with _$RoomDto {
       description: roomDescription ?? empty.description,
       imageUrl: roomImageUrl ?? empty.imageUrl,
       name: roomName ?? empty.name,
-      messages:
-          messages?.map((message) => message.toDomain()).toImmutableList() ??
-              empty.messages,
+      messages: empty.messages,
     );
   }
 }
