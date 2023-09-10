@@ -82,7 +82,7 @@ class ChatBubble extends StatelessWidget {
               children: [
                 if (sentAt != null)
                   Text(
-                    sentAt!.toStringFormatted('hh:mm'),
+                    sentAt!.toStringFormatted('HH:mm'),
                     style:
                         AppTypography.metadata2.copyWith(color: metadataColor),
                   ),
