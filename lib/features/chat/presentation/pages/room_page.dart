@@ -9,8 +9,10 @@ import 'package:core/styles/colors.dart';
 import 'package:core/styles/input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../blocs/message_form/message_form_bloc.dart';
 import '../widgets/chats_container.dart';
 
 @RoutePage()
@@ -24,109 +26,164 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar(
-        title: BlocBuilder<RoomWatcherBloc, RoomWatcherState>(
-          builder: (context, state) {
-            final room = state.room;
-            return Row(
-              children: [
-                Text(room.name),
-              ],
-            );
-          },
+    return BlocListener<MessageFormBloc, MessageFormState>(
+      listenWhen: (p, c) =>
+          p.failureOrSuccessOption != c.failureOrSuccessOption,
+      listener: (context, state) {
+        state.failureOrSuccessOption.fold(
+          () => null,
+          (either) => either.fold(
+            (f) => null,
+            (_) {
+              context
+                  .read<MessageFormBloc>()
+                  .add(const MessageFormEvent.dataChanged(''));
+            },
+          ),
+        );
+      },
+      child: Scaffold(
+        appBar: MyAppBar(
+          title: BlocBuilder<RoomWatcherBloc, RoomWatcherState>(
+            builder: (context, state) {
+              final room = state.room;
+              return Row(
+                children: [
+                  Text(room.name),
+                ],
+              );
+            },
+          ),
+          trailing: Row(
+            children: [
+              GhostButton(
+                onPressed: () {},
+                child: Icon(
+                  Coolicons.search,
+                  size: 24.w,
+                ),
+              ),
+              GhostButton(
+                onPressed: () {},
+                child: Icon(
+                  Coolicons.hamburger,
+                  size: 24.w,
+                ),
+              ),
+            ],
+          ),
         ),
-        trailing: Row(
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            GhostButton(
-              onPressed: () {},
-              child: Icon(
-                Coolicons.search,
-                size: 24.w,
+            Expanded(
+              child: Container(
+                color: NeutralColor.secondaryBG,
+                child: ChatsContainer(
+                  chats: [
+                    ChatBubble(
+                      body: const Text(
+                          'But don’t worry cause we are all learning here'),
+                      sentAt: DateTime.now(),
+                    ),
+                    ChatBubble(
+                      isSender: false,
+                      imageUrl: '',
+                      body: const Text('Look at how chocho sleep in my arms!'),
+                      sentAt: DateTime.now(),
+                      recipientName: 'hohoh',
+                    ),
+                  ],
+                ),
               ),
             ),
-            GhostButton(
-              onPressed: () {},
-              child: Icon(
-                Coolicons.hamburger,
-                size: 24.w,
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 12.w),
+              decoration: BoxDecoration(
+                color: NeutralColor.white,
+                border: Border.all(width: 1.w, color: NeutralColor.line),
+              ),
+              child: SafeArea(
+                top: false,
+                child: Row(
+                  children: [
+                    GhostButton(
+                      onPressed: () {},
+                      child: Icon(
+                        Coolicons.plus,
+                        color: NeutralColor.disabled,
+                        size: 24.w,
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    const Expanded(
+                      child: MessageTextField(),
+                    ),
+                    SizedBox(width: 12.w),
+                    GhostButton(
+                      onPressed: () => context
+                          .read<MessageFormBloc>()
+                          .add(MessageFormEvent.submitted(roomId)),
+                      child: Icon(
+                        Icons.send,
+                        size: 24.w,
+                        color: BrandColor.neutral,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         ),
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Expanded(
-            child: Container(
-              color: NeutralColor.secondaryBG,
-              child: ChatsContainer(
-                chats: [
-                  ChatBubble(
-                    body: const Text(
-                        'But don’t worry cause we are all learning here'),
-                    sentAt: DateTime.now(),
-                  ),
-                  ChatBubble(
-                    isSender: false,
-                    imageUrl: '',
-                    body: const Text('Look at how chocho sleep in my arms!'),
-                    sentAt: DateTime.now(),
-                    recipientName: 'hohoh',
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.symmetric(vertical: 10.w, horizontal: 12.w),
-            decoration: BoxDecoration(
-              color: NeutralColor.white,
-              border: Border.all(width: 1.w, color: NeutralColor.line),
-            ),
-            child: SafeArea(
-              top: false,
-              child: Row(
-                children: [
-                  GhostButton(
-                    onPressed: () {},
-                    child: Icon(
-                      Coolicons.plus,
-                      color: NeutralColor.disabled,
-                      size: 24.w,
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  const Expanded(
-                    child: AppTextField(
-                      placeholder: 'Type message',
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  GhostButton(
-                    onPressed: () {},
-                    child: Icon(
-                      Icons.send,
-                      size: 24.w,
-                      color: BrandColor.neutral,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
 
   @override
   Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          getIt<RoomWatcherBloc>()..add(RoomWatcherEvent.watchStarted(roomId)),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<RoomWatcherBloc>()
+            ..add(RoomWatcherEvent.watchStarted(roomId)),
+        ),
+        BlocProvider(
+          create: (context) => getIt<MessageFormBloc>(),
+        ),
+      ],
       child: this,
+    );
+  }
+}
+
+class MessageTextField extends HookWidget {
+  const MessageTextField({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    var controller = useTextEditingController();
+    return BlocListener<MessageFormBloc, MessageFormState>(
+      listenWhen: (p, c) =>
+          p.failureOrSuccessOption != c.failureOrSuccessOption,
+      listener: (context, state) {
+        state.failureOrSuccessOption.fold(
+          () => null,
+          (either) => either.fold(
+            (f) => null,
+            (_) => controller.clear(),
+          ),
+        );
+      },
+      child: AppTextField(
+        controller: controller,
+        placeholder: 'Type message',
+        onChange: (value) => context
+            .read<MessageFormBloc>()
+            .add(MessageFormEvent.dataChanged(value)),
+      ),
     );
   }
 }
