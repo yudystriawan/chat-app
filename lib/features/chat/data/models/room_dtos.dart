@@ -1,4 +1,3 @@
-import 'package:chat_app/features/chat/data/models/message_dtos.dart';
 import 'package:core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kt_dart/collection.dart';
@@ -19,8 +18,10 @@ class RoomDto with _$RoomDto {
     String? roomDescription,
     String? roomImageUrl,
     String? createdBy,
-    List<MessageDto>? messages,
+    int? messageCount,
+    String? lastMessage,
     @ServerTimestampConverter() Timestamp? createdAt,
+    @ServerTimestampConverter() Timestamp? sentAt,
   }) = _RoomDto;
 
   factory RoomDto.fromJson(Map<String, dynamic> json) =>
@@ -37,7 +38,9 @@ class RoomDto with _$RoomDto {
       description: roomDescription ?? empty.description,
       imageUrl: roomImageUrl ?? empty.imageUrl,
       name: roomName ?? empty.name,
-      messages: empty.messages,
+      lastMessage: lastMessage ?? empty.lastMessage,
+      sentAt: sentAt?.toDate(),
+      createdAt: createdAt?.toDate(),
     );
   }
 }

@@ -27,8 +27,9 @@ class Room with _$Room {
     required String name,
     required String description,
     required String imageUrl,
-    required KtList<Message> messages,
+    required String lastMessage,
     DateTime? createdAt,
+    DateTime? sentAt,
   }) = _Room;
 
   factory Room.empty() => const Room(
@@ -39,6 +40,6 @@ class Room with _$Room {
         description: '',
         imageUrl: '',
         name: '',
-        messages: KtList.empty(),
+        lastMessage: '',
       );
 }

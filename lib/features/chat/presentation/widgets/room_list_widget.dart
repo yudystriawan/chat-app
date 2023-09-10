@@ -6,6 +6,7 @@ import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
+import 'package:core/utils/extensions/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,7 +84,9 @@ class RoomListWidget extends StatelessWidget {
 
                 return RoomListTile(
                   title: Text(roomName),
+                  subtitle: Text(room.lastMessage),
                   imageUrl: roomImage,
+                  date: room.sentAt?.toStringDate(),
                   onTap: () => context.pushRoute(RoomRoute(roomId: room.id)),
                 );
               },
