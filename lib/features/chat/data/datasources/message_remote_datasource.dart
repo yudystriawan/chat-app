@@ -34,6 +34,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
       final messageId = messageCollection.doc().id;
 
       final request = message.copyWith(
+        id: messageId,
         sentBy: userId,
         sentAt: FieldValue.serverTimestamp(),
       );

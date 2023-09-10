@@ -1,4 +1,4 @@
-import 'package:chat_app/features/chat/data/datasources/message_remote_dataasource.dart';
+import 'package:chat_app/features/chat/data/datasources/message_remote_datasource.dart';
 import 'package:chat_app/features/chat/data/datasources/room_remote_datasource.dart';
 import 'package:chat_app/features/chat/data/models/message_dtos.dart';
 import 'package:chat_app/features/chat/data/models/room_dtos.dart';
