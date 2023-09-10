@@ -1,9 +1,13 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/room_list_tile.dart';
 import 'package:chat_app/routes/routes.gr.dart';
+import 'package:core/core.dart';
+import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kt_dart/collection.dart';
 
@@ -19,6 +23,8 @@ class RoomListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final userId = context.read<AuthBloc>().state.user.id;
+
     if (rooms.isEmpty()) {
       return Center(
         child: SingleChildScrollView(
@@ -47,10 +53,41 @@ class RoomListWidget extends StatelessWidget {
 
         return Padding(
           padding: EdgeInsets.only(top: 16.w, bottom: 12.w),
-          child: RoomListTile(
-            title: Text(room.name),
-            imageUrl: room.imageUrl,
-            onTap: () => context.pushRoute(RoomRoute(roomId: room.id)),
+          child: BlocProvider(
+            create: (context) => getIt<MemberWatcherBloc>()
+              ..add(MemberWatcherEvent.watchAllStarted(room.members)),
+            child: BlocBuilder<MemberWatcherBloc, MemberWatcherState>(
+              builder: (context, state) {
+                if (state.isLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                if (state.members.isEmpty()) {
+                  return const Center(
+                    child: Text('No members'),
+                  );
+                }
+
+                String roomName = room.name;
+                String roomImage = room.imageUrl;
+
+                if (room.type.isPrivate) {
+                  final recipient = state.members
+                      .filter((member) => member.id != userId)
+                      .first();
+                  roomName = recipient.name;
+                  roomImage = recipient.imageUrl;
+                }
+
+                return RoomListTile(
+                  title: Text(roomName),
+                  imageUrl: roomImage,
+                  onTap: () => context.pushRoute(RoomRoute(roomId: room.id)),
+                );
+              },
+            ),
           ),
         );
       },

@@ -5,6 +5,7 @@ import 'package:chat_app/features/chat/presentation/blocs/room_watcher/room_watc
 import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/core.dart';
+import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/input.dart';
@@ -28,6 +29,8 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
 
   @override
   Widget build(BuildContext context) {
+    final userId = context.read<AuthBloc>().state.user.id;
+
     return MultiBlocListener(
       listeners: [
         BlocListener<MessageFormBloc, MessageFormState>(
@@ -61,13 +64,25 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
       ],
       child: Scaffold(
         appBar: MyAppBar(
-          title: BlocBuilder<RoomWatcherBloc, RoomWatcherState>(
+          title: BlocBuilder<MemberWatcherBloc, MemberWatcherState>(
             builder: (context, state) {
-              final room = state.room;
-              return Row(
-                children: [
-                  Text(room.name),
-                ],
+              final members = state.members;
+
+              if (members.isEmpty()) return const Text('Loading...');
+
+              return BlocBuilder<RoomWatcherBloc, RoomWatcherState>(
+                builder: (context, state) {
+                  final room = state.room;
+
+                  String roomName = room.name;
+
+                  if (room.type.isPrivate) {
+                    final recepient =
+                        members.filter((member) => member.id != userId).first();
+                    roomName = recepient.name;
+                  }
+                  return Text(roomName);
+                },
               );
             },
           ),
