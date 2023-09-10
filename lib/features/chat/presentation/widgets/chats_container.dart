@@ -1,6 +1,8 @@
 import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
+import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
+import 'package:core/utils/extensions/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -47,23 +49,72 @@ class ChatsContainer extends StatelessWidget {
               );
             }
 
-            return ListView.separated(
+            final listGroupedByDate = messages.groupBy((message) {
+              final sentAt = message.sentAt ?? DateTime.now();
+              final dateTime = DateTime(sentAt.year, sentAt.month, sentAt.day);
+              return dateTime;
+            });
+
+            return ListView.builder(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
+              itemCount: listGroupedByDate.size,
+              shrinkWrap: true,
               reverse: true,
-              itemCount: messages.size,
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(height: 12.w);
-              },
               itemBuilder: (BuildContext context, int index) {
-                final message = messages[index];
+                final date = listGroupedByDate.keys.elementAt(index);
+                final items = listGroupedByDate[date];
 
-                var isSender = userId == message.sentBy;
+                if (items == null || items.isEmpty()) {
+                  return Center(
+                    child: Text(
+                      'No Message',
+                      style: AppTypography.bodyText1,
+                    ),
+                  );
+                }
 
-                return ChatBubble(
-                  body: Text(message.data),
-                  sentAt: message.sentAt,
-                  isSender: isSender,
-                  recipientName: isSender ? null : recipient.name,
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        const Expanded(child: Divider()),
+                        SizedBox(width: 16.w),
+                        Text(
+                          date.toStringDate(),
+                          style: AppTypography.metadata1.copyWith(
+                            color: NeutralColor.disabled,
+                          ),
+                        ),
+                        SizedBox(width: 16.w),
+                        const Expanded(child: Divider()),
+                      ],
+                    ),
+                    ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      reverse: true,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: items.size,
+                      separatorBuilder: (BuildContext context, int index) {
+                        return SizedBox(height: 12.w);
+                      },
+                      itemBuilder: (BuildContext context, int index) {
+                        final message = items[index];
+
+                        var isSender = userId == message.sentBy;
+
+                        // return const SizedBox();
+
+                        return ChatBubble(
+                          body: Text(message.data),
+                          sentAt: message.sentAt,
+                          isSender: isSender,
+                          recipientName: isSender ? null : recipient.name,
+                        );
+                      },
+                    ),
+                  ],
                 );
               },
             );
