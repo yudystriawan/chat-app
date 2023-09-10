@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:chat_app/features/chat/domain/usecases/get_messages.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
@@ -24,8 +25,20 @@ class MessagesWatcherBloc
 
   MessagesWatcherBloc(this._getMessages)
       : super(MessagesWatcherState.initial()) {
-    on<_WatchAllStarted>(_onWatchAllStarted);
-    on<_MessagesReceived>(_onMessageReceived);
+    on<_WatchAllStarted>(
+      _onWatchAllStarted,
+      transformer: concurrent(),
+    );
+    on<_MessagesReceived>(
+      _onMessageReceived,
+      transformer: concurrent(),
+    );
+  }
+
+  @override
+  Future<void> close() async {
+    await _messageStreamSubscription?.cancel();
+    return super.close();
   }
 
   void _onWatchAllStarted(
