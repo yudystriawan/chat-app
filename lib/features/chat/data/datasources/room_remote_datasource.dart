@@ -117,9 +117,11 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
     return _service.instance.roomCollection
         .doc(roomId)
         .snapshots()
-        .map((snapshot) =>
-            RoomDto.fromJson(snapshot.data() as Map<String, dynamic>))
-        .onErrorReturnWith((error, stackTrace) {
+        .map((snapshot) {
+      if (snapshot.data() == null) return null;
+
+      return RoomDto.fromJson(snapshot.data() as Map<String, dynamic>);
+    }).onErrorReturnWith((error, stackTrace) {
       log('an error occured', error: error, stackTrace: stackTrace);
       throw const Failure.serverError();
     });
