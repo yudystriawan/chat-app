@@ -47,16 +47,20 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
 
       // add createdAt field with server timestamp
       // add createdBy with current userId
-      final request = room.copyWith(
-        id: roomId,
-        createdBy: user.uid,
-        members: members,
-        createdAt: FieldValue.serverTimestamp(),
-      );
+      final request = room
+          .copyWith(
+            id: roomId,
+            createdBy: user.uid,
+            members: members,
+          )
+          .toJson();
+
+      // add server timestamp
+      request.addAll({'createdAt': FieldValue.serverTimestamp()});
 
       await _service.instance.roomCollection
           .doc(roomId)
-          .set(request.toJson())
+          .set(request)
           .then((_) => log('room created with ID $roomId'));
 
       return roomId;

@@ -35,14 +35,18 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
       // modify message payload
       final messageId = messageCollection.doc().id;
 
-      final request = message.copyWith(
-        id: messageId,
-        sentBy: userId,
-        sentAt: FieldValue.serverTimestamp(),
-      );
+      final request = message
+          .copyWith(
+            id: messageId,
+            sentBy: userId,
+          )
+          .toJson();
+
+      // add server timestamp
+      request.addAll({'sentAt': FieldValue.serverTimestamp()});
 
       // create message
-      await messageCollection.doc(messageId).set(request.toJson()).then(
+      await messageCollection.doc(messageId).set(request).then(
           (_) => log('message created with ID $messageId in roomId: $roomId'));
     } catch (e, s) {
       log('createMessage',
