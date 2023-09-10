@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/features/chat/presentation/blocs/messages_watcher/messages_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/blocs/room_watcher/room_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/chat_bubble.dart';
 import 'package:chat_app/shared/app_bar.dart';
@@ -79,17 +80,26 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
             Expanded(
               child: Container(
                 color: NeutralColor.secondaryBG,
-                child: BlocBuilder<RoomWatcherBloc, RoomWatcherState>(
-                  buildWhen: (p, c) => p.room.messages != c.room.messages,
+                child: BlocBuilder<MessagesWatcherBloc, MessagesWatcherState>(
+                  buildWhen: (p, c) => p.messages != c.messages,
                   builder: (context, state) {
-                    final messages = state.room.messages;
+                    final messages = state.messages;
+
+                    if (state.isLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
 
                     if (messages.isEmpty()) return const SizedBox();
 
                     return ChatsContainer(
                       chats: messages.iter
                           .map(
-                            (message) => ChatBubble(body: Text(message.data)),
+                            (message) => ChatBubble(
+                              body: Text(message.data),
+                              sentAt: message.sentAt,
+                            ),
                           )
                           .toList(),
                     );
@@ -150,6 +160,10 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
         ),
         BlocProvider(
           create: (context) => getIt<MessageFormBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<MessagesWatcherBloc>()
+            ..add(MessagesWatcherEvent.watchAllStarted(roomId)),
         ),
       ],
       child: this,
