@@ -6,6 +6,7 @@ import 'package:chat_app/routes/routes.gr.dart';
 import 'package:chat_app/shared/bottom_navigation_bar.dart';
 import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
+import 'package:core/observers/bloc_observer.dart';
 import 'package:core/styles/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,9 @@ Future<void> main() async {
 
   // setup firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // setup bloc observer
+  Bloc.observer = MyBlocObserver();
 
   runApp(const MyApp());
 }
