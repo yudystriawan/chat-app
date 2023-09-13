@@ -27,6 +27,12 @@ class RoomWatcherBloc extends Bloc<RoomWatcherEvent, RoomWatcherState> {
     on<_RoomReceived>(_onRoomReceived, transformer: concurrent());
   }
 
+  @override
+  Future<void> close() async {
+    await _roomStreamSubscription?.cancel();
+    return super.close();
+  }
+
   void _onWatchStarted(
     _WatchStarted event,
     Emitter<RoomWatcherState> emit,
