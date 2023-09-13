@@ -51,7 +51,7 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
           },
         ),
         BlocListener<RoomWatcherBloc, RoomWatcherState>(
-          listenWhen: (p, c) => p.room != c.room,
+          listenWhen: (p, c) => p.room.id != c.room.id,
           listener: (context, state) {
             final room = state.room;
             if (room.members.isNotEmpty()) {
