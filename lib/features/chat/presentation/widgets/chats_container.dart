@@ -21,6 +21,7 @@ class ChatsContainer extends StatelessWidget {
     final userId = context.read<AuthBloc>().state.user.id;
 
     return BlocBuilder<MemberWatcherBloc, MemberWatcherState>(
+      buildWhen: (p, c) => p.members != c.members,
       builder: (context, state) {
         if (state.isLoading || state.members.isEmpty()) {
           return const Center(child: CircularProgressIndicator());
