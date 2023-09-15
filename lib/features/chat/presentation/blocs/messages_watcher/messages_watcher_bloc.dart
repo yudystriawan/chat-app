@@ -45,15 +45,28 @@ class MessagesWatcherBloc
     _WatchAllStarted event,
     Emitter<MessagesWatcherState> emit,
   ) async {
-    emit(state.copyWith(isLoading: true));
+    var newState = state.copyWith(isLoading: true);
+
+    if (_messageStreamSubscription != null) {
+      newState = newState.copyWith(
+        currentPage: newState.currentPage + 1,
+      );
+    }
+
+    emit(newState);
 
     await _messageStreamSubscription?.cancel();
 
-    _messageStreamSubscription = _getMessages(GetMessagesParams(
-      roomId: event.roomId,
-      limit: state.limit,
-    )).listen((failureOrMessages) =>
-        add(MessagesWatcherEvent.messagesReceived(failureOrMessages)));
+    _messageStreamSubscription = _getMessages(
+      GetMessagesParams(
+        roomId: event.roomId,
+        limit: state.limit,
+      ),
+    ).listen(
+      (failureOrMessages) => add(
+        MessagesWatcherEvent.messagesReceived(failureOrMessages),
+      ),
+    );
   }
 
   void _onMessageReceived(
