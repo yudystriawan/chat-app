@@ -26,7 +26,7 @@ class MessageDto with _$MessageDto {
       data: data ?? empty.data,
       type: MessageType.fromValue(type),
       sentBy: sentBy ?? empty.sentBy,
-      sentAt: sentAt?.toDate(),
+      sentAt: sentAt?.toDate() ?? empty.sentAt,
     );
   }
 }
