@@ -111,7 +111,11 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
             Expanded(
               child: Container(
                 color: NeutralColor.secondaryBG,
-                child: const ChatsContainer(),
+                child: ChatsContainer(
+                  onLoadMore: () => context
+                      .read<MessagesWatcherBloc>()
+                      .add(MessagesWatcherEvent.watchAllStarted(roomId)),
+                ),
               ),
             ),
             Container(
