@@ -49,10 +49,11 @@ class MessagesWatcherBloc
 
     await _messageStreamSubscription?.cancel();
 
-    _messageStreamSubscription =
-        _getMessages(GetMessagesParams(roomId: event.roomId)).listen(
-            (failureOrMessages) =>
-                add(MessagesWatcherEvent.messagesReceived(failureOrMessages)));
+    _messageStreamSubscription = _getMessages(GetMessagesParams(
+      roomId: event.roomId,
+      limit: state.limit,
+    )).listen((failureOrMessages) =>
+        add(MessagesWatcherEvent.messagesReceived(failureOrMessages)));
   }
 
   void _onMessageReceived(

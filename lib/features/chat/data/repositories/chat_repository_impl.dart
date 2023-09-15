@@ -141,8 +141,13 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Stream<Either<Failure, KtList<Message>>> getMessages(String roomId) {
-    return _messageRemoteDataSource.fetchMessages(roomId).map((messages) {
+  Stream<Either<Failure, KtList<Message>>> getMessages(
+    String roomId, {
+    int? limit,
+  }) {
+    return _messageRemoteDataSource
+        .fetchMessages(roomId, limit: limit)
+        .map((messages) {
       if (messages == null) {
         return right<Failure, KtList<Message>>(const KtList.empty());
       }

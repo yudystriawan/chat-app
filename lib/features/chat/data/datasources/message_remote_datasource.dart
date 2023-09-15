@@ -11,7 +11,10 @@ abstract class MessageRemoteDataSource {
     required String roomId,
     required MessageDto message,
   });
-  Stream<List<MessageDto>?> fetchMessages(String roomId);
+  Stream<List<MessageDto>?> fetchMessages(
+    String roomId, {
+    int? limit,
+  });
 }
 
 @Injectable(as: MessageRemoteDataSource)
@@ -46,8 +49,9 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
       request.addAll({'sentAt': FieldValue.serverTimestamp()});
 
       // create message
-      await messageCollection.doc(messageId).set(request).then(
-          (_) => log('message created with ID $messageId in roomId: $roomId'));
+      await messageCollection.doc(messageId).set(request);
+      // .then(
+      //     (_) => log('message created with ID $messageId in roomId: $roomId'));
     } catch (e, s) {
       log('createMessage',
           name: runtimeType.toString(), error: e, stackTrace: s);
@@ -56,11 +60,20 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
   }
 
   @override
-  Stream<List<MessageDto>?> fetchMessages(String roomId) {
-    return _service.instance.roomCollection
+  Stream<List<MessageDto>?> fetchMessages(
+    String roomId, {
+    int? limit,
+  }) {
+    var query = _service.instance.roomCollection
         .doc(roomId)
         .collection('messages')
-        .orderBy('sentAt', descending: true)
+        .orderBy('sentAt', descending: true);
+
+    if (limit != null && limit > 0) {
+      query = query.limit(limit);
+    }
+
+    return query
         .snapshots()
         .map((snapshot) => snapshot.docs
             .map((doc) => MessageDto.fromJson(doc.data()))

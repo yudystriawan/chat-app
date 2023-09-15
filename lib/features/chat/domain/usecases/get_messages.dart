@@ -16,15 +16,20 @@ class GetMessages implements StreamUsecase<KtList<Message>, GetMessagesParams> {
 
   @override
   Stream<Either<Failure, KtList<Message>>> call(params) {
-    return _repository.getMessages(params.roomId);
+    return _repository.getMessages(
+      params.roomId,
+      limit: params.limit,
+    );
   }
 }
 
 class GetMessagesParams extends Equatable {
   final String roomId;
+  final int limit;
 
   const GetMessagesParams({
     required this.roomId,
+    required this.limit,
   });
 
   @override
