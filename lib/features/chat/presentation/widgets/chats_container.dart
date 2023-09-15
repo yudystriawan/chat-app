@@ -11,10 +11,32 @@ import 'package:kt_dart/collection.dart';
 import '../blocs/messages_watcher/messages_watcher_bloc.dart';
 import 'chat_bubble.dart';
 
-class ChatsContainer extends StatelessWidget {
+class ChatsContainer extends StatefulWidget {
+  final VoidCallback? onLoadMore;
+
   const ChatsContainer({
     Key? key,
+    this.onLoadMore,
   }) : super(key: key);
+
+  @override
+  State<ChatsContainer> createState() => _ChatsContainerState();
+}
+
+class _ChatsContainerState extends State<ChatsContainer> {
+  final _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        // User has reached the end of the list, fetch the next page.
+        widget.onLoadMore?.call();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +79,8 @@ class ChatsContainer extends StatelessWidget {
             });
 
             return ListView.builder(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               itemCount: listGroupedByDate.size,
               shrinkWrap: true,
