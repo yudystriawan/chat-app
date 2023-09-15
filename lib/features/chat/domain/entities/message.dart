@@ -26,10 +26,11 @@ class Message with _$Message {
     DateTime? sentAt,
   }) = _Message;
 
-  factory Message.empty() => const Message(
+  factory Message.empty() => Message(
         id: '',
         data: '',
         type: MessageType.text,
         sentBy: '',
+        sentAt: DateTime.now(),
       );
 }
