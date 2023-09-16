@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/blocs/messages_watcher/messages_watcher_bloc.dart';
+import 'package:chat_app/features/chat/presentation/blocs/room_actor/room_actor_bloc.dart';
 import 'package:chat_app/features/chat/presentation/blocs/room_watcher/room_watcher_bloc.dart';
 import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
@@ -19,13 +20,57 @@ import '../blocs/message_form/message_form_bloc.dart';
 import '../widgets/chats_container.dart';
 
 @RoutePage()
-class RoomPage extends StatelessWidget implements AutoRouteWrapper {
+class RoomPage extends StatefulWidget implements AutoRouteWrapper {
   const RoomPage({
     Key? key,
     required this.roomId,
   }) : super(key: key);
 
   final String roomId;
+
+  @override
+  State<RoomPage> createState() => _RoomPageState();
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<RoomWatcherBloc>()
+            ..add(RoomWatcherEvent.watchStarted(roomId)),
+        ),
+        BlocProvider(
+          create: (context) => getIt<MessageFormBloc>(),
+        ),
+        BlocProvider(
+          create: (context) => getIt<MessagesWatcherBloc>()
+            ..add(MessagesWatcherEvent.watchAllStarted(roomId)),
+        ),
+        BlocProvider(
+          create: (context) => getIt<MemberWatcherBloc>(),
+        ),
+      ],
+      child: this,
+    );
+  }
+}
+
+class _RoomPageState extends State<RoomPage> {
+  late RoomActorBloc _roomActorBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _roomActorBloc = context.read<RoomActorBloc>();
+
+    _roomActorBloc.add(RoomActorEvent.roomEntered(widget.roomId));
+  }
+
+  @override
+  void dispose() {
+    _roomActorBloc.add(RoomActorEvent.roomExited(widget.roomId));
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +159,7 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
                 child: ChatsContainer(
                   onLoadMore: () => context
                       .read<MessagesWatcherBloc>()
-                      .add(MessagesWatcherEvent.watchAllStarted(roomId)),
+                      .add(MessagesWatcherEvent.watchAllStarted(widget.roomId)),
                 ),
               ),
             ),
@@ -144,7 +189,7 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
                     GhostButton(
                       onPressed: () => context
                           .read<MessageFormBloc>()
-                          .add(MessageFormEvent.submitted(roomId)),
+                          .add(MessageFormEvent.submitted(widget.roomId)),
                       child: Icon(
                         Icons.send,
                         size: 24.w,
@@ -158,29 +203,6 @@ class RoomPage extends StatelessWidget implements AutoRouteWrapper {
           ],
         ),
       ),
-    );
-  }
-
-  @override
-  Widget wrappedRoute(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => getIt<RoomWatcherBloc>()
-            ..add(RoomWatcherEvent.watchStarted(roomId)),
-        ),
-        BlocProvider(
-          create: (context) => getIt<MessageFormBloc>(),
-        ),
-        BlocProvider(
-          create: (context) => getIt<MessagesWatcherBloc>()
-            ..add(MessagesWatcherEvent.watchAllStarted(roomId)),
-        ),
-        BlocProvider(
-          create: (context) => getIt<MemberWatcherBloc>(),
-        ),
-      ],
-      child: this,
     );
   }
 }

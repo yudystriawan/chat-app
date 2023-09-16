@@ -162,4 +162,28 @@ class ChatRepositoryImpl implements ChatRepository {
       return left(const Failure.unexpectedError());
     });
   }
+
+  @override
+  Future<Either<Failure, Unit>> enterRoom(String roomId) async {
+    try {
+      await _roomRemoteDataSource.enterRoom(roomId);
+      return right(unit);
+    } on Failure catch (e) {
+      return left(e);
+    } catch (e) {
+      return left(const Failure.unexpectedError());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> exitRoom(String roomId) async {
+    try {
+      await _roomRemoteDataSource.exitRoom(roomId);
+      return right(unit);
+    } on Failure catch (e) {
+      return left(e);
+    } catch (e) {
+      return left(const Failure.unexpectedError());
+    }
+  }
 }

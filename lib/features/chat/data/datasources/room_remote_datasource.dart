@@ -10,6 +10,8 @@ import 'package:rxdart/rxdart.dart';
 abstract class RoomRemoteDataSource {
   Future<String> createRoom(RoomDto room);
   Future<void> deleteRoom(String roomId);
+  Future<void> enterRoom(String roomId);
+  Future<void> exitRoom(String roomId);
   Stream<List<RoomDto>?> fetchRooms();
   Stream<RoomDto?> fetchRoom(String roomId);
   Stream<List<MemberDto>?> fetchMembers(List<String> ids);
@@ -127,5 +129,29 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
       log('fetchRoom', error: error, stackTrace: stackTrace);
       throw const Failure.serverError();
     });
+  }
+
+  @override
+  Future<void> enterRoom(String roomId) {
+    try {
+      final userId = _service.instance.currentUser?.uid;
+      return _service.instance.roomCollection.doc(roomId).update({
+        'onlineUsers': FieldValue.arrayUnion([userId])
+      });
+    } catch (e) {
+      throw const Failure.serverError();
+    }
+  }
+
+  @override
+  Future<void> exitRoom(String roomId) {
+    try {
+      final userId = _service.instance.currentUser?.uid;
+      return _service.instance.roomCollection.doc(roomId).update({
+        'onlineUsers': FieldValue.arrayRemove([userId])
+      });
+    } catch (e) {
+      throw const Failure.serverError();
+    }
   }
 }

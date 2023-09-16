@@ -7,4 +7,6 @@ class RoomActorEvent with _$RoomActorEvent {
     required KtList<String> userIds,
     required RoomType type,
   }) = _RoomAdded;
+  const factory RoomActorEvent.roomEntered(String roomId) = _RoomEntered;
+  const factory RoomActorEvent.roomExited(String roomId) = _RoomExited;
 }

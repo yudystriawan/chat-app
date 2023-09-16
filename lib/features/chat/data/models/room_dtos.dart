@@ -44,3 +44,4 @@ class RoomDto with _$RoomDto {
     );
   }
 }
+

@@ -22,4 +22,12 @@ abstract class ChatRepository {
     String roomId, {
     int? limit,
   });
+
+  /// this function is to notify the room
+  /// when user is in this room, all message that does not read will be read.
+  Future<Either<Failure, Unit>> enterRoom(String roomId);
+
+  /// this function is to notify the room that user exit
+  /// so messages in this room will not change to read
+  Future<Either<Failure, Unit>> exitRoom(String roomId);
 }

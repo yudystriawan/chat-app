@@ -56,6 +56,9 @@ class _MyAppState extends State<MyApp> {
           create: (context) => getIt<AccountWatcherBloc>()
             ..add(const AccountWatcherEvent.started()),
         ),
+        BlocProvider(
+          create: (context) => getIt<RoomActorBloc>(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
@@ -89,11 +92,8 @@ class HomePage extends StatelessWidget implements AutoRouteWrapper {
   Widget build(BuildContext context) {
     return BlocListener<RoomActorBloc, RoomActorState>(
       listener: (context, state) {
-        state.map(
-          initial: (_) {},
-          actionInProgress: (_) {},
-          actionFailure: (_) {},
-          removeRoomSuccess: (_) {},
+        state.maybeMap(
+          orElse: () {},
           addRoomSuccess: (value) =>
               context.pushRoute(RoomRoute(roomId: value.roomId)),
         );
@@ -144,9 +144,6 @@ class HomePage extends StatelessWidget implements AutoRouteWrapper {
         BlocProvider(
           create: (context) => getIt<RoomsWatcherBloc>()
             ..add(const RoomsWatcherEvent.watchAllStarted()),
-        ),
-        BlocProvider(
-          create: (context) => getIt<RoomActorBloc>(),
         ),
       ],
       child: this,
