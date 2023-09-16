@@ -1,6 +1,7 @@
 import 'package:chat_app/features/chat/domain/entities/entity.dart';
 import 'package:core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kt_dart/collection.dart';
 
 part 'message_dtos.freezed.dart';
 part 'message_dtos.g.dart';
@@ -14,6 +15,7 @@ class MessageDto with _$MessageDto {
     String? type,
     String? sentBy,
     @ServerTimestampConverter() Timestamp? sentAt,
+    @JsonKey(name: 'readInfo') List<ReadInfoDto>? readInfoList,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
@@ -27,6 +29,28 @@ class MessageDto with _$MessageDto {
       type: MessageType.fromValue(type),
       sentBy: sentBy ?? empty.sentBy,
       sentAt: sentAt?.toDate() ?? empty.sentAt,
+      readInfoList: readInfoList?.map((e) => e.toDomain()).toImmutableList() ??
+          empty.readInfoList,
+    );
+  }
+}
+
+@freezed
+class ReadInfoDto with _$ReadInfoDto {
+  const ReadInfoDto._();
+  const factory ReadInfoDto({
+    String? uid,
+    @ServerTimestampConverter() Timestamp? readAt,
+  }) = _ReadInfoDto;
+
+  factory ReadInfoDto.fromJson(Map<String, dynamic> json) =>
+      _$ReadInfoDtoFromJson(json);
+
+  ReadInfo toDomain() {
+    final empty = ReadInfo.empty();
+    return ReadInfo(
+      uid: uid ?? empty.uid,
+      readAt: readAt?.toDate() ?? empty.readAt,
     );
   }
 }

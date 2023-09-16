@@ -136,7 +136,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
     try {
       final userId = _service.instance.currentUser?.uid;
       return _service.instance.roomCollection.doc(roomId).update({
-        'onlineUsers': FieldValue.arrayUnion([userId])
+        'onlineMembers': FieldValue.arrayUnion([userId])
       });
     } catch (e) {
       throw const Failure.serverError();
@@ -148,7 +148,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
     try {
       final userId = _service.instance.currentUser?.uid;
       return _service.instance.roomCollection.doc(roomId).update({
-        'onlineUsers': FieldValue.arrayRemove([userId])
+        'onlineMembers': FieldValue.arrayRemove([userId])
       });
     } catch (e) {
       throw const Failure.serverError();

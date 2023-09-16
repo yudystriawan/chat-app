@@ -49,8 +49,9 @@ class _ChatsContainerState extends State<ChatsContainer> {
           return const Center(child: CircularProgressIndicator());
         }
 
-        final recipient =
-            state.members.filter((member) => member.id != userId).first();
+        // get member room exclude myself
+        final recipients =
+            state.members.filter((member) => member.id != userId);
 
         return BlocBuilder<MessagesWatcherBloc, MessagesWatcherState>(
           buildWhen: (p, c) => p.messages != c.messages,
@@ -127,15 +128,27 @@ class _ChatsContainerState extends State<ChatsContainer> {
                       itemBuilder: (BuildContext context, int index) {
                         final message = items[index];
 
-                        var isSender = userId == message.sentBy;
+                        final isSender = userId == message.sentBy;
 
-                        // return const SizedBox();
+                        // check status read
+                        // when message have read info that not from sender
+                        final isRead = message.readInfoList
+                            .filter(
+                                (readInfo) => readInfo.uid != message.sentBy)
+                            .isNotEmpty();
+
+                        // get the sender name
+                        final recipientName = recipients
+                            .firstOrNull(
+                                (member) => member.id == message.sentBy)
+                            ?.name;
 
                         return ChatBubble(
                           body: Text(message.data),
                           sentAt: message.sentAt,
                           isSender: isSender,
-                          recipientName: isSender ? null : recipient.name,
+                          recipientName: recipientName,
+                          isRead: isSender ? isRead : false,
                         );
                       },
                     ),

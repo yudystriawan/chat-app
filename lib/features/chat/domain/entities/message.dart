@@ -23,6 +23,7 @@ class Message with _$Message {
     required String data,
     required MessageType type,
     required String sentBy,
+    required KtList<ReadInfo> readInfoList,
     DateTime? sentAt,
   }) = _Message;
 
@@ -31,6 +32,18 @@ class Message with _$Message {
         data: '',
         type: MessageType.text,
         sentBy: '',
+        readInfoList: KtList.empty(),
         sentAt: DateTime.now(),
       );
+}
+
+@freezed
+class ReadInfo with _$ReadInfo {
+  const ReadInfo._();
+  const factory ReadInfo({
+    required String uid,
+    required DateTime readAt,
+  }) = _ReadInfo;
+
+  factory ReadInfo.empty() => ReadInfo(uid: '', readAt: DateTime.now());
 }
