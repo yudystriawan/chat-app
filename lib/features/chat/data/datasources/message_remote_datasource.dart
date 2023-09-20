@@ -122,7 +122,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
     return _service.instance.roomCollection
         .doc(roomId)
         .collection('messages')
-        .orderBy('senAt', descending: true)
+        .orderBy('sentAt', descending: true)
         .limit(1)
         .snapshots()
         .map((snap) =>
