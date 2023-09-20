@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
+import 'package:chat_app/features/chat/presentation/blocs/messages_watcher/messages_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/room_list_tile.dart';
 import 'package:chat_app/routes/routes.gr.dart';
 import 'package:core/core.dart';
@@ -82,12 +83,23 @@ class RoomListWidget extends StatelessWidget {
                   roomImage = recipient.imageUrl;
                 }
 
-                return RoomListTile(
-                  title: Text(roomName),
-                  subtitle: Text(room.lastMessage),
-                  imageUrl: roomImage,
-                  date: room.sentAt?.toStringDate(),
-                  onTap: () => context.pushRoute(RoomRoute(roomId: room.id)),
+                return BlocProvider(
+                  create: (context) => getIt<MessagesWatcherBloc>()
+                    ..add(MessagesWatcherEvent.watchUnreadStarted(room.id)),
+                  child: BlocBuilder<MessagesWatcherBloc, MessagesWatcherState>(
+                    buildWhen: (p, c) => p.messages != c.messages,
+                    builder: (context, state) {
+                      return RoomListTile(
+                        title: Text(roomName),
+                        subtitle: Text(room.lastMessage),
+                        imageUrl: roomImage,
+                        date: room.sentAt?.toStringDate(),
+                        chatCount: state.messages.size,
+                        onTap: () =>
+                            context.pushRoute(RoomRoute(roomId: room.id)),
+                      );
+                    },
+                  ),
                 );
               },
             ),

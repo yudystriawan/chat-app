@@ -86,7 +86,7 @@ class RoomListTile extends StatelessWidget {
                             child: subtitle,
                           ),
                         ),
-                        if (chatCount != null) ...[
+                        if (chatCount != null && chatCount! > 0) ...[
                           SizedBox(width: 2.w),
                           AppBadge(count: chatCount),
                         ]

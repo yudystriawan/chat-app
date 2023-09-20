@@ -186,4 +186,37 @@ class ChatRepositoryImpl implements ChatRepository {
       return left(const Failure.unexpectedError());
     }
   }
+
+  @override
+  Stream<Either<Failure, KtList<Message>>> getUnreadMessages(String roomId) {
+    return _messageRemoteDataSource.fetchUnreadMessages(roomId).map((messages) {
+      if (messages == null) {
+        return right<Failure, KtList<Message>>(const KtList.empty());
+      }
+
+      final data = messages.map((e) => e.toDomain()).toImmutableList();
+      return right<Failure, KtList<Message>>(data);
+    }).onErrorReturnWith((error, stackTrace) {
+      if (error is Failure) return left(error);
+
+      log('getUnreadMessageCount', error: error, stackTrace: stackTrace);
+      return left(const Failure.unexpectedError());
+    });
+  }
+
+  @override
+  Stream<Either<Failure, Message>> watchLastMessage(String roomId) {
+    return _messageRemoteDataSource.watchLastMessage(roomId).map((message) {
+      if (message == null) {
+        return right<Failure, Message>(Message.empty());
+      }
+
+      return right<Failure, Message>(message.toDomain());
+    }).onErrorReturnWith((error, stackTrace) {
+      if (error is Failure) return left(error);
+
+      log('watchLastMessage', error: error, stackTrace: stackTrace);
+      return left(const Failure.unexpectedError());
+    });
+  }
 }

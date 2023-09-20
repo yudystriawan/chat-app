@@ -30,4 +30,8 @@ abstract class ChatRepository {
   /// this function is to notify the room that user exit
   /// so messages in this room will not change to read
   Future<Either<Failure, Unit>> exitRoom(String roomId);
+
+  Stream<Either<Failure, KtList<Message>>> getUnreadMessages(String roomId);
+
+  Stream<Either<Failure, Message>> watchLastMessage(String roomId);
 }

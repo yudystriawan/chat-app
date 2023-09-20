@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:chat_app/features/chat/domain/usecases/get_messages.dart';
+import 'package:chat_app/features/chat/domain/usecases/get_unread_messages.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -19,14 +20,21 @@ part 'messages_watcher_state.dart';
 class MessagesWatcherBloc
     extends Bloc<MessagesWatcherEvent, MessagesWatcherState> {
   final GetMessages _getMessages;
+  final GetUnreadMessages _getUnreadMessages;
 
   StreamSubscription<Either<Failure, KtList<Message>>>?
       _messageStreamSubscription;
 
-  MessagesWatcherBloc(this._getMessages)
-      : super(MessagesWatcherState.initial()) {
+  MessagesWatcherBloc(
+    this._getMessages,
+    this._getUnreadMessages,
+  ) : super(MessagesWatcherState.initial()) {
     on<_WatchAllStarted>(
       _onWatchAllStarted,
+      transformer: concurrent(),
+    );
+    on<_WatchUnreadStarted>(
+      _onWatchUnreadStarted,
       transformer: concurrent(),
     );
     on<_MessagesReceived>(
@@ -79,5 +87,24 @@ class MessagesWatcherBloc
       (f) => newState.copyWith(failureOption: optionOf(f)),
       (messages) => newState.copyWith(messages: messages),
     ));
+  }
+
+  void _onWatchUnreadStarted(
+    _WatchUnreadStarted event,
+    Emitter<MessagesWatcherState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+
+    await _messageStreamSubscription?.cancel();
+
+    _messageStreamSubscription = _getUnreadMessages(
+      GetUnreadMessagesParams(
+        roomId: event.roomId,
+      ),
+    ).listen(
+      (failureOrMessages) => add(
+        MessagesWatcherEvent.messagesReceived(failureOrMessages),
+      ),
+    );
   }
 }

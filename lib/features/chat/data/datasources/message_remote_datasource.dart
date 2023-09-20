@@ -15,6 +15,10 @@ abstract class MessageRemoteDataSource {
     String roomId, {
     int? limit,
   });
+
+  Stream<List<MessageDto>?> fetchUnreadMessages(String roomId);
+
+  Stream<MessageDto?> watchLastMessage(String roomId);
 }
 
 @Injectable(as: MessageRemoteDataSource)
@@ -80,6 +84,52 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
             .toList())
         .onErrorReturnWith((error, stackTrace) {
       log('fetchMessages',
+          name: runtimeType.toString(), error: error, stackTrace: stackTrace);
+      throw const Failure.serverError();
+    });
+  }
+
+  @override
+  Stream<List<MessageDto>?> fetchUnreadMessages(String roomId) {
+    final userId = _service.instance.currentUser?.uid;
+
+    return _service.instance.roomCollection
+        .doc(roomId)
+        .collection('messages')
+        .where(
+          'sentBy',
+          isNotEqualTo: userId,
+        )
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => MessageDto.fromJson(doc.data()))
+            .toList())
+        .map((messages) => messages
+            .where((message) =>
+                message.readInfoList
+                    ?.every((readInfo) => readInfo.uid != userId) ??
+                true)
+            .toList())
+        .onErrorReturnWith((error, stackTrace) {
+      log('fetchUnreadMessages',
+          name: runtimeType.toString(), error: error, stackTrace: stackTrace);
+      throw const Failure.serverError();
+    });
+  }
+
+  @override
+  Stream<MessageDto?> watchLastMessage(String roomId) {
+    return _service.instance.roomCollection
+        .doc(roomId)
+        .collection('messages')
+        .orderBy('senAt', descending: true)
+        .limit(1)
+        .snapshots()
+        .map((snap) =>
+            snap.docs.map((doc) => MessageDto.fromJson(doc.data())).toList())
+        .map((messages) => messages.first)
+        .onErrorReturnWith((error, stackTrace) {
+      log('watchLastMessage',
           name: runtimeType.toString(), error: error, stackTrace: stackTrace);
       throw const Failure.serverError();
     });
