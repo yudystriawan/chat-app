@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/features/chat/presentation/blocs/last_message_watcher/last_message_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/blocs/messages_watcher/messages_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/room_list_tile.dart';
@@ -53,11 +54,23 @@ class RoomListWidget extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final room = rooms[index];
 
-        return Padding(
-          padding: EdgeInsets.only(top: 16.w, bottom: 12.w),
-          child: BlocProvider(
-            create: (context) => getIt<MemberWatcherBloc>()
-              ..add(MemberWatcherEvent.watchAllStarted(room.members)),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => getIt<LastMessageWatcherBloc>()
+                ..add(LastMessageWatcherEvent.watchStarted(room.id)),
+            ),
+            BlocProvider(
+              create: (context) => getIt<MemberWatcherBloc>()
+                ..add(MemberWatcherEvent.watchAllStarted(room.members)),
+            ),
+            BlocProvider(
+              create: (context) => getIt<MessagesWatcherBloc>()
+                ..add(MessagesWatcherEvent.watchUnreadStarted(room.id)),
+            )
+          ],
+          child: Padding(
+            padding: EdgeInsets.only(top: 16.w, bottom: 12.w),
             child: BlocBuilder<MemberWatcherBloc, MemberWatcherState>(
               builder: (context, state) {
                 if (state.isLoading) {
@@ -83,23 +96,25 @@ class RoomListWidget extends StatelessWidget {
                   roomImage = recipient.imageUrl;
                 }
 
-                return BlocProvider(
-                  create: (context) => getIt<MessagesWatcherBloc>()
-                    ..add(MessagesWatcherEvent.watchUnreadStarted(room.id)),
-                  child: BlocBuilder<MessagesWatcherBloc, MessagesWatcherState>(
-                    buildWhen: (p, c) => p.messages != c.messages,
-                    builder: (context, state) {
-                      return RoomListTile(
-                        title: Text(roomName),
-                        subtitle: Text(room.lastMessage),
-                        imageUrl: roomImage,
-                        date: room.sentAt?.toStringDate(),
-                        chatCount: state.messages.size,
-                        onTap: () =>
-                            context.pushRoute(RoomRoute(roomId: room.id)),
-                      );
-                    },
-                  ),
+                return BlocBuilder<MessagesWatcherBloc, MessagesWatcherState>(
+                  buildWhen: (p, c) => p.messages != c.messages,
+                  builder: (context, state) {
+                    return RoomListTile(
+                      title: Text(roomName),
+                      subtitle: BlocBuilder<LastMessageWatcherBloc,
+                          LastMessageWatcherState>(
+                        buildWhen: (p, c) => p.message != c.message,
+                        builder: (context, state) {
+                          return Text(state.message.data);
+                        },
+                      ),
+                      imageUrl: roomImage,
+                      date: room.sentAt?.toStringDate(),
+                      chatCount: state.messages.size,
+                      onTap: () =>
+                          context.pushRoute(RoomRoute(roomId: room.id)),
+                    );
+                  },
                 );
               },
             ),
