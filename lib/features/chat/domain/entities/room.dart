@@ -27,9 +27,7 @@ class Room with _$Room {
     required String name,
     required String description,
     required String imageUrl,
-    required String lastMessage,
     DateTime? createdAt,
-    DateTime? sentAt,
   }) = _Room;
 
   factory Room.empty() => const Room(
@@ -40,6 +38,5 @@ class Room with _$Room {
         description: '',
         imageUrl: '',
         name: '',
-        lastMessage: '',
       );
 }

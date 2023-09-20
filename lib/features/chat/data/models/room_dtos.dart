@@ -18,10 +18,7 @@ class RoomDto with _$RoomDto {
     String? roomDescription,
     String? roomImageUrl,
     String? createdBy,
-    int? messageCount,
-    String? lastMessage,
     @ServerTimestampConverter() Timestamp? createdAt,
-    @ServerTimestampConverter() Timestamp? sentAt,
   }) = _RoomDto;
 
   factory RoomDto.fromJson(Map<String, dynamic> json) =>
@@ -38,10 +35,7 @@ class RoomDto with _$RoomDto {
       description: roomDescription ?? empty.description,
       imageUrl: roomImageUrl ?? empty.imageUrl,
       name: roomName ?? empty.name,
-      lastMessage: lastMessage ?? empty.lastMessage,
-      sentAt: sentAt?.toDate(),
       createdAt: createdAt?.toDate(),
     );
   }
 }
-
