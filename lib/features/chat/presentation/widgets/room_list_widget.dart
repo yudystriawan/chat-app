@@ -99,20 +99,23 @@ class RoomListWidget extends StatelessWidget {
                 return BlocBuilder<MessagesWatcherBloc, MessagesWatcherState>(
                   buildWhen: (p, c) => p.messages != c.messages,
                   builder: (context, state) {
-                    return RoomListTile(
-                      title: Text(roomName),
-                      subtitle: BlocBuilder<LastMessageWatcherBloc,
-                          LastMessageWatcherState>(
-                        buildWhen: (p, c) => p.message != c.message,
-                        builder: (context, state) {
-                          return Text(state.message.data);
-                        },
-                      ),
-                      imageUrl: roomImage,
-                      date: room.sentAt?.toStringDate(),
-                      chatCount: state.messages.size,
-                      onTap: () =>
-                          context.pushRoute(RoomRoute(roomId: room.id)),
+                    final unreadMessages = state.messages;
+
+                    return BlocBuilder<LastMessageWatcherBloc,
+                        LastMessageWatcherState>(
+                      buildWhen: (p, c) => p.message != c.message,
+                      builder: (context, state) {
+                        final lastMessage = state.message;
+                        return RoomListTile(
+                          title: Text(roomName),
+                          subtitle: Text(lastMessage.data),
+                          imageUrl: roomImage,
+                          date: lastMessage.sentAt?.toStringDate(),
+                          chatCount: unreadMessages.size,
+                          onTap: () =>
+                              context.pushRoute(RoomRoute(roomId: room.id)),
+                        );
+                      },
                     );
                   },
                 );
