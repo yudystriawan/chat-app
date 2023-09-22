@@ -21,6 +21,7 @@ void main() {
         data: 'Hello, World!',
         type: MessageType.text,
         sentBy: 'user1',
+        imageUrl: 'image.jpg',
         readInfoList: KtList.of(
           ReadInfo(uid: 'user2', readAt: DateTime.now()),
           ReadInfo(uid: 'user3', readAt: DateTime.now()),
@@ -44,6 +45,7 @@ void main() {
         data: 'Hello, World!',
         type: MessageType.text,
         sentBy: 'user1',
+        imageUrl: 'image.jpg',
         readInfoList: KtList.of(
           ReadInfo(uid: 'user2', readAt: DateTime.now()),
           ReadInfo(uid: 'user3', readAt: DateTime.now()),
@@ -68,6 +70,7 @@ void main() {
         data: 'Hello, World!',
         type: MessageType.text,
         sentBy: 'user1',
+        imageUrl: 'image.jpg',
         readInfoList: KtList.of(
           ReadInfo(uid: 'user2', readAt: DateTime.now()),
           ReadInfo(uid: 'user3', readAt: DateTime.now()),
@@ -91,6 +94,7 @@ void main() {
         data: 'Hello, World!',
         type: MessageType.text,
         sentBy: 'user1',
+        imageUrl: 'image.jpg',
         readInfoList: KtList.of(
           ReadInfo(uid: 'user2', readAt: dateTime),
           ReadInfo(uid: 'user3', readAt: dateTime),
@@ -103,6 +107,7 @@ void main() {
         data: 'Hello, World!',
         type: MessageType.text,
         sentBy: 'user1',
+        imageUrl: 'image.jpg',
         readInfoList: KtList.of(
           ReadInfo(uid: 'user2', readAt: dateTime),
           ReadInfo(uid: 'user3', readAt: dateTime),
@@ -122,6 +127,7 @@ void main() {
         data: 'Hello, World!',
         type: MessageType.text,
         sentBy: 'user1',
+        imageUrl: 'image.jpg',
         readInfoList: KtList.of(
           ReadInfo(uid: 'user2', readAt: dateTime),
           ReadInfo(uid: 'user3', readAt: dateTime),
@@ -134,6 +140,7 @@ void main() {
         data: 'Hello, World!',
         type: MessageType.text,
         sentBy: 'user1',
+        imageUrl: 'image.jpg',
         readInfoList: KtList.of(
           ReadInfo(uid: 'user2', readAt: dateTime),
           ReadInfo(uid: 'user3', readAt: dateTime),
