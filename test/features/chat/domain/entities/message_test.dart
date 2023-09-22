@@ -78,6 +78,7 @@ void main() {
       final updatedMessage =
           message1.copyWith(data: 'Updated', sentBy: 'user2');
 
+      expect(updatedMessage.sentBy, 'user2');
       expect(message1.data, 'Hello, World!');
       expect(message1.sentBy, 'user1');
     });
