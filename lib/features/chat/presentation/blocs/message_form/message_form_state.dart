@@ -4,6 +4,7 @@ part of 'message_form_bloc.dart';
 class MessageFormState with _$MessageFormState {
   const factory MessageFormState({
     required String data,
+    required MessageType messageType,
     required Option<Either<Failure, Unit>> failureOrSuccessOption,
     @Default(false) bool isSubmitting,
     File? imageFile,
@@ -12,5 +13,6 @@ class MessageFormState with _$MessageFormState {
   factory MessageFormState.initial() => MessageFormState(
         data: '',
         failureOrSuccessOption: none(),
+        messageType: MessageType.text,
       );
 }

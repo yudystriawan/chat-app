@@ -12,6 +12,9 @@ enum MessageType {
             .singleWhereOrNull((element) => element.value == value) ??
         MessageType.text;
   }
+
+  bool get isText => this == MessageType.text;
+  bool get isImage => this == MessageType.image;
 }
 
 @freezed

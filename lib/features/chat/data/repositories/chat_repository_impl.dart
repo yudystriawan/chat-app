@@ -23,7 +23,7 @@ class ChatRepositoryImpl implements ChatRepository {
     this._messageRemoteDataSource,
   );
   @override
-  Future<Either<Failure, Unit>> createMessage({
+  Future<Either<Failure, Message>> createMessage({
     required String roomId,
     required String message,
     required MessageType type,
@@ -36,12 +36,12 @@ class ChatRepositoryImpl implements ChatRepository {
         imageUrl: imageUrl,
       );
 
-      await _messageRemoteDataSource.createMessage(
+      final result = await _messageRemoteDataSource.createMessage(
         roomId: roomId,
         message: data,
       );
 
-      return right(unit);
+      return right(result?.toDomain() ?? Message.empty());
     } on Failure catch (e) {
       return left(e);
     } catch (e, s) {
@@ -220,5 +220,25 @@ class ChatRepositoryImpl implements ChatRepository {
       log('watchLastMessage', error: error, stackTrace: stackTrace);
       return left(const Failure.unexpectedError());
     });
+  }
+
+  @override
+  Future<Either<Failure, Unit>> editMessage({
+    required String roomId,
+    required Message message,
+  }) async {
+    try {
+      await _messageRemoteDataSource.updateMessage(
+        roomId: roomId,
+        message: MessageDto.fromDomain(message),
+      );
+
+      return right(unit);
+    } on Failure catch (e) {
+      return left(e);
+    } catch (e, s) {
+      log('createMessage', error: e, stackTrace: s);
+      return left(const Failure.unexpectedError());
+    }
   }
 }

@@ -22,6 +22,21 @@ class MessageDto with _$MessageDto {
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
       _$MessageDtoFromJson(json);
 
+  factory MessageDto.fromDomain(Message domain) {
+    return MessageDto(
+      id: domain.id,
+      data: domain.data,
+      type: domain.type.value,
+      sentBy: domain.sentBy,
+      sentAt: domain.sentAt != null ? Timestamp.fromDate(domain.sentAt!) : null,
+      imageUrl: domain.imageUrl,
+      readInfoList: domain.readInfoList
+          .map((readInfo) => ReadInfoDto.fromDomain(readInfo))
+          .iter
+          .toList(),
+    );
+  }
+
   Message toDomain() {
     final empty = Message.empty();
     return Message(
@@ -47,6 +62,13 @@ class ReadInfoDto with _$ReadInfoDto {
 
   factory ReadInfoDto.fromJson(Map<String, dynamic> json) =>
       _$ReadInfoDtoFromJson(json);
+
+  factory ReadInfoDto.fromDomain(ReadInfo domain) {
+    return ReadInfoDto(
+      uid: domain.uid,
+      readAt: Timestamp.fromDate(domain.readAt),
+    );
+  }
 
   ReadInfo toDomain() {
     final empty = ReadInfo.empty();

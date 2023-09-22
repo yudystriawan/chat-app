@@ -5,12 +5,18 @@ import 'package:kt_dart/collection.dart';
 import '../entities/entity.dart';
 
 abstract class ChatRepository {
-  Future<Either<Failure, Unit>> createMessage({
+  Future<Either<Failure, Message>> createMessage({
     required String roomId,
     required String message,
     required MessageType type,
     String? imageUrl,
   });
+
+  Future<Either<Failure, Unit>> editMessage({
+    required String roomId,
+    required Message message,
+  });
+
   Future<Either<Failure, String>> addRoom({
     required KtList<String> members,
     required int type,

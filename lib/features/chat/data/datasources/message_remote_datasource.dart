@@ -7,10 +7,16 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract class MessageRemoteDataSource {
-  Future<void> createMessage({
+  Future<MessageDto?> createMessage({
     required String roomId,
     required MessageDto message,
   });
+
+  Future<MessageDto?> updateMessage({
+    required String roomId,
+    required MessageDto message,
+  });
+
   Stream<List<MessageDto>?> fetchMessages(
     String roomId, {
     int? limit,
@@ -19,6 +25,11 @@ abstract class MessageRemoteDataSource {
   Stream<List<MessageDto>?> watchUnreadMessages(String roomId);
 
   Stream<MessageDto?> watchLastMessage(String roomId);
+
+  Future<MessageDto?> fetchMessage({
+    required String roomId,
+    required String messageId,
+  });
 }
 
 @Injectable(as: MessageRemoteDataSource)
@@ -28,7 +39,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
   MessageRemoteDataSourceImpl(this._service);
 
   @override
-  Future<void> createMessage({
+  Future<MessageDto?> createMessage({
     required String roomId,
     required MessageDto message,
   }) async {
@@ -54,8 +65,9 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
 
       // create message
       await messageCollection.doc(messageId).set(request);
-      // .then(
-      //     (_) => log('message created with ID $messageId in roomId: $roomId'));
+
+      // get message
+      return fetchMessage(roomId: roomId, messageId: messageId);
     } catch (e, s) {
       log('createMessage',
           name: runtimeType.toString(), error: e, stackTrace: s);
@@ -133,5 +145,50 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
           name: runtimeType.toString(), error: error, stackTrace: stackTrace);
       throw const Failure.serverError();
     });
+  }
+
+  @override
+  Future<MessageDto?> updateMessage({
+    required String roomId,
+    required MessageDto message,
+  }) async {
+    try {
+      final messageCollection =
+          _service.instance.roomCollection.doc(roomId).collection('messages');
+
+      final request = message.toJson();
+
+      // update message
+      await messageCollection.doc(message.id).update(request);
+
+      // get message
+      return fetchMessage(roomId: roomId, messageId: message.id!);
+    } catch (e, s) {
+      log('updateMessage',
+          name: runtimeType.toString(), error: e, stackTrace: s);
+      throw const Failure.serverError();
+    }
+  }
+
+  @override
+  Future<MessageDto?> fetchMessage({
+    required String roomId,
+    required String messageId,
+  }) async {
+    try {
+      final doc = await _service.instance.roomCollection
+          .doc(roomId)
+          .collection('messages')
+          .doc(messageId)
+          .get();
+
+      final message = MessageDto.fromJson(doc.data() as Map<String, dynamic>);
+
+      return message;
+    } catch (e, s) {
+      log('fetchMessage',
+          name: runtimeType.toString(), error: e, stackTrace: s);
+      throw const Failure.serverError();
+    }
   }
 }
