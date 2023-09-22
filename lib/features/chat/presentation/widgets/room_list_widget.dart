@@ -4,6 +4,7 @@ import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_
 import 'package:chat_app/features/chat/presentation/blocs/messages_watcher/messages_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/room_list_tile.dart';
 import 'package:chat_app/routes/routes.gr.dart';
+import 'package:coolicons/coolicons.dart';
 import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/styles/colors.dart';
@@ -106,9 +107,31 @@ class RoomListWidget extends StatelessWidget {
                       buildWhen: (p, c) => p.message != c.message,
                       builder: (context, state) {
                         final lastMessage = state.message;
+
+                        Widget subtitle = Text(lastMessage.data);
+                        if (lastMessage.type.isImage) {
+                          subtitle = Row(
+                            children: [
+                              Icon(
+                                Coolicons.image,
+                                size: 12.w,
+                                color: NeutralColor.disabled,
+                              ),
+                              4.horizontalSpace,
+                              if (lastMessage.data.isNotEmpty)
+                                Text(lastMessage.data)
+                              else
+                                Text(
+                                  'image',
+                                  style: AppTypography.metadata1
+                                      .copyWith(color: NeutralColor.disabled),
+                                )
+                            ],
+                          );
+                        }
                         return RoomListTile(
                           title: Text(roomName),
-                          subtitle: Text(lastMessage.data),
+                          subtitle: subtitle,
                           imageUrl: roomImage,
                           date: lastMessage.sentAt?.toStringDate(),
                           chatCount: unreadMessages.size,
