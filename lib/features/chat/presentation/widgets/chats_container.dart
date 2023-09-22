@@ -149,6 +149,7 @@ class _ChatsContainerState extends State<ChatsContainer> {
                           isSender: isSender,
                           recipientName: recipientName,
                           isRead: isSender ? isRead : false,
+                          imageUrl: message.imageUrl,
                         );
                       },
                     ),

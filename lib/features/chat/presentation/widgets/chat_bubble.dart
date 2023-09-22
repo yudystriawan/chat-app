@@ -67,9 +67,10 @@ class ChatBubble extends StatelessWidget {
               ),
               const SizedBox(height: 4),
             ],
-            if (imageUrl != null) ...[
-              Image.network(
-                'https://placehold.co/200x200/png',
+            if (imageUrl != null && imageUrl!.isNotEmpty) ...[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16.r),
+                child: Image.network(imageUrl!),
               ),
               const SizedBox(height: 4),
             ],
