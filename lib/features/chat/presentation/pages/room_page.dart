@@ -3,6 +3,7 @@ import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_
 import 'package:chat_app/features/chat/presentation/blocs/messages_watcher/messages_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/blocs/room_actor/room_actor_bloc.dart';
 import 'package:chat_app/features/chat/presentation/blocs/room_watcher/room_watcher_bloc.dart';
+import 'package:chat_app/features/chat/presentation/widgets/show_attachments_bottom_sheet.dart';
 import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/core.dart';
@@ -10,6 +11,7 @@ import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/input.dart';
+import 'package:core/utils/images/image_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -174,7 +176,9 @@ class _RoomPageState extends State<RoomPage> {
                 child: Row(
                   children: [
                     GhostButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        await _sendImage(context);
+                      },
                       child: Icon(
                         Coolicons.plus,
                         color: NeutralColor.disabled,
@@ -204,6 +208,29 @@ class _RoomPageState extends State<RoomPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _sendImage(BuildContext context) async {
+    var attachment = await showAttachmentsBottomSheet(context);
+
+    if (attachment == null) return;
+
+    if (attachment.isCamera || attachment.isGallery) {
+      final pickedImage =
+          await ImageUtils.pickImage(attachment.toImageOrigin());
+
+      if (pickedImage == null) return;
+
+      final compressedImage = await ImageUtils.compressImage(
+        pickedImage.path,
+      );
+
+      if (compressedImage == null) return;
+
+      return;
+    }
+
+    return;
   }
 }
 
