@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>We need access to your microphone for clear audio during voice and video calls, as well as for recording voice messages. Your privacy is our priority, and we will not record audio without your permission. Feel free to customize your microphone settings in the app to suit your preferences</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Access to your camera is essential for our app&apos;s functionality. You can capture moments, participate in video calls, and share live experiences with friends. Rest assured, your camera is only used within the app, and we do not access or store your camera footage without your consent.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We require access to your photo library to enhance your experience. You can upload and share photos, set profile pictures, and personalize your content. Your privacy is important to us, and we&apos;ll never use your photos for any other purpose.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -47,16 +53,16 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>com.googleusercontent.apps.235379009895-uf630n2mm8l3q9q173r47g7uoqcfdl4t</string>
-            </array>
-        </dict>
-    </array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.235379009895-uf630n2mm8l3q9q173r47g7uoqcfdl4t</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
