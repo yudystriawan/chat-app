@@ -8,13 +8,13 @@ import 'package:kt_dart/collection.dart';
 import '../entities/entity.dart';
 
 @injectable
-class GetChatRooms implements StreamUsecase<KtList<Room>, NoParams> {
+class WatchChatRooms implements StreamUsecase<KtList<Room>, NoParams> {
   final ChatRepository _chatRepository;
 
-  GetChatRooms(this._chatRepository);
+  WatchChatRooms(this._chatRepository);
 
   @override
   Stream<Either<Failure, KtList<Room>>> call(NoParams params) {
-    return _chatRepository.getChatRooms();
+    return _chatRepository.watchChatRooms();
   }
 }

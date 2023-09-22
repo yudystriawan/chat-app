@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:chat_app/features/chat/domain/usecases/get_messages.dart';
-import 'package:chat_app/features/chat/domain/usecases/get_unread_messages.dart';
+import 'package:chat_app/features/chat/domain/usecases/watch_messages.dart';
+import 'package:chat_app/features/chat/domain/usecases/watch_unread_messages.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -19,8 +19,8 @@ part 'messages_watcher_state.dart';
 @injectable
 class MessagesWatcherBloc
     extends Bloc<MessagesWatcherEvent, MessagesWatcherState> {
-  final GetMessages _getMessages;
-  final GetUnreadMessages _getUnreadMessages;
+  final WatchMessages _getMessages;
+  final WatchUnreadMessages _getUnreadMessages;
 
   StreamSubscription<Either<Failure, KtList<Message>>>?
       _messageStreamSubscription;
@@ -66,7 +66,7 @@ class MessagesWatcherBloc
     await _messageStreamSubscription?.cancel();
 
     _messageStreamSubscription = _getMessages(
-      GetMessagesParams(
+      WatchMessagesParams(
         roomId: event.roomId,
         limit: state.limit,
       ),
@@ -98,7 +98,7 @@ class MessagesWatcherBloc
     await _messageStreamSubscription?.cancel();
 
     _messageStreamSubscription = _getUnreadMessages(
-      GetUnreadMessagesParams(
+      WatchUnreadMessagesParams(
         roomId: event.roomId,
       ),
     ).listen(

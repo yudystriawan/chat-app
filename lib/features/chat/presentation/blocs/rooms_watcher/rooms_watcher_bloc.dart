@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:chat_app/features/chat/domain/usecases/get_chat_rooms.dart';
+import 'package:chat_app/features/chat/domain/usecases/watch_chat_rooms.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:core/utils/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
@@ -18,7 +18,7 @@ part 'rooms_watcher_state.dart';
 
 @injectable
 class RoomsWatcherBloc extends Bloc<RoomsWatcherEvent, RoomsWatcherState> {
-  final GetChatRooms _getChatRooms;
+  final WatchChatRooms _getChatRooms;
 
   StreamSubscription<Either<Failure, KtList<Room>>>? _roomsStreamSubscription;
 

@@ -86,8 +86,8 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Stream<Either<Failure, KtList<Room>>> getChatRooms() {
-    return _roomRemoteDataSource.fetchRooms().map((rooms) {
+  Stream<Either<Failure, KtList<Room>>> watchChatRooms() {
+    return _roomRemoteDataSource.watchRooms().map((rooms) {
       if (rooms == null) {
         return right<Failure, KtList<Room>>(const KtList.empty());
       }
@@ -105,8 +105,8 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Stream<Either<Failure, KtList<Member>>> getMembers(KtList<String> ids) {
-    return _roomRemoteDataSource.fetchMembers(ids.iter.toList()).map((members) {
+  Stream<Either<Failure, KtList<Member>>> watchMembers(KtList<String> ids) {
+    return _roomRemoteDataSource.watchMembers(ids.iter.toList()).map((members) {
       if (members == null) {
         return right<Failure, KtList<Member>>(const KtList.empty());
       }
@@ -124,8 +124,8 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Stream<Either<Failure, Room>> getChatRoom(String roomId) {
-    return _roomRemoteDataSource.fetchRoom(roomId).map((room) {
+  Stream<Either<Failure, Room>> watchChatRoom(String roomId) {
+    return _roomRemoteDataSource.watchRoom(roomId).map((room) {
       if (room == null) {
         return left<Failure, Room>(const Failure.notFound());
       }
@@ -141,7 +141,7 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Stream<Either<Failure, KtList<Message>>> getMessages(
+  Stream<Either<Failure, KtList<Message>>> watchMessages(
     String roomId, {
     int? limit,
   }) {
@@ -188,8 +188,8 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Stream<Either<Failure, KtList<Message>>> getUnreadMessages(String roomId) {
-    return _messageRemoteDataSource.fetchUnreadMessages(roomId).map((messages) {
+  Stream<Either<Failure, KtList<Message>>> watchUnreadMessages(String roomId) {
+    return _messageRemoteDataSource.watchUnreadMessages(roomId).map((messages) {
       if (messages == null) {
         return right<Failure, KtList<Message>>(const KtList.empty());
       }

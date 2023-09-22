@@ -9,21 +9,22 @@ import 'package:kt_dart/collection.dart';
 import '../entities/entity.dart';
 
 @injectable
-class GetMembers implements StreamUsecase<KtList<Member>, GetMembersParams> {
+class WatchMembers
+    implements StreamUsecase<KtList<Member>, WatchMembersParams> {
   final ChatRepository _repository;
 
-  GetMembers(this._repository);
+  WatchMembers(this._repository);
 
   @override
   Stream<Either<Failure, KtList<Member>>> call(params) {
-    return _repository.getMembers(params.ids);
+    return _repository.watchMembers(params.ids);
   }
 }
 
-class GetMembersParams extends Equatable {
+class WatchMembersParams extends Equatable {
   final KtList<String> ids;
 
-  const GetMembersParams({
+  const WatchMembersParams({
     required this.ids,
   });
 

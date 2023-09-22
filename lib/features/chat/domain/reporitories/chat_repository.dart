@@ -15,10 +15,10 @@ abstract class ChatRepository {
     required int type,
   });
   Future<Either<Failure, Unit>> removeRoom(String roomId);
-  Stream<Either<Failure, KtList<Room>>> getChatRooms();
-  Stream<Either<Failure, Room>> getChatRoom(String roomId);
-  Stream<Either<Failure, KtList<Member>>> getMembers(KtList<String> ids);
-  Stream<Either<Failure, KtList<Message>>> getMessages(
+  Stream<Either<Failure, KtList<Room>>> watchChatRooms();
+  Stream<Either<Failure, Room>> watchChatRoom(String roomId);
+  Stream<Either<Failure, KtList<Member>>> watchMembers(KtList<String> ids);
+  Stream<Either<Failure, KtList<Message>>> watchMessages(
     String roomId, {
     int? limit,
   });
@@ -31,7 +31,7 @@ abstract class ChatRepository {
   /// so messages in this room will not change to read
   Future<Either<Failure, Unit>> exitRoom(String roomId);
 
-  Stream<Either<Failure, KtList<Message>>> getUnreadMessages(String roomId);
+  Stream<Either<Failure, KtList<Message>>> watchUnreadMessages(String roomId);
 
   Stream<Either<Failure, Message>> watchLastMessage(String roomId);
 }

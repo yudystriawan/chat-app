@@ -9,24 +9,28 @@ import 'package:kt_dart/collection.dart';
 import '../entities/entity.dart';
 
 @injectable
-class GetUnreadMessages
-    implements StreamUsecase<KtList<Message>, GetUnreadMessagesParams> {
+class WatchMessages
+    implements StreamUsecase<KtList<Message>, WatchMessagesParams> {
   final ChatRepository _repository;
 
-  GetUnreadMessages(this._repository);
+  WatchMessages(this._repository);
 
   @override
-  Stream<Either<Failure, KtList<Message>>> call(
-      GetUnreadMessagesParams params) {
-    return _repository.getUnreadMessages(params.roomId);
+  Stream<Either<Failure, KtList<Message>>> call(params) {
+    return _repository.watchMessages(
+      params.roomId,
+      limit: params.limit,
+    );
   }
 }
 
-class GetUnreadMessagesParams extends Equatable {
+class WatchMessagesParams extends Equatable {
   final String roomId;
+  final int limit;
 
-  const GetUnreadMessagesParams({
+  const WatchMessagesParams({
     required this.roomId,
+    required this.limit,
   });
 
   @override

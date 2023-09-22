@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:chat_app/features/chat/domain/usecases/get_members.dart';
+import 'package:chat_app/features/chat/domain/usecases/watch_members.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -17,7 +17,7 @@ part 'member_watcher_state.dart';
 
 @injectable
 class MemberWatcherBloc extends Bloc<MemberWatcherEvent, MemberWatcherState> {
-  final GetMembers _getMembers;
+  final WatchMembers _getMembers;
 
   StreamSubscription<Either<Failure, KtList<Member>>>?
       _membersStreamSubscription;
@@ -42,7 +42,7 @@ class MemberWatcherBloc extends Bloc<MemberWatcherEvent, MemberWatcherState> {
     emit(state.copyWith(isLoading: true));
     await _membersStreamSubscription?.cancel();
     _membersStreamSubscription =
-        _getMembers(GetMembersParams(ids: event.memberIds)).listen(
+        _getMembers(WatchMembersParams(ids: event.memberIds)).listen(
             (failureOrMembers) =>
                 add(MemberWatcherEvent.membersReceived(failureOrMembers)));
   }

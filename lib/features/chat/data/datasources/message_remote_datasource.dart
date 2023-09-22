@@ -16,7 +16,7 @@ abstract class MessageRemoteDataSource {
     int? limit,
   });
 
-  Stream<List<MessageDto>?> fetchUnreadMessages(String roomId);
+  Stream<List<MessageDto>?> watchUnreadMessages(String roomId);
 
   Stream<MessageDto?> watchLastMessage(String roomId);
 }
@@ -90,7 +90,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
   }
 
   @override
-  Stream<List<MessageDto>?> fetchUnreadMessages(String roomId) {
+  Stream<List<MessageDto>?> watchUnreadMessages(String roomId) {
     final userId = _service.instance.currentUser?.uid;
 
     return _service.instance.roomCollection

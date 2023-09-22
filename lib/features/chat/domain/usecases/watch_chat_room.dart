@@ -8,21 +8,21 @@ import 'package:injectable/injectable.dart';
 import '../entities/entity.dart';
 
 @injectable
-class GetChatRoom implements StreamUsecase<Room, GetChatRoomParams> {
+class WatchChatRoom implements StreamUsecase<Room, WatchChatRoomParams> {
   final ChatRepository _repository;
 
-  GetChatRoom(this._repository);
+  WatchChatRoom(this._repository);
 
   @override
   Stream<Either<Failure, Room>> call(params) {
-    return _repository.getChatRoom(params.roomId);
+    return _repository.watchChatRoom(params.roomId);
   }
 }
 
-class GetChatRoomParams extends Equatable {
+class WatchChatRoomParams extends Equatable {
   final String roomId;
 
-  const GetChatRoomParams({
+  const WatchChatRoomParams({
     required this.roomId,
   });
 

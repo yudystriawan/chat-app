@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:chat_app/features/chat/domain/usecases/get_chat_room.dart';
+import 'package:chat_app/features/chat/domain/usecases/watch_chat_room.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -16,7 +16,7 @@ part 'room_watcher_state.dart';
 
 @injectable
 class RoomWatcherBloc extends Bloc<RoomWatcherEvent, RoomWatcherState> {
-  final GetChatRoom _getChatRoom;
+  final WatchChatRoom _getChatRoom;
 
   StreamSubscription<Either<Failure, Room>>? _roomStreamSubscription;
 
@@ -42,7 +42,7 @@ class RoomWatcherBloc extends Bloc<RoomWatcherEvent, RoomWatcherState> {
     await _roomStreamSubscription?.cancel();
 
     _roomStreamSubscription =
-        _getChatRoom(GetChatRoomParams(roomId: event.roomId)).listen(
+        _getChatRoom(WatchChatRoomParams(roomId: event.roomId)).listen(
             (failureOrRoom) =>
                 add(RoomWatcherEvent.roomReceived(failureOrRoom)));
   }

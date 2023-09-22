@@ -12,9 +12,9 @@ abstract class RoomRemoteDataSource {
   Future<void> deleteRoom(String roomId);
   Future<void> enterRoom(String roomId);
   Future<void> exitRoom(String roomId);
-  Stream<List<RoomDto>?> fetchRooms();
-  Stream<RoomDto?> fetchRoom(String roomId);
-  Stream<List<MemberDto>?> fetchMembers(List<String> ids);
+  Stream<List<RoomDto>?> watchRooms();
+  Stream<RoomDto?> watchRoom(String roomId);
+  Stream<List<MemberDto>?> watchMembers(List<String> ids);
 }
 
 @Injectable(as: RoomRemoteDataSource)
@@ -82,7 +82,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
   }
 
   @override
-  Stream<List<RoomDto>?> fetchRooms() {
+  Stream<List<RoomDto>?> watchRooms() {
     // get current user id
     final userId = _service.instance.currentUser!.uid;
 
@@ -102,7 +102,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
   }
 
   @override
-  Stream<List<MemberDto>?> fetchMembers(List<String> ids) {
+  Stream<List<MemberDto>?> watchMembers(List<String> ids) {
     return _service.instance.userCollection
         .where(FieldPath.documentId, whereIn: ids)
         .snapshots()
@@ -117,7 +117,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
   }
 
   @override
-  Stream<RoomDto?> fetchRoom(String roomId) {
+  Stream<RoomDto?> watchRoom(String roomId) {
     return _service.instance.roomCollection
         .doc(roomId)
         .snapshots()
