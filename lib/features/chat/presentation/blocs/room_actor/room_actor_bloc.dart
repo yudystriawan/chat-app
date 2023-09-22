@@ -69,8 +69,6 @@ class RoomActorBloc extends Bloc<RoomActorEvent, RoomActorState> {
     _RoomEntered event,
     Emitter<RoomActorState> emit,
   ) async {
-    emit(const RoomActorState.actionInProgress());
-
     final failureOrSuccess = await _enterRoom(EnterRoomParams(event.roomId));
 
     emit(failureOrSuccess.fold(
@@ -83,8 +81,6 @@ class RoomActorBloc extends Bloc<RoomActorEvent, RoomActorState> {
     _RoomExited event,
     Emitter<RoomActorState> emit,
   ) async {
-    emit(const RoomActorState.actionInProgress());
-
     final failureOrSuccess = await _exitRoom(ExitRoomParams(event.roomId));
 
     emit(failureOrSuccess.fold(
