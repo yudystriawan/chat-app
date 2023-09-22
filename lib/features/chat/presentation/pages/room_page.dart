@@ -171,37 +171,87 @@ class _RoomPageState extends State<RoomPage> {
                 color: NeutralColor.white,
                 border: Border.all(width: 1.w, color: NeutralColor.line),
               ),
-              child: SafeArea(
-                top: false,
-                child: Row(
-                  children: [
-                    GhostButton(
-                      onPressed: () async {
-                        await _sendImage(context);
+              child: Column(
+                children: [
+                  ...[
+                    BlocBuilder<MessageFormBloc, MessageFormState>(
+                      buildWhen: (p, c) => p.imageFile != c.imageFile,
+                      builder: (context, state) {
+                        if (state.imageFile == null) return const SizedBox();
+
+                        return Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12.r),
+                              child: Image.file(
+                                state.imageFile!,
+                                fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                            Positioned(
+                              top: 8.w,
+                              right: 8.w,
+                              child: GhostButton(
+                                onPressed: () => context
+                                    .read<MessageFormBloc>()
+                                    .add(
+                                        const MessageFormEvent.imageFileChanged(
+                                            null)),
+                                padding: EdgeInsets.all(2.w),
+                                backgroundColor:
+                                    NeutralColor.offWhite.withOpacity(0.5),
+                                child: const Icon(Coolicons.close_big),
+                              ),
+                            ),
+                          ],
+                        );
                       },
-                      child: Icon(
-                        Coolicons.plus,
-                        color: NeutralColor.disabled,
-                        size: 24.w,
-                      ),
                     ),
-                    SizedBox(width: 12.w),
-                    const Expanded(
-                      child: MessageTextField(),
-                    ),
-                    SizedBox(width: 12.w),
-                    GhostButton(
-                      onPressed: () => context
-                          .read<MessageFormBloc>()
-                          .add(MessageFormEvent.submitted(widget.roomId)),
-                      child: Icon(
-                        Icons.send,
-                        size: 24.w,
-                        color: BrandColor.neutral,
-                      ),
-                    ),
+                    10.verticalSpace,
                   ],
-                ),
+                  SafeArea(
+                    top: false,
+                    child: Row(
+                      children: [
+                        GhostButton(
+                          onPressed: () async {
+                            await _sendImage(context);
+                          },
+                          child: Icon(
+                            Coolicons.plus,
+                            color: NeutralColor.disabled,
+                            size: 24.w,
+                          ),
+                        ),
+                        SizedBox(width: 12.w),
+                        const Expanded(
+                          child: MessageTextField(),
+                        ),
+                        SizedBox(width: 12.w),
+                        BlocBuilder<MessageFormBloc, MessageFormState>(
+                          buildWhen: (p, c) => p.isSubmitting != c.isSubmitting,
+                          builder: (context, state) {
+                            if (state.isSubmitting) {
+                              return const CircularProgressIndicator();
+                            }
+
+                            return GhostButton(
+                              onPressed: () => context
+                                  .read<MessageFormBloc>()
+                                  .add(MessageFormEvent.submitted(
+                                      widget.roomId)),
+                              child: Icon(
+                                Icons.send,
+                                size: 24.w,
+                                color: BrandColor.neutral,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -227,7 +277,10 @@ class _RoomPageState extends State<RoomPage> {
 
       if (compressedImage == null) return;
 
-      return;
+      // ignore: use_build_context_synchronously
+      context
+          .read<MessageFormBloc>()
+          .add(MessageFormEvent.imageFileChanged(compressedImage));
     }
 
     return;

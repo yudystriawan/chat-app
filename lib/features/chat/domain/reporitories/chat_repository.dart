@@ -9,6 +9,7 @@ abstract class ChatRepository {
     required String roomId,
     required String message,
     required MessageType type,
+    String? imageUrl,
   });
   Future<Either<Failure, String>> addRoom({
     required KtList<String> members,

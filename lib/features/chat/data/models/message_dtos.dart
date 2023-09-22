@@ -14,6 +14,7 @@ class MessageDto with _$MessageDto {
     String? data,
     String? type,
     String? sentBy,
+    String? imageUrl,
     @ServerTimestampConverter() Timestamp? sentAt,
     @JsonKey(name: 'readInfo') List<ReadInfoDto>? readInfoList,
   }) = _MessageDto;
@@ -31,6 +32,7 @@ class MessageDto with _$MessageDto {
       sentAt: sentAt?.toDate() ?? empty.sentAt,
       readInfoList: readInfoList?.map((e) => e.toDomain()).toImmutableList() ??
           empty.readInfoList,
+      imageUrl: imageUrl ?? empty.imageUrl,
     );
   }
 }

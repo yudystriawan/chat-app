@@ -24,6 +24,7 @@ class Message with _$Message {
     required MessageType type,
     required String sentBy,
     required KtList<ReadInfo> readInfoList,
+    required String imageUrl,
     DateTime? sentAt,
   }) = _Message;
 
@@ -32,6 +33,7 @@ class Message with _$Message {
         data: '',
         type: MessageType.text,
         sentBy: '',
+        imageUrl: '',
         readInfoList: const KtList.empty(),
         sentAt: DateTime.now(),
       );

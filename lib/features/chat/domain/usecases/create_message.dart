@@ -18,6 +18,7 @@ class CreateMessage implements Usecase<Unit, CreateMessageParams> {
       roomId: params.roomId,
       message: params.message,
       type: params.type,
+      imageUrl: params.imageUrl,
     );
   }
 }
@@ -26,12 +27,13 @@ class CreateMessageParams extends Equatable {
   final String roomId;
   final String message;
   final MessageType type;
+  final String? imageUrl;
 
   const CreateMessageParams({
     required this.roomId,
     required this.message,
-    required this.type,
-  });
+    this.imageUrl,
+  }) : type = imageUrl == null ? MessageType.text : MessageType.image;
 
   @override
   List<Object> get props => [roomId, message, type];
