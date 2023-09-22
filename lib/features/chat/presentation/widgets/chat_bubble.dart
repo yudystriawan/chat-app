@@ -1,3 +1,4 @@
+import 'package:coolicons/coolicons.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:core/utils/extensions/date_formatter.dart';
@@ -35,10 +36,15 @@ class ChatBubble extends StatelessWidget {
     Widget body = this.body;
 
     if (body is Text) {
-      body = DefaultTextStyle(
-        style: body.style ?? AppTypography.bodyText2.copyWith(color: textColor),
-        child: Text(body.data!),
-      );
+      if (body.data?.isEmpty ?? false) {
+        body = const SizedBox();
+      } else {
+        body = DefaultTextStyle(
+          style:
+              body.style ?? AppTypography.bodyText2.copyWith(color: textColor),
+          child: Text(body.data!),
+        );
+      }
     }
 
     return Align(
@@ -78,8 +84,20 @@ class ChatBubble extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 4),
-            ],
+            ] else
+              Container(
+                width: 100.w,
+                height: 100.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16.r),
+                  color: NeutralColor.weak,
+                ),
+                child: Icon(
+                  Coolicons.image,
+                  size: 24.w,
+                ),
+              ),
+            const SizedBox(height: 4),
             body,
             SizedBox(height: 4.w),
             Row(
