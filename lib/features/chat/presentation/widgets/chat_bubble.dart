@@ -70,7 +70,13 @@ class ChatBubble extends StatelessWidget {
             if (imageUrl != null && imageUrl!.isNotEmpty) ...[
               ClipRRect(
                 borderRadius: BorderRadius.circular(16.r),
-                child: Image.network(imageUrl!),
+                child: SizedBox(
+                  height: 218.w,
+                  child: Image.network(
+                    imageUrl!,
+                    fit: BoxFit.fitHeight,
+                  ),
+                ),
               ),
               const SizedBox(height: 4),
             ],

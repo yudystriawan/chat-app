@@ -185,7 +185,8 @@ class _RoomPageState extends State<RoomPage> {
                               borderRadius: BorderRadius.circular(12.r),
                               child: Image.file(
                                 state.imageFile!,
-                                fit: BoxFit.fitWidth,
+                                fit: BoxFit.fitHeight,
+                                height: 180.w,
                               ),
                             ),
                             Positioned(
