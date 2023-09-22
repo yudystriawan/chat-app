@@ -58,7 +58,7 @@ class MessageFormBloc extends Bloc<MessageFormEvent, MessageFormState> {
     _Submitted event,
     Emitter<MessageFormState> emit,
   ) async {
-    if (state.data.isEmpty) return;
+    if (state.data.isEmpty && state.imageFile == null) return;
 
     final imageFile = state.imageFile;
 
