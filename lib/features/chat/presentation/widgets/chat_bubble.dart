@@ -1,4 +1,4 @@
-import 'package:coolicons/coolicons.dart';
+import 'package:chat_app/features/chat/presentation/widgets/chat_image.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:core/utils/extensions/date_formatter.dart';
@@ -73,31 +73,10 @@ class ChatBubble extends StatelessWidget {
               ),
               const SizedBox(height: 4),
             ],
-            if (imageUrl != null && imageUrl!.isNotEmpty) ...[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(16.r),
-                child: SizedBox(
-                  height: 218.w,
-                  child: Image.network(
-                    imageUrl!,
-                    fit: BoxFit.fitHeight,
-                  ),
-                ),
-              ),
-            ] else
-              Container(
-                width: 100.w,
-                height: 100.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16.r),
-                  color: NeutralColor.weak,
-                ),
-                child: Icon(
-                  Coolicons.image,
-                  size: 24.w,
-                ),
-              ),
-            const SizedBox(height: 4),
+            if (imageUrl != null) ...[
+              ChatImageNetwork(imageUrl: imageUrl!),
+              const SizedBox(height: 4),
+            ],
             body,
             SizedBox(height: 4.w),
             Row(
