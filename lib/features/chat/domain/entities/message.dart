@@ -32,7 +32,7 @@ class Message with _$Message {
         data: '',
         type: MessageType.text,
         sentBy: '',
-        readInfoList: KtList.empty(),
+        readInfoList: const KtList.empty(),
         sentAt: DateTime.now(),
       );
 }
