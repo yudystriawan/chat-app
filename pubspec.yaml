@@ -28,7 +28,7 @@ dependencies:
   equatable: ^2.0.5
   flutter_screenutil: ^5.8.4
   coolicons: ^1.0.0
-  flutter_hooks: ^0.20.0
+  flutter_hooks: ^0.20.1
   kt_dart: ^1.1.0
   rxdart: ^0.27.7
   uuid: ^3.0.7
