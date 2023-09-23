@@ -83,7 +83,6 @@ class _ChatsContainerState extends State<ChatsContainer> {
             return ListView.builder(
               controller: _scrollController,
               physics: const AlwaysScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
               itemCount: listGroupedByDate.size,
               shrinkWrap: true,
               reverse: true,
@@ -118,7 +117,7 @@ class _ChatsContainerState extends State<ChatsContainer> {
                       ],
                     ),
                     ListView.separated(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      padding: EdgeInsets.symmetric(horizontal: 22.w),
                       reverse: true,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
