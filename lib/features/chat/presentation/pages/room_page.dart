@@ -20,7 +20,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kt_dart/collection.dart';
 
 import '../blocs/message_form/message_form_bloc.dart';
-import '../widgets/chats_container.dart';
+import '../widgets/chat_list_widget.dart';
 
 @RoutePage()
 class RoomPage extends StatefulWidget implements AutoRouteWrapper {
@@ -159,7 +159,7 @@ class _RoomPageState extends State<RoomPage> {
             Expanded(
               child: Container(
                 color: NeutralColor.secondaryBG,
-                child: ChatsContainer(
+                child: ChatListWidget(
                   onLoadMore: () => context
                       .read<MessagesWatcherBloc>()
                       .add(MessagesWatcherEvent.watchAllStarted(widget.roomId)),
