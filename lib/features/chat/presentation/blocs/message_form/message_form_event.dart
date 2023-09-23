@@ -7,5 +7,8 @@ class MessageFormEvent with _$MessageFormEvent {
   const factory MessageFormEvent.dataChanged(String dataStr) = _DataChanged;
   const factory MessageFormEvent.imageFileChanged(File? file) =
       _ImageFileChanged;
+  const factory MessageFormEvent.replyMessageChanged(Message? message) =
+      _ReplyMessageChanged;
+
   const factory MessageFormEvent.submitted(String roomId) = _Submitted;
 }

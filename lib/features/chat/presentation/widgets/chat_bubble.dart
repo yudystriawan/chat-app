@@ -15,6 +15,7 @@ class ChatBubble extends StatelessWidget {
     this.sentAt,
     this.imageUrl,
     this.recipientName,
+    this.onSwipeRight,
   })  : assert(!isSender || recipientName == null,
             "Sender does not need recipient's name"),
         assert(!isRead || recipientName == null,
@@ -27,6 +28,7 @@ class ChatBubble extends StatelessWidget {
   final DateTime? sentAt;
   final String? imageUrl;
   final String? recipientName;
+  final VoidCallback? onSwipeRight;
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +51,7 @@ class ChatBubble extends StatelessWidget {
     }
 
     return SwipeableWidget(
-      onSwipeRight: isSender
-          ? null
-          : () {
-              // Callback for right swipe
-              debugPrint('Swiped right!');
-            },
+      onSwipeRight: isSender ? null : onSwipeRight,
       child: Align(
         alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
         child: Container(

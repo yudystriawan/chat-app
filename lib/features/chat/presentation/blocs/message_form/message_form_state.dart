@@ -8,6 +8,7 @@ class MessageFormState with _$MessageFormState {
     required Option<Either<Failure, Unit>> failureOrSuccessOption,
     @Default(false) bool isSubmitting,
     File? imageFile,
+    Message? replyMessage,
   }) = _MessageFormState;
 
   factory MessageFormState.initial() => MessageFormState(

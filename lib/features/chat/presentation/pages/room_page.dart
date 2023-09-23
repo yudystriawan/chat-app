@@ -3,6 +3,7 @@ import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_
 import 'package:chat_app/features/chat/presentation/blocs/messages_watcher/messages_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/blocs/room_actor/room_actor_bloc.dart';
 import 'package:chat_app/features/chat/presentation/blocs/room_watcher/room_watcher_bloc.dart';
+import 'package:chat_app/features/chat/presentation/widgets/reply_chat_widget.dart';
 import 'package:chat_app/features/chat/presentation/widgets/show_attachments_bottom_sheet.dart';
 import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
@@ -172,44 +173,66 @@ class _RoomPageState extends State<RoomPage> {
                 border: Border.all(width: 1.w, color: NeutralColor.line),
               ),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ...[
-                    BlocBuilder<MessageFormBloc, MessageFormState>(
-                      buildWhen: (p, c) => p.imageFile != c.imageFile,
-                      builder: (context, state) {
-                        if (state.imageFile == null) return const SizedBox();
+                  BlocBuilder<MessageFormBloc, MessageFormState>(
+                    buildWhen: (p, c) => p.replyMessage != c.replyMessage,
+                    builder: (context, state) {
+                      if (state.replyMessage == null) return const SizedBox();
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ReplyChatWidget(
+                            message: state.replyMessage!,
+                            onCloseReply: () => context
+                                .read<MessageFormBloc>()
+                                .add(const MessageFormEvent.replyMessageChanged(
+                                  null,
+                                )),
+                          ),
+                          10.verticalSpace,
+                        ],
+                      );
+                    },
+                  ),
+                  BlocBuilder<MessageFormBloc, MessageFormState>(
+                    buildWhen: (p, c) => p.imageFile != c.imageFile,
+                    builder: (context, state) {
+                      if (state.imageFile == null) return const SizedBox();
 
-                        return Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(12.r),
-                              child: Image.file(
-                                state.imageFile!,
-                                fit: BoxFit.fitHeight,
-                                height: 180.w,
+                      return Column(
+                        children: [
+                          Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12.r),
+                                child: Image.file(
+                                  state.imageFile!,
+                                  fit: BoxFit.fitHeight,
+                                  height: 180.w,
+                                ),
                               ),
-                            ),
-                            Positioned(
-                              top: 8.w,
-                              right: 8.w,
-                              child: GhostButton(
-                                onPressed: () => context
-                                    .read<MessageFormBloc>()
-                                    .add(
-                                        const MessageFormEvent.imageFileChanged(
-                                            null)),
-                                padding: EdgeInsets.all(2.w),
-                                backgroundColor:
-                                    NeutralColor.offWhite.withOpacity(0.5),
-                                child: const Icon(Coolicons.close_big),
+                              Positioned(
+                                top: 8.w,
+                                right: 8.w,
+                                child: GhostButton(
+                                  onPressed: () => context
+                                      .read<MessageFormBloc>()
+                                      .add(const MessageFormEvent
+                                          .imageFileChanged(null)),
+                                  padding: EdgeInsets.all(2.w),
+                                  backgroundColor:
+                                      NeutralColor.offWhite.withOpacity(0.5),
+                                  child: const Icon(Coolicons.close_big),
+                                ),
                               ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                    10.verticalSpace,
-                  ],
+                            ],
+                          ),
+                          10.verticalSpace,
+                        ],
+                      );
+                    },
+                  ),
                   SafeArea(
                     top: false,
                     child: Row(

@@ -1,4 +1,5 @@
 import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
+import 'package:chat_app/features/chat/presentation/blocs/message_form/message_form_bloc.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
@@ -150,6 +151,10 @@ class _ChatsContainerState extends State<ChatsContainer> {
                           recipientName: recipientName,
                           isRead: isSender ? isRead : false,
                           imageUrl: message.imageUrl,
+                          onSwipeRight: () => context
+                              .read<MessageFormBloc>()
+                              .add(MessageFormEvent.replyMessageChanged(
+                                  message)),
                         );
                       },
                     ),

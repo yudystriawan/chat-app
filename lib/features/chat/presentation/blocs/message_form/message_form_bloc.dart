@@ -30,6 +30,7 @@ class MessageFormBloc extends Bloc<MessageFormEvent, MessageFormState> {
     });
     on<_DataChanged>(_onDataChanged);
     on<_ImageFileChanged>(_onImageFileChanged);
+    on<_ReplyMessageChanged>(_onReplyMessageChanged);
     on<_Submitted>(_onSubmitted);
   }
 
@@ -50,6 +51,16 @@ class MessageFormBloc extends Bloc<MessageFormEvent, MessageFormState> {
     emit(state.copyWith(
       imageFile: event.file,
       messageType: event.file == null ? MessageType.text : MessageType.image,
+      failureOrSuccessOption: none(),
+    ));
+  }
+
+  void _onReplyMessageChanged(
+    _ReplyMessageChanged event,
+    Emitter<MessageFormState> emit,
+  ) async {
+    emit(state.copyWith(
+      replyMessage: event.message,
       failureOrSuccessOption: none(),
     ));
   }
