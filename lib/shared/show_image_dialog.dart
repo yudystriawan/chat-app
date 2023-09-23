@@ -36,10 +36,7 @@ Future<void> showImageDialog(
               borderRadius: BorderRadius.circular(12.r),
               color: NeutralColor.secondaryBG,
             ),
-            child: Hero(
-              tag: imageUrl,
-              child: CachedNetworkImage(imageUrl: imageUrl),
-            ),
+            child: CachedNetworkImage(imageUrl: imageUrl),
           ),
         ],
       ),
