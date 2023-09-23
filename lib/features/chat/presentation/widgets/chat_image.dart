@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_app/shared/show_image_dialog.dart';
 import 'package:core/styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,16 +17,22 @@ class ChatImageNetwork extends StatelessWidget {
     return CachedNetworkImage(
       imageUrl: imageUrl,
       imageBuilder: (context, imageProvider) {
-        return ClipRRect(
-          borderRadius: BorderRadius.circular(16.r),
-          clipBehavior: Clip.hardEdge,
-          child: Container(
-            height: 218.w,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                alignment: Alignment.centerLeft,
-                image: imageProvider,
-                fit: BoxFit.cover,
+        return GestureDetector(
+          onTap: () => showImageDialog(context, imageUrl: imageUrl),
+          child: Hero(
+            tag: imageUrl,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16.r),
+              clipBehavior: Clip.hardEdge,
+              child: Container(
+                height: 218.w,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    alignment: Alignment.centerLeft,
+                    image: imageProvider,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
             ),
           ),
