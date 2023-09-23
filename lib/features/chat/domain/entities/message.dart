@@ -29,6 +29,7 @@ class Message with _$Message {
     required KtList<ReadInfo> readInfoList,
     required String imageUrl,
     DateTime? sentAt,
+    Message? replyMessage,
   }) = _Message;
 
   factory Message.empty() => Message(

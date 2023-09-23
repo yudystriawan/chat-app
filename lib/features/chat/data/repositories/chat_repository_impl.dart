@@ -28,12 +28,17 @@ class ChatRepositoryImpl implements ChatRepository {
     required String message,
     required MessageType type,
     String? imageUrl,
+    Message? replyMessage,
   }) async {
     try {
+      final replyMessageDto =
+          replyMessage != null ? MessageDto.fromDomain(replyMessage) : null;
+
       final data = MessageDto(
         data: message,
         type: type.value,
         imageUrl: imageUrl,
+        replyMessage: replyMessageDto,
       );
 
       final result = await _messageRemoteDataSource.createMessage(

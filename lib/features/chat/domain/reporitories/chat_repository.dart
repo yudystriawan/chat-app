@@ -10,6 +10,7 @@ abstract class ChatRepository {
     required String message,
     required MessageType type,
     String? imageUrl,
+    Message? replyMessage,
   });
 
   Future<Either<Failure, Unit>> editMessage({

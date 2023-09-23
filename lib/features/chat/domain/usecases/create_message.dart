@@ -18,6 +18,7 @@ class CreateMessage implements Usecase<Message, CreateMessageParams> {
       roomId: params.roomId,
       message: params.message,
       type: params.type,
+      replyMessage: params.replyMessage,
     );
   }
 }
@@ -26,11 +27,13 @@ class CreateMessageParams extends Equatable {
   final String roomId;
   final String message;
   final MessageType type;
+  final Message? replyMessage;
 
   const CreateMessageParams({
     required this.roomId,
     required this.message,
     required this.type,
+    this.replyMessage,
   });
 
   @override

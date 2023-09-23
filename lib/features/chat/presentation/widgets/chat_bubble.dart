@@ -1,10 +1,13 @@
 import 'package:chat_app/features/chat/presentation/widgets/chat_image.dart';
+import 'package:chat_app/features/chat/presentation/widgets/reply_chat_widget.dart';
 import 'package:chat_app/shared/swipeable_widget.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:core/utils/extensions/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../domain/entities/entity.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
@@ -16,6 +19,7 @@ class ChatBubble extends StatelessWidget {
     this.imageUrl,
     this.recipientName,
     this.onSwipeRight,
+    this.replyMessage,
   })  : assert(!isSender || recipientName == null,
             "Sender does not need recipient's name"),
         assert(!isRead || recipientName == null,
@@ -29,6 +33,7 @@ class ChatBubble extends StatelessWidget {
   final String? imageUrl;
   final String? recipientName;
   final VoidCallback? onSwipeRight;
+  final Message? replyMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +76,12 @@ class ChatBubble extends StatelessWidget {
             crossAxisAlignment:
                 isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
+              if (replyMessage != null) ...[
+                ReplyChatWidget(
+                  message: replyMessage!,
+                  isSender: isSender,
+                ),
+              ],
               if (recipientName != null) ...[
                 Text(
                   recipientName!,

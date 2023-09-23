@@ -82,6 +82,7 @@ class MessageFormBloc extends Bloc<MessageFormEvent, MessageFormState> {
       roomId: event.roomId,
       message: state.data,
       type: state.messageType,
+      replyMessage: state.replyMessage,
     ));
 
     // change right value to unit.

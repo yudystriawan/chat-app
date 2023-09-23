@@ -151,6 +151,7 @@ class _ChatsContainerState extends State<ChatsContainer> {
                           recipientName: recipientName,
                           isRead: isSender ? isRead : false,
                           imageUrl: message.imageUrl,
+                          replyMessage: message.replyMessage,
                           onSwipeRight: () => context
                               .read<MessageFormBloc>()
                               .add(MessageFormEvent.replyMessageChanged(

@@ -16,10 +16,12 @@ class ReplyChatWidget extends StatelessWidget {
     Key? key,
     required this.message,
     this.onCloseReply,
+    this.isSender = false,
   }) : super(key: key);
 
   final Message message;
   final VoidCallback? onCloseReply;
+  final bool isSender;
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +44,10 @@ class ReplyChatWidget extends StatelessWidget {
                   border: Border(
                     left: BorderSide(
                       width: 4.w,
-                      color: BrandColor.neutral,
+                      color: isSender ? NeutralColor.white : BrandColor.neutral,
                     ),
                   ),
-                  color: NeutralColor.line,
+                  color: isSender ? BrandColor.darkMode : NeutralColor.line,
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +56,8 @@ class ReplyChatWidget extends StatelessWidget {
                     Text(
                       recipientName ?? '',
                       style: AppTypography.metadata3.copyWith(
-                        color: BrandColor.neutral,
+                        color:
+                            isSender ? NeutralColor.white : BrandColor.neutral,
                       ),
                     ),
                     4.verticalSpace,
@@ -68,7 +71,8 @@ class ReplyChatWidget extends StatelessWidget {
                       Text(
                         message.data,
                         style: AppTypography.bodyText2.copyWith(
-                          color: NeutralColor.body,
+                          color:
+                              isSender ? NeutralColor.white : NeutralColor.body,
                         ),
                       )
                   ],
@@ -77,15 +81,16 @@ class ReplyChatWidget extends StatelessWidget {
             );
           },
         ),
-        Positioned(
-          top: 4.w,
-          right: 4.w,
-          child: GhostButton(
-            onPressed: onCloseReply,
-            padding: EdgeInsets.zero,
-            child: const Icon(Coolicons.close_small),
-          ),
-        )
+        if (onCloseReply != null)
+          Positioned(
+            top: 4.w,
+            right: 4.w,
+            child: GhostButton(
+              onPressed: onCloseReply,
+              padding: EdgeInsets.zero,
+              child: const Icon(Coolicons.close_small),
+            ),
+          )
       ],
     );
   }
