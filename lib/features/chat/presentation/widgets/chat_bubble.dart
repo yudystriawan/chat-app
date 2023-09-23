@@ -1,4 +1,5 @@
 import 'package:chat_app/features/chat/presentation/widgets/chat_image.dart';
+import 'package:chat_app/shared/swipeable_widget.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:core/utils/extensions/date_formatter.dart';
@@ -47,64 +48,73 @@ class ChatBubble extends StatelessWidget {
       }
     }
 
-    return Align(
-      alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        padding: EdgeInsets.all(10.w),
-        constraints: BoxConstraints(maxWidth: 317.w),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.r),
-            topRight: Radius.circular(16.r),
-            bottomLeft: isSender ? Radius.circular(16.r) : Radius.zero,
-            bottomRight: isSender ? Radius.zero : Radius.circular(16.r),
+    return SwipeableWidget(
+      onSwipeRight: isSender
+          ? null
+          : () {
+              // Callback for right swipe
+              debugPrint('Swiped right!');
+            },
+      child: Align(
+        alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
+        child: Container(
+          padding: EdgeInsets.all(10.w),
+          constraints: BoxConstraints(maxWidth: 317.w),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.r),
+              topRight: Radius.circular(16.r),
+              bottomLeft: isSender ? Radius.circular(16.r) : Radius.zero,
+              bottomRight: isSender ? Radius.zero : Radius.circular(16.r),
+            ),
+            color: bubbleBackground,
           ),
-          color: bubbleBackground,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment:
-              isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-          children: [
-            if (recipientName != null) ...[
-              Text(
-                recipientName!,
-                style: AppTypography.metadata3.copyWith(color: BrandColor.dark),
-              ),
-              const SizedBox(height: 4),
-            ],
-            if (imageUrl != null) ...[
-              ChatImageNetwork(imageUrl: imageUrl!),
-              const SizedBox(height: 4),
-            ],
-            body,
-            SizedBox(height: 4.w),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment:
-                  isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
-              children: [
-                if (sentAt != null)
-                  Text(
-                    sentAt!.toStringFormatted('HH:mm'),
-                    style:
-                        AppTypography.metadata2.copyWith(color: metadataColor),
-                  ),
-                if (isRead) ...[
-                  Text(
-                    ' • ',
-                    style:
-                        AppTypography.metadata2.copyWith(color: metadataColor),
-                  ),
-                  Text(
-                    'Read',
-                    style:
-                        AppTypography.metadata2.copyWith(color: metadataColor),
-                  )
-                ]
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment:
+                isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+            children: [
+              if (recipientName != null) ...[
+                Text(
+                  recipientName!,
+                  style:
+                      AppTypography.metadata3.copyWith(color: BrandColor.dark),
+                ),
+                const SizedBox(height: 4),
               ],
-            )
-          ],
+              if (imageUrl != null) ...[
+                ChatImageNetwork(imageUrl: imageUrl!),
+                const SizedBox(height: 4),
+              ],
+              body,
+              SizedBox(height: 4.w),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment:
+                    isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+                children: [
+                  if (sentAt != null)
+                    Text(
+                      sentAt!.toStringFormatted('HH:mm'),
+                      style: AppTypography.metadata2
+                          .copyWith(color: metadataColor),
+                    ),
+                  if (isRead) ...[
+                    Text(
+                      ' • ',
+                      style: AppTypography.metadata2
+                          .copyWith(color: metadataColor),
+                    ),
+                    Text(
+                      'Read',
+                      style: AppTypography.metadata2
+                          .copyWith(color: metadataColor),
+                    )
+                  ]
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
