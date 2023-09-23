@@ -41,6 +41,8 @@ class Message with _$Message {
         readInfoList: const KtList.empty(),
         sentAt: DateTime.now(),
       );
+
+  bool get hasReplyMessage => replyMessage != null;
 }
 
 @freezed
