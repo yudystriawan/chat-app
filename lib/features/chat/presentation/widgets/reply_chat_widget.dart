@@ -56,9 +56,9 @@ class ReplyChatWidget extends StatelessWidget {
                     Text(
                       recipientName ?? '',
                       style: AppTypography.metadata3.copyWith(
-                        color:
-                            isSender ? NeutralColor.white : BrandColor.neutral,
-                      ),
+                          color: isSender
+                              ? NeutralColor.white
+                              : BrandColor.neutral),
                     ),
                     4.verticalSpace,
                     if (message.type.isImage) ...[

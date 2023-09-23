@@ -1,4 +1,3 @@
-import 'package:chat_app/features/chat/presentation/widgets/chat_image.dart';
 import 'package:chat_app/features/chat/presentation/widgets/reply_chat_widget.dart';
 import 'package:chat_app/shared/swipeable_widget.dart';
 import 'package:core/styles/colors.dart';
@@ -8,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../domain/entities/entity.dart';
+import 'chat_image.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
@@ -76,12 +76,6 @@ class ChatBubble extends StatelessWidget {
             crossAxisAlignment:
                 isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
             children: [
-              if (replyMessage != null) ...[
-                ReplyChatWidget(
-                  message: replyMessage!,
-                  isSender: isSender,
-                ),
-              ],
               if (recipientName != null) ...[
                 Text(
                   recipientName!,
@@ -90,8 +84,16 @@ class ChatBubble extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
               ],
+              if (replyMessage != null) ...[
+                ReplyChatWidget(
+                  message: replyMessage!,
+                  isSender: isSender,
+                ),
+                4.verticalSpace,
+              ],
               if (imageUrl != null) ...[
                 ChatImageNetwork(imageUrl: imageUrl!),
+                // Image.network(imageUrl!),
                 const SizedBox(height: 4),
               ],
               body,

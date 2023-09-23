@@ -18,12 +18,14 @@ class ChatImageNetwork extends StatelessWidget {
       imageBuilder: (context, imageProvider) {
         return ClipRRect(
           borderRadius: BorderRadius.circular(16.r),
+          clipBehavior: Clip.hardEdge,
           child: Container(
             height: 218.w,
             decoration: BoxDecoration(
               image: DecorationImage(
+                alignment: Alignment.centerLeft,
                 image: imageProvider,
-                fit: BoxFit.fitHeight,
+                fit: BoxFit.cover,
               ),
             ),
           ),
