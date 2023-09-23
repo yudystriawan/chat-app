@@ -38,159 +38,177 @@ class ChatListWidget extends HookWidget {
 
     final userId = context.read<AuthBloc>().state.user.id;
 
-    return Stack(
-      children: [
-        BlocBuilder<MemberWatcherBloc, MemberWatcherState>(
-          buildWhen: (p, c) => p.members != c.members,
-          builder: (context, state) {
-            if (state.isLoading || state.members.isEmpty()) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    return BlocListener<MessageFormBloc, MessageFormState>(
+      listenWhen: (p, c) =>
+          p.failureOrSuccessOption != c.failureOrSuccessOption,
+      listener: (context, state) {
+        state.failureOrSuccessOption.fold(
+          () {},
+          (either) => either.fold(
+            (f) {},
+            (_) => _scrollToBottom(scrollController),
+          ),
+        );
+      },
+      child: Stack(
+        children: [
+          BlocBuilder<MemberWatcherBloc, MemberWatcherState>(
+            buildWhen: (p, c) => p.members != c.members,
+            builder: (context, state) {
+              if (state.isLoading || state.members.isEmpty()) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            // get member room exclude myself
-            final recipients =
-                state.members.filter((member) => member.id != userId);
+              // get member room exclude myself
+              final recipients =
+                  state.members.filter((member) => member.id != userId);
 
-            return BlocBuilder<MessagesWatcherBloc, MessagesWatcherState>(
-              buildWhen: (p, c) => p.messages != c.messages,
-              builder: (context, state) {
-                final messages = state.messages;
+              return BlocBuilder<MessagesWatcherBloc, MessagesWatcherState>(
+                buildWhen: (p, c) => p.messages != c.messages,
+                builder: (context, state) {
+                  final messages = state.messages;
 
-                if (state.isLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-
-                if (messages.isEmpty()) {
-                  return Center(
-                    child: Text(
-                      'No Message',
-                      style: AppTypography.bodyText1,
-                    ),
-                  );
-                }
-
-                final listGroupedByDate = messages.groupBy((message) {
-                  final sentAt = message.sentAt ?? DateTime.now();
-                  final dateTime =
-                      DateTime(sentAt.year, sentAt.month, sentAt.day);
-                  return dateTime;
-                });
-
-                return ListView.builder(
-                  controller: scrollController,
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: listGroupedByDate.size,
-                  shrinkWrap: true,
-                  reverse: true,
-                  itemBuilder: (BuildContext context, int index) {
-                    final date = listGroupedByDate.keys.elementAt(index);
-                    final items = listGroupedByDate[date];
-
-                    if (items == null || items.isEmpty()) {
-                      return Center(
-                        child: Text(
-                          'No Message',
-                          style: AppTypography.bodyText1,
-                        ),
-                      );
-                    }
-
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          children: [
-                            const Expanded(child: Divider()),
-                            SizedBox(width: 16.w),
-                            Text(
-                              date.toStringDate(),
-                              style: AppTypography.metadata1.copyWith(
-                                color: NeutralColor.disabled,
-                              ),
-                            ),
-                            SizedBox(width: 16.w),
-                            const Expanded(child: Divider()),
-                          ],
-                        ),
-                        ListView.separated(
-                          padding: EdgeInsets.symmetric(horizontal: 22.w),
-                          reverse: true,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: items.size,
-                          separatorBuilder: (BuildContext context, int index) {
-                            return SizedBox(height: 12.w);
-                          },
-                          itemBuilder: (BuildContext context, int index) {
-                            final message = items[index];
-
-                            final isSender = userId == message.sentBy;
-
-                            // check status read
-                            // when message have read info that not from sender
-                            final isRead = message.readInfoList
-                                .filter((readInfo) =>
-                                    readInfo.uid != message.sentBy)
-                                .isNotEmpty();
-
-                            // get the sender name
-                            final recipientName = recipients
-                                .firstOrNull(
-                                    (member) => member.id == message.sentBy)
-                                ?.name;
-
-                            return ChatBubble(
-                              body: Text(message.data),
-                              sentAt: message.sentAt,
-                              isSender: isSender,
-                              recipientName: recipientName,
-                              isRead: isSender ? isRead : false,
-                              imageUrl: message.imageUrl,
-                              replyMessage: message.replyMessage,
-                              onSwipeRight: () => context
-                                  .read<MessageFormBloc>()
-                                  .add(MessageFormEvent.replyMessageChanged(
-                                      message)),
-                            );
-                          },
-                        ),
-                      ],
+                  if (state.isLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
-                  },
-                );
-              },
-            );
-          },
-        ),
-        Positioned(
-          bottom: 4.w,
-          right: 4.w,
-          child: FadeTransition(
-            opacity: hideFabAnimController,
-            child: ScaleTransition(
-              scale: hideFabAnimController,
-              child: GhostButton(
-                padding: const EdgeInsets.all(8),
-                backgroundColor: BrandColor.light,
-                onPressed: () {
-                  scrollController.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeOut,
+                  }
+
+                  if (messages.isEmpty()) {
+                    return Center(
+                      child: Text(
+                        'No Message',
+                        style: AppTypography.bodyText1,
+                      ),
+                    );
+                  }
+
+                  final listGroupedByDate = messages.groupBy((message) {
+                    final sentAt = message.sentAt ?? DateTime.now();
+                    final dateTime =
+                        DateTime(sentAt.year, sentAt.month, sentAt.day);
+                    return dateTime;
+                  });
+
+                  return ListView.builder(
+                    controller: scrollController,
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    itemCount: listGroupedByDate.size,
+                    shrinkWrap: true,
+                    reverse: true,
+                    itemBuilder: (BuildContext context, int index) {
+                      final date = listGroupedByDate.keys.elementAt(index);
+                      final items = listGroupedByDate[date];
+
+                      if (items == null || items.isEmpty()) {
+                        return Center(
+                          child: Text(
+                            'No Message',
+                            style: AppTypography.bodyText1,
+                          ),
+                        );
+                      }
+
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            children: [
+                              const Expanded(child: Divider()),
+                              SizedBox(width: 16.w),
+                              Text(
+                                date.toStringDate(),
+                                style: AppTypography.metadata1.copyWith(
+                                  color: NeutralColor.disabled,
+                                ),
+                              ),
+                              SizedBox(width: 16.w),
+                              const Expanded(child: Divider()),
+                            ],
+                          ),
+                          ListView.separated(
+                            padding: EdgeInsets.symmetric(horizontal: 22.w),
+                            reverse: true,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: items.size,
+                            separatorBuilder:
+                                (BuildContext context, int index) {
+                              return SizedBox(height: 12.w);
+                            },
+                            itemBuilder: (BuildContext context, int index) {
+                              final message = items[index];
+
+                              final isSender = userId == message.sentBy;
+
+                              // check status read
+                              // when message have read info that not from sender
+                              final isRead = message.readInfoList
+                                  .filter((readInfo) =>
+                                      readInfo.uid != message.sentBy)
+                                  .isNotEmpty();
+
+                              // get the sender name
+                              final recipientName = recipients
+                                  .firstOrNull(
+                                      (member) => member.id == message.sentBy)
+                                  ?.name;
+
+                              return ChatBubble(
+                                body: Text(message.data),
+                                sentAt: message.sentAt,
+                                isSender: isSender,
+                                recipientName: recipientName,
+                                isRead: isSender ? isRead : false,
+                                imageUrl: message.imageUrl,
+                                replyMessage: message.replyMessage,
+                                onSwipeRight: () => context
+                                    .read<MessageFormBloc>()
+                                    .add(MessageFormEvent.replyMessageChanged(
+                                        message)),
+                              );
+                            },
+                          ),
+                        ],
+                      );
+                    },
                   );
                 },
-                child: Icon(
-                  Coolicons.chevron_down,
-                  color: NeutralColor.white,
-                  size: 24.w,
+              );
+            },
+          ),
+          Positioned(
+            bottom: 4.w,
+            right: 4.w,
+            child: FadeTransition(
+              opacity: hideFabAnimController,
+              child: ScaleTransition(
+                scale: hideFabAnimController,
+                child: GhostButton(
+                  padding: const EdgeInsets.all(8),
+                  backgroundColor: BrandColor.light,
+                  onPressed: () {
+                    _scrollToBottom(scrollController);
+                  },
+                  child: Icon(
+                    Coolicons.chevron_down,
+                    color: NeutralColor.white,
+                    size: 24.w,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  void _scrollToBottom(ScrollController scrollController) {
+    scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeOut,
     );
   }
 }
