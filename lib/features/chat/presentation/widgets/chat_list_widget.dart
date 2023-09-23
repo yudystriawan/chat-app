@@ -12,19 +12,19 @@ import 'package:kt_dart/collection.dart';
 import '../blocs/messages_watcher/messages_watcher_bloc.dart';
 import 'chat_bubble.dart';
 
-class ChatsContainer extends StatefulWidget {
+class ChatListWidget extends StatefulWidget {
   final VoidCallback? onLoadMore;
 
-  const ChatsContainer({
+  const ChatListWidget({
     Key? key,
     this.onLoadMore,
   }) : super(key: key);
 
   @override
-  State<ChatsContainer> createState() => _ChatsContainerState();
+  State<ChatListWidget> createState() => _ChatListWidgetState();
 }
 
-class _ChatsContainerState extends State<ChatsContainer> {
+class _ChatListWidgetState extends State<ChatListWidget> {
   final _scrollController = ScrollController();
 
   @override
