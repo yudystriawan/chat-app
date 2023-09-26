@@ -20,6 +20,7 @@ class ChatBubble extends StatelessWidget {
     this.recipientName,
     this.onSwipeRight,
     this.replyMessage,
+    this.onReplyTapped,
   })  : assert(!isSender || recipientName == null,
             "Sender does not need recipient's name"),
         assert(!isRead || recipientName == null,
@@ -34,6 +35,7 @@ class ChatBubble extends StatelessWidget {
   final String? recipientName;
   final VoidCallback? onSwipeRight;
   final Message? replyMessage;
+  final Function(String messageId)? onReplyTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +90,7 @@ class ChatBubble extends StatelessWidget {
                 ReplyChatWidget(
                   message: replyMessage!,
                   isSender: isSender,
+                  onTap: onReplyTapped,
                 ),
                 4.verticalSpace,
               ],

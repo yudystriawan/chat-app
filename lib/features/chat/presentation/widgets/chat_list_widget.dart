@@ -162,6 +162,9 @@ class ChatListWidget extends HookWidget {
                                 isRead: isSender ? isRead : false,
                                 imageUrl: message.imageUrl,
                                 replyMessage: message.replyMessage,
+                                onReplyTapped: (messageId) {
+                                  debugPrint('reply tapped: $messageId');
+                                },
                                 onSwipeRight: () => context
                                     .read<MessageFormBloc>()
                                     .add(MessageFormEvent.replyMessageChanged(

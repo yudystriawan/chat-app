@@ -17,11 +17,13 @@ class ReplyChatWidget extends StatelessWidget {
     required this.message,
     this.onCloseReply,
     this.isSender = false,
+    this.onTap,
   }) : super(key: key);
 
   final Message message;
   final VoidCallback? onCloseReply;
   final bool isSender;
+  final Function(String messageId)? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -35,47 +37,52 @@ class ReplyChatWidget extends StatelessWidget {
             final recipientName = members
                 .firstOrNull((member) => member.id == message.sentBy)
                 ?.name;
-            return ClipRRect(
-              borderRadius: BorderRadius.circular(4.r),
-              child: Container(
-                width: 317.w,
-                padding: EdgeInsets.all(8.w),
-                decoration: BoxDecoration(
-                  border: Border(
-                    left: BorderSide(
-                      width: 4.w,
-                      color: isSender ? NeutralColor.white : BrandColor.neutral,
+            return GestureDetector(
+              onTap: onTap == null ? null : () => onTap!.call(message.id),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4.r),
+                child: Container(
+                  width: 317.w,
+                  padding: EdgeInsets.all(8.w),
+                  decoration: BoxDecoration(
+                    border: Border(
+                      left: BorderSide(
+                        width: 4.w,
+                        color:
+                            isSender ? NeutralColor.white : BrandColor.neutral,
+                      ),
                     ),
+                    color: isSender ? BrandColor.darkMode : NeutralColor.line,
                   ),
-                  color: isSender ? BrandColor.darkMode : NeutralColor.line,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      recipientName ?? '',
-                      style: AppTypography.metadata3.copyWith(
-                          color: isSender
-                              ? NeutralColor.white
-                              : BrandColor.neutral),
-                    ),
-                    4.verticalSpace,
-                    if (message.type.isImage) ...[
-                      ChatImageNetwork(imageUrl: message.imageUrl),
-                      4.verticalSpace,
-                    ],
-                    if (message.data.isEmpty)
-                      const SizedBox()
-                    else
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                       Text(
-                        message.data,
-                        style: AppTypography.bodyText2.copyWith(
-                          color:
-                              isSender ? NeutralColor.white : NeutralColor.body,
-                        ),
-                      )
-                  ],
+                        recipientName ?? '',
+                        style: AppTypography.metadata3.copyWith(
+                            color: isSender
+                                ? NeutralColor.white
+                                : BrandColor.neutral),
+                      ),
+                      4.verticalSpace,
+                      if (message.type.isImage) ...[
+                        ChatImageNetwork(imageUrl: message.imageUrl),
+                        4.verticalSpace,
+                      ],
+                      if (message.data.isEmpty)
+                        const SizedBox()
+                      else
+                        Text(
+                          message.data,
+                          style: AppTypography.bodyText2.copyWith(
+                            color: isSender
+                                ? NeutralColor.white
+                                : NeutralColor.body,
+                          ),
+                        )
+                    ],
+                  ),
                 ),
               ),
             );
