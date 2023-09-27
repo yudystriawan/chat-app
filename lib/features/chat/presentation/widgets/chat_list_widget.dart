@@ -11,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kt_dart/collection.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../../shared/hooks/scroll_controller_for_animation.dart';
 import '../blocs/messages_watcher/messages_watcher_bloc.dart';
@@ -31,7 +32,7 @@ class ChatListWidget extends HookWidget {
       initialValue: 0,
     );
 
-    final scrollController = useScrollControllerForAnimation(
+    final scrollController = useAutoScrollController(
       animationController: hideFabAnimController,
       onScrollEnd: onLoadMore,
     );
@@ -131,21 +132,35 @@ class ChatListWidget extends HookWidget {
                             ),
                             10.verticalSpace,
                           ],
-                          ChatBubble(
-                            body: Text(message.data),
-                            sentAt: message.sentAt,
-                            isSender: isSender,
-                            recipientName: recipientName,
-                            isRead: isSender ? isRead : false,
-                            imageUrl: message.imageUrl,
-                            replyMessage: message.replyMessage,
-                            onReplyTapped: (messageId) {
-                              debugPrint('reply tapped: $messageId');
-                            },
-                            onSwipeRight: () => context
-                                .read<MessageFormBloc>()
-                                .add(MessageFormEvent.replyMessageChanged(
-                                    message)),
+                          AutoScrollTag(
+                            key: ValueKey(message.id),
+                            controller: scrollController,
+                            index: index,
+                            child: ChatBubble(
+                              body: Text(message.data),
+                              sentAt: message.sentAt,
+                              isSender: isSender,
+                              recipientName: recipientName,
+                              isRead: isSender ? isRead : false,
+                              imageUrl: message.imageUrl,
+                              replyMessage: message.replyMessage,
+                              onReplyTapped: (messageId) async {
+                                debugPrint('reply tapped: $messageId');
+                                final replyMessage = messages.firstOrNull(
+                                    (message) => message.id == messageId);
+                                if (replyMessage == null) return;
+
+                                final replyIndex =
+                                    messages.indexOf(replyMessage);
+
+                                await scrollController
+                                    .scrollToIndex(replyIndex);
+                              },
+                              onSwipeRight: () => context
+                                  .read<MessageFormBloc>()
+                                  .add(MessageFormEvent.replyMessageChanged(
+                                      message)),
+                            ),
                           )
                         ],
                       );

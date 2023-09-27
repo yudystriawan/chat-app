@@ -35,6 +35,7 @@ dependencies:
   bloc_concurrency: ^0.2.2
   sliver_tools: ^0.2.12
   cached_network_image: ^3.2.3
+  scroll_to_index: ^3.0.1
 
 dev_dependencies:
   flutter_test:

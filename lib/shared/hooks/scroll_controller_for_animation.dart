@@ -3,8 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 
-ScrollController useScrollControllerForAnimation({
+AutoScrollController useAutoScrollController({
   required AnimationController animationController,
   VoidCallback? onScrollEnd,
 }) {
@@ -14,7 +15,7 @@ ScrollController useScrollControllerForAnimation({
   ));
 }
 
-class _ScrollControllerForAnimationHook extends Hook<ScrollController> {
+class _ScrollControllerForAnimationHook extends Hook<AutoScrollController> {
   final AnimationController animationController;
   final VoidCallback? onScrollEnd;
 
@@ -24,18 +25,18 @@ class _ScrollControllerForAnimationHook extends Hook<ScrollController> {
   });
 
   @override
-  HookState<ScrollController, Hook<ScrollController>> createState() =>
+  HookState<AutoScrollController, Hook<AutoScrollController>> createState() =>
       _ScrollControllerForAnimationHookState();
 }
 
 class _ScrollControllerForAnimationHookState
-    extends HookState<ScrollController, _ScrollControllerForAnimationHook> {
-  late ScrollController _scrollController;
+    extends HookState<AutoScrollController, _ScrollControllerForAnimationHook> {
+  late AutoScrollController _scrollController;
 
   @override
   void initHook() {
     super.initHook();
-    _scrollController = ScrollController();
+    _scrollController = AutoScrollController();
     _scrollController.addListener(() {
       switch (_scrollController.position.userScrollDirection) {
         case ScrollDirection.forward:
@@ -61,7 +62,7 @@ class _ScrollControllerForAnimationHookState
   }
 
   @override
-  ScrollController build(BuildContext context) => _scrollController;
+  AutoScrollController build(BuildContext context) => _scrollController;
 
   @override
   void dispose() {
