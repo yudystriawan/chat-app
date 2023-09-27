@@ -83,98 +83,74 @@ class ChatListWidget extends HookWidget {
                     );
                   }
 
-                  final listGroupedByDate = messages.groupBy((message) {
-                    final sentAt = message.sentAt ?? DateTime.now();
-                    final dateTime =
-                        DateTime(sentAt.year, sentAt.month, sentAt.day);
-                    return dateTime;
-                  });
-
-                  return ListView.builder(
+                  return ListView.separated(
                     controller: scrollController,
+                    padding: EdgeInsets.all(16.w),
                     physics: const AlwaysScrollableScrollPhysics(),
-                    itemCount: listGroupedByDate.size,
+                    itemCount: messages.size,
                     shrinkWrap: true,
                     reverse: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      final date = listGroupedByDate.keys.elementAt(index);
-                      final items = listGroupedByDate[date];
+                    itemBuilder: (context, index) {
+                      final message = messages[index];
 
-                      if (items == null || items.isEmpty()) {
-                        return Center(
-                          child: Text(
-                            'No Message',
-                            style: AppTypography.bodyText1,
-                          ),
-                        );
-                      }
+                      final isSender = userId == message.sentBy;
+
+                      // check status read
+                      // when message have read info that not from sender
+                      final isRead = message.readInfoList
+                          .filter((readInfo) => readInfo.uid != message.sentBy)
+                          .isNotEmpty();
+
+                      // get the sender name
+                      final recipientName = recipients
+                          .firstOrNull((member) => member.id == message.sentBy)
+                          ?.name;
+
+                      // check if current message'sentAt is different from previous
+                      final showDate = (index < messages.size - 1) &&
+                          messages[index + 1].sentAt?.day !=
+                              message.sentAt?.day;
 
                       return Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Row(
-                            children: [
-                              const Expanded(child: Divider()),
-                              SizedBox(width: 16.w),
-                              Text(
-                                date.toStringDate(),
-                                style: AppTypography.metadata1.copyWith(
-                                  color: NeutralColor.disabled,
+                          if (showDate) ...[
+                            Row(
+                              children: [
+                                const Expanded(child: Divider()),
+                                SizedBox(width: 16.w),
+                                Text(
+                                  message.sentAt!.toStringDate(),
+                                  style: AppTypography.metadata1.copyWith(
+                                    color: NeutralColor.disabled,
+                                  ),
                                 ),
-                              ),
-                              SizedBox(width: 16.w),
-                              const Expanded(child: Divider()),
-                            ],
-                          ),
-                          ListView.separated(
-                            padding: EdgeInsets.symmetric(horizontal: 22.w),
-                            reverse: true,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: items.size,
-                            separatorBuilder:
-                                (BuildContext context, int index) {
-                              return SizedBox(height: 12.w);
+                                SizedBox(width: 16.w),
+                                const Expanded(child: Divider()),
+                              ],
+                            ),
+                            10.verticalSpace,
+                          ],
+                          ChatBubble(
+                            body: Text(message.data),
+                            sentAt: message.sentAt,
+                            isSender: isSender,
+                            recipientName: recipientName,
+                            isRead: isSender ? isRead : false,
+                            imageUrl: message.imageUrl,
+                            replyMessage: message.replyMessage,
+                            onReplyTapped: (messageId) {
+                              debugPrint('reply tapped: $messageId');
                             },
-                            itemBuilder: (BuildContext context, int index) {
-                              final message = items[index];
-
-                              final isSender = userId == message.sentBy;
-
-                              // check status read
-                              // when message have read info that not from sender
-                              final isRead = message.readInfoList
-                                  .filter((readInfo) =>
-                                      readInfo.uid != message.sentBy)
-                                  .isNotEmpty();
-
-                              // get the sender name
-                              final recipientName = recipients
-                                  .firstOrNull(
-                                      (member) => member.id == message.sentBy)
-                                  ?.name;
-
-                              return ChatBubble(
-                                body: Text(message.data),
-                                sentAt: message.sentAt,
-                                isSender: isSender,
-                                recipientName: recipientName,
-                                isRead: isSender ? isRead : false,
-                                imageUrl: message.imageUrl,
-                                replyMessage: message.replyMessage,
-                                onReplyTapped: (messageId) {
-                                  debugPrint('reply tapped: $messageId');
-                                },
-                                onSwipeRight: () => context
-                                    .read<MessageFormBloc>()
-                                    .add(MessageFormEvent.replyMessageChanged(
-                                        message)),
-                              );
-                            },
-                          ),
+                            onSwipeRight: () => context
+                                .read<MessageFormBloc>()
+                                .add(MessageFormEvent.replyMessageChanged(
+                                    message)),
+                          )
                         ],
                       );
                     },
+                    separatorBuilder: (context, index) => 12.verticalSpace,
                   );
                 },
               );
