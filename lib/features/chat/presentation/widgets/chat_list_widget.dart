@@ -145,16 +145,21 @@ class ChatListWidget extends HookWidget {
                               imageUrl: message.imageUrl,
                               replyMessage: message.replyMessage,
                               onReplyTapped: (messageId) async {
-                                debugPrint('reply tapped: $messageId');
+                                // get message object
                                 final replyMessage = messages.firstOrNull(
                                     (message) => message.id == messageId);
                                 if (replyMessage == null) return;
 
+                                // get message index on list
                                 final replyIndex =
                                     messages.indexOf(replyMessage);
 
+                                // scroll todesignated widget
                                 await scrollController
                                     .scrollToIndex(replyIndex);
+
+                                // show button
+                                hideFabAnimController.forward();
                               },
                               onSwipeRight: () => context
                                   .read<MessageFormBloc>()
@@ -183,6 +188,9 @@ class ChatListWidget extends HookWidget {
                   backgroundColor: BrandColor.light,
                   onPressed: () {
                     _scrollToBottom(scrollController);
+
+                    // hide butten
+                    hideFabAnimController.reverse();
                   },
                   child: Icon(
                     Coolicons.chevron_down,

@@ -38,7 +38,12 @@ class _ScrollControllerForAnimationHookState
     super.initHook();
     _scrollController = AutoScrollController();
     _scrollController.addListener(() {
-      switch (_scrollController.position.userScrollDirection) {
+      final scrollPosition = _scrollController.position;
+
+      debugPrint(
+          'changed: ${_scrollController.position.isScrollingNotifier.value} | ${scrollPosition.userScrollDirection}');
+
+      switch (scrollPosition.userScrollDirection) {
         case ScrollDirection.forward:
           hook.animationController.reverse();
           break;
@@ -48,13 +53,12 @@ class _ScrollControllerForAnimationHookState
           break;
 
         case ScrollDirection.idle:
-          hook.animationController.reverse();
-          break;
+        // hook.animationController.reverse();
+        // break;
       }
 
       // Detect scroll end by checking if we are at the bottom of the list
-      if (_scrollController.position.pixels ==
-          _scrollController.position.maxScrollExtent) {
+      if (scrollPosition.pixels == scrollPosition.maxScrollExtent) {
         // Call the callback when the user reaches the end of the list
         hook.onScrollEnd?.call();
       }
