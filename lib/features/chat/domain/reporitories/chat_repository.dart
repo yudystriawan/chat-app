@@ -5,7 +5,7 @@ import 'package:kt_dart/collection.dart';
 import '../entities/entity.dart';
 
 abstract class ChatRepository {
-  Future<Either<Failure, Message>> createMessage({
+  Future<Either<Failure, Message>> addMessage({
     required String roomId,
     required String message,
     required MessageType type,

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/features/chat/domain/entities/entity.dart';
-import 'package:chat_app/features/chat/domain/usecases/create_message.dart';
+import 'package:chat_app/features/chat/domain/usecases/add_message.dart';
 import 'package:chat_app/features/chat/domain/usecases/edit_message.dart';
 import 'package:core/features/images/domain/usecases/upload_image.dart';
 import 'package:core/utils/errors/failure.dart';
@@ -16,7 +16,7 @@ part 'message_form_state.dart';
 
 @injectable
 class MessageFormBloc extends Bloc<MessageFormEvent, MessageFormState> {
-  final CreateMessage _createMessage;
+  final AddMessage _createMessage;
   final UploadImage _uploadImage;
   final EditMessage _editMessage;
 
@@ -78,7 +78,7 @@ class MessageFormBloc extends Bloc<MessageFormEvent, MessageFormState> {
       failureOrSuccessOption: none(),
     ));
 
-    final failureOrMessage = await _createMessage(CreateMessageParams(
+    final failureOrMessage = await _createMessage(AddMessageParams(
       roomId: event.roomId,
       message: state.data,
       type: state.messageType,

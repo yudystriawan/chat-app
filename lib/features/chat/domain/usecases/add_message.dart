@@ -7,14 +7,14 @@ import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-class CreateMessage implements Usecase<Message, CreateMessageParams> {
+class AddMessage implements Usecase<Message, AddMessageParams> {
   final ChatRepository _repostory;
 
-  CreateMessage(this._repostory);
+  AddMessage(this._repostory);
 
   @override
-  Future<Either<Failure, Message>> call(CreateMessageParams params) async {
-    return await _repostory.createMessage(
+  Future<Either<Failure, Message>> call(AddMessageParams params) async {
+    return await _repostory.addMessage(
       roomId: params.roomId,
       message: params.message,
       type: params.type,
@@ -23,13 +23,13 @@ class CreateMessage implements Usecase<Message, CreateMessageParams> {
   }
 }
 
-class CreateMessageParams extends Equatable {
+class AddMessageParams extends Equatable {
   final String roomId;
   final String message;
   final MessageType type;
   final Message? replyMessage;
 
-  const CreateMessageParams({
+  const AddMessageParams({
     required this.roomId,
     required this.message,
     required this.type,

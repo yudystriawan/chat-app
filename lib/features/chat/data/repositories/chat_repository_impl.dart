@@ -23,7 +23,7 @@ class ChatRepositoryImpl implements ChatRepository {
     this._messageRemoteDataSource,
   );
   @override
-  Future<Either<Failure, Message>> createMessage({
+  Future<Either<Failure, Message>> addMessage({
     required String roomId,
     required String message,
     required MessageType type,
