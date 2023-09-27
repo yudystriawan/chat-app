@@ -19,7 +19,7 @@ abstract class ChatRepository {
   });
 
   Future<Either<Failure, String>> addRoom({
-    required KtList<String> members,
+    required KtList<String> membersIds,
     required int type,
   });
   Future<Either<Failure, Unit>> removeRoom(String roomId);

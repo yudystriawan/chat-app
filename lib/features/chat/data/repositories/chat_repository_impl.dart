@@ -57,12 +57,12 @@ class ChatRepositoryImpl implements ChatRepository {
 
   @override
   Future<Either<Failure, String>> addRoom({
-    required KtList<String> members,
+    required KtList<String> membersIds,
     required int type,
   }) async {
     try {
       final bodyRequest = RoomDto(
-        members: members.iter.toList(),
+        members: membersIds.iter.toList(),
         type: type,
       );
 

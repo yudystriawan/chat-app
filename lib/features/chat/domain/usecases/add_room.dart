@@ -9,29 +9,53 @@ import 'package:kt_dart/collection.dart';
 import '../entities/entity.dart';
 
 @injectable
-class AddRoom implements Usecase<String, CreateRoomParams> {
+class AddRoom implements Usecase<String, AddRoomParams> {
   final ChatRepository _repository;
 
   AddRoom(this._repository);
 
   @override
-  Future<Either<Failure, String>> call(params) {
+  Future<Either<Failure, String>> call(params) async {
+    if (params.hasFailure) {
+      return left(params.failure!);
+    }
+
+    if (params.membersIds.size > 2 && params.type.isPrivate) {
+      return left(
+          const Failure.invalidParameter(message: 'Must be a group type'));
+    }
+
     return _repository.addRoom(
-      members: params.members,
+      membersIds: params.membersIds,
       type: params.type.value,
     );
   }
 }
 
-class CreateRoomParams extends Equatable {
-  final KtList<String> members;
+class AddRoomParams extends Equatable {
+  final KtList<String> membersIds;
   final RoomType type;
 
-  const CreateRoomParams({
-    required this.members,
+  const AddRoomParams({
+    required this.membersIds,
     required this.type,
   });
 
+  Failure? get failure {
+    if (type == RoomType.nan) {
+      return const Failure.invalidParameter(message: 'RoomType must be set');
+    }
+
+    if (membersIds.isEmpty()) {
+      return const Failure.invalidParameter(
+          message: 'MembersIds cannot be empty');
+    }
+
+    return null;
+  }
+
+  bool get hasFailure => failure != null;
+
   @override
-  List<Object> get props => [members, type];
+  List<Object> get props => [membersIds, type];
 }
