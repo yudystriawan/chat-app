@@ -8,4 +8,5 @@ abstract class AccountRepository {
   Future<Either<Failure, Unit>> saveAccount(Account account);
   Stream<Either<Failure, Account>> watchAccount();
   Stream<Either<Failure, KtList<Account>>> watchAccounts({String? username});
+  Future<Either<Failure, Unit>> setOnlineStatus(bool status);
 }

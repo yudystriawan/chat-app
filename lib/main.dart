@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'features/account/presentation/blocs/account_actor/account_actor_bloc.dart';
 import 'features/chat/presentation/blocs/rooms_watcher/rooms_watcher_bloc.dart';
 import 'firebase_options.dart';
 import 'injection.dart';
@@ -85,8 +86,77 @@ class _MyAppState extends State<MyApp> {
 }
 
 @RoutePage()
-class HomePage extends StatelessWidget implements AutoRouteWrapper {
+class HomePage extends StatefulWidget implements AutoRouteWrapper {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+
+  @override
+  Widget wrappedRoute(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => getIt<ContactWatcherBloc>()
+            ..add(const ContactWatcherEvent.watchAllStarted()),
+        ),
+        BlocProvider(
+          create: (context) => getIt<RoomsWatcherBloc>()
+            ..add(const RoomsWatcherEvent.watchAllStarted()),
+        ),
+        BlocProvider(
+          create: (context) => getIt<AccountActorBloc>(),
+        ),
+      ],
+      child: this,
+    );
+  }
+}
+
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
+  late AccountActorBloc accountActorBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    accountActorBloc = context.read<AccountActorBloc>();
+    accountActorBloc.add(const AccountActorEvent.onlineStatusChanged(true));
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // Handle lifecycle state changes here
+    switch (state) {
+      case AppLifecycleState.inactive:
+        // The app is in an inactive state (e.g., when a phone call is received)
+        accountActorBloc
+            .add(const AccountActorEvent.onlineStatusChanged(false));
+        break;
+      case AppLifecycleState.resumed:
+        // The app is resumed from the background
+        accountActorBloc.add(const AccountActorEvent.onlineStatusChanged(true));
+        break;
+      case AppLifecycleState.paused:
+        // The app is paused (e.g., when it goes into the background)
+        accountActorBloc
+            .add(const AccountActorEvent.onlineStatusChanged(false));
+        break;
+      case AppLifecycleState.detached:
+        // The app is detached (e.g., when it is terminated)
+        accountActorBloc
+            .add(const AccountActorEvent.onlineStatusChanged(false));
+        break;
+    }
+
+    super.didChangeAppLifecycleState(state);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,23 +200,6 @@ class HomePage extends StatelessWidget implements AutoRouteWrapper {
           )
         ],
       ),
-    );
-  }
-
-  @override
-  Widget wrappedRoute(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => getIt<ContactWatcherBloc>()
-            ..add(const ContactWatcherEvent.watchAllStarted()),
-        ),
-        BlocProvider(
-          create: (context) => getIt<RoomsWatcherBloc>()
-            ..add(const RoomsWatcherEvent.watchAllStarted()),
-        ),
-      ],
-      child: this,
     );
   }
 }

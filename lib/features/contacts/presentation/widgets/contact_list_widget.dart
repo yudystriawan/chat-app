@@ -51,6 +51,7 @@ class ContactListWidget extends StatelessWidget {
             title: Text(contact.name),
             imageUrl: contact.photoUrl,
             subtitle: Text(contact.bio),
+            isOnline: contact.isOnline,
             onTap: () => context.read<RoomActorBloc>().add(
                 RoomActorEvent.roomAdded(
                     userIds: KtList.from([contact.id]),

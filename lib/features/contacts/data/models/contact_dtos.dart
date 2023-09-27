@@ -17,6 +17,7 @@ class ContactDto with _$ContactDto {
     String? email,
     String? photoUrl,
     String? phoneNumber,
+    bool? isOnline,
     List<String>? contacts,
   }) = _ContactDto;
 
@@ -46,6 +47,7 @@ class ContactDto with _$ContactDto {
       email: email ?? empty.email,
       photoUrl: photoUrl ?? empty.photoUrl,
       phoneNumber: phoneNumber ?? empty.phoneNumber,
+      isOnline: isOnline ?? empty.isOnline,
       contacts: contacts?.toImmutableList() ?? empty.contacts,
     );
   }

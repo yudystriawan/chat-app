@@ -15,6 +15,7 @@ class Contact with _$Contact, BaseUser {
     required String email,
     required String photoUrl,
     required String phoneNumber,
+    required bool isOnline,
     required KtList<String> contacts,
   }) = _Contact;
 
@@ -27,5 +28,6 @@ class Contact with _$Contact, BaseUser {
         photoUrl: '',
         phoneNumber: '',
         contacts: KtList.empty(),
+        isOnline: false,
       );
 }

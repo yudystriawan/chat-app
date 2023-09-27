@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app/features/account/data/datasources/account_remote_datasource.dart';
 import 'package:chat_app/features/account/data/models/account_dtos.dart';
 import 'package:chat_app/features/account/domain/entities/account.dart';
@@ -54,5 +56,23 @@ class AccountRepositoryImpl implements AccountRepository {
 
       return left<Failure, KtList<Account>>(const Failure.serverError());
     });
+  }
+
+  @override
+  Future<Either<Failure, Unit>> setOnlineStatus(bool status) async {
+    try {
+      await _remoteDataSource.updateOnlineStatus(status);
+      return right(unit);
+    } on Failure catch (e) {
+      return left(e);
+    } catch (e, s) {
+      log(
+        'an error occured',
+        name: 'setOnlineStatus',
+        error: e,
+        stackTrace: s,
+      );
+      return left(const Failure.unexpectedError());
+    }
   }
 }

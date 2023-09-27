@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app/features/account/data/models/account_dtos.dart';
 import 'package:core/core.dart';
 import 'package:core/services/firestore/firestore_helper.dart';
@@ -8,6 +10,7 @@ abstract class AccountRemoteDataSource {
   Future<void> saveAccount(AccountDto account);
   Stream<AccountDto?> watchCurrentAccount();
   Stream<List<AccountDto>?> watchAccounts({String? username});
+  Future<void> updateOnlineStatus(bool status);
 }
 
 @Injectable(as: AccountRemoteDataSource)
@@ -52,5 +55,24 @@ class AccountFirebaseDataSourceImpl implements AccountRemoteDataSource {
         .onErrorReturnWith(
           (error, stackTrace) => throw const Failure.serverError(),
         );
+  }
+
+  @override
+  Future<void> updateOnlineStatus(bool status) async {
+    try {
+      final userDoc = await _service.instance.userDocument();
+
+      final request = {'isOnline': status};
+
+      await _service.instance.userCollection.doc(userDoc.id).update(request);
+    } catch (e, s) {
+      log(
+        'an error occured',
+        name: 'updateOnlineStatus',
+        error: e,
+        stackTrace: s,
+      );
+      throw const Failure.serverError();
+    }
   }
 }
