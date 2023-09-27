@@ -9,8 +9,8 @@ class MessagesWatcherState with _$MessagesWatcherState {
     @Default(false) bool isLoading,
     @Default(1) int currentPage,
 
-    /// show page per size
-    @Default(10) int pageSize,
+    /// show size per page
+    @Default(100) int pageSize,
   }) = _MessagesWatcherState;
 
   int get limit => currentPage * pageSize;
