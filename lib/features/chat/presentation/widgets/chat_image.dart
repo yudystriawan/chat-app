@@ -8,9 +8,15 @@ class ChatImageNetwork extends StatelessWidget {
   const ChatImageNetwork({
     Key? key,
     required this.imageUrl,
+    this.height,
+    this.width,
+    this.borderRadius,
   }) : super(key: key);
 
   final String imageUrl;
+  final double? height;
+  final double? width;
+  final BorderRadiusGeometry? borderRadius;
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +26,11 @@ class ChatImageNetwork extends StatelessWidget {
         return GestureDetector(
           onTap: () => showImageDialog(context, imageUrl: imageUrl),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(16.r),
+            borderRadius: borderRadius ?? BorderRadius.circular(4.r),
             clipBehavior: Clip.hardEdge,
             child: Container(
-              height: 218.w,
+              height: height ?? 218.w,
+              width: width,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   alignment: Alignment.centerLeft,
@@ -45,7 +52,7 @@ class ChatImageNetwork extends StatelessWidget {
           width: 80.w,
           height: 80.w,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16.r),
+            borderRadius: borderRadius ?? BorderRadius.circular(4.r),
           ),
           child: Icon(
             Icons.broken_image_outlined,

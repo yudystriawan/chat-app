@@ -183,6 +183,7 @@ class _RoomPageState extends State<RoomPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           ReplyChatWidget(
+                            width: double.infinity,
                             message: state.replyMessage!,
                             onCloseReply: () => context
                                 .read<MessageFormBloc>()
