@@ -58,12 +58,12 @@ class ReplyChatWidget extends StatelessWidget {
                       border: Border(
                         left: BorderSide(
                           width: 4.w,
-                          color: isReplyFromMyself || sentByMyself
+                          color: sentByMyself
                               ? NeutralColor.white
                               : BrandColor.neutral,
                         ),
                       ),
-                      color: isReplyFromMyself || sentByMyself
+                      color: sentByMyself
                           ? BrandColor.darkMode
                           : NeutralColor.line,
                     ),
@@ -87,7 +87,7 @@ class ReplyChatWidget extends StatelessWidget {
                                   Text(
                                     recipientName,
                                     style: AppTypography.metadata3.copyWith(
-                                      color: isReplyFromMyself || sentByMyself
+                                      color: sentByMyself
                                           ? NeutralColor.white
                                           : BrandColor.neutral,
                                     ),
@@ -98,7 +98,7 @@ class ReplyChatWidget extends StatelessWidget {
                                       Icon(
                                         Coolicons.image,
                                         size: 14.w,
-                                        color: isReplyFromMyself || sentByMyself
+                                        color: sentByMyself
                                             ? NeutralColor.body
                                             : NeutralColor.white,
                                       ),
@@ -106,10 +106,9 @@ class ReplyChatWidget extends StatelessWidget {
                                       Text(
                                         'Image',
                                         style: AppTypography.metadata3.copyWith(
-                                          color:
-                                              isReplyFromMyself || sentByMyself
-                                                  ? NeutralColor.white
-                                                  : NeutralColor.body,
+                                          color: sentByMyself
+                                              ? NeutralColor.white
+                                              : NeutralColor.body,
                                         ),
                                       ),
                                     ],
@@ -123,7 +122,7 @@ class ReplyChatWidget extends StatelessWidget {
                           Text(
                             recipientName,
                             style: AppTypography.metadata3.copyWith(
-                              color: isReplyFromMyself || sentByMyself
+                              color: sentByMyself
                                   ? NeutralColor.white
                                   : BrandColor.neutral,
                             ),
@@ -134,7 +133,7 @@ class ReplyChatWidget extends StatelessWidget {
                             child: Text(
                               message.data,
                               style: AppTypography.bodyText2.copyWith(
-                                color: isReplyFromMyself || sentByMyself
+                                color: sentByMyself
                                     ? NeutralColor.white
                                     : NeutralColor.body,
                               ),
