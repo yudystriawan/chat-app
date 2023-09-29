@@ -16,16 +16,18 @@ class ReplyChatWidget extends StatelessWidget {
     Key? key,
     required this.message,
     this.onCloseReply,
-    this.isSender = false,
     this.onTap,
     this.width,
+    this.isReplyFromMyself = false,
+    this.sentByMyself = false,
   }) : super(key: key);
 
   final Message message;
   final VoidCallback? onCloseReply;
-  final bool isSender;
   final Function(String messageId)? onTap;
   final double? width;
+  final bool isReplyFromMyself;
+  final bool sentByMyself;
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +40,13 @@ class ReplyChatWidget extends StatelessWidget {
             builder: (context, state) {
               final members = state.members;
               // get the sender name
-              final recipientName = members
-                  .firstOrNull((member) => member.id == message.sentBy)
-                  ?.name;
+              String recipientName = members
+                      .firstOrNull((member) => member.id == message.sentBy)
+                      ?.name ??
+                  '';
+
+              if (isReplyFromMyself) recipientName = 'You';
+
               return GestureDetector(
                 onTap: onTap == null ? null : () => onTap!.call(message.id),
                 child: ClipRRect(
@@ -52,12 +58,14 @@ class ReplyChatWidget extends StatelessWidget {
                       border: Border(
                         left: BorderSide(
                           width: 4.w,
-                          color: isSender
+                          color: isReplyFromMyself || sentByMyself
                               ? NeutralColor.white
                               : BrandColor.neutral,
                         ),
                       ),
-                      color: isSender ? BrandColor.darkMode : NeutralColor.line,
+                      color: isReplyFromMyself || sentByMyself
+                          ? BrandColor.darkMode
+                          : NeutralColor.line,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,11 +85,12 @@ class ReplyChatWidget extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    recipientName ?? '',
+                                    recipientName,
                                     style: AppTypography.metadata3.copyWith(
-                                        color: isSender
-                                            ? NeutralColor.white
-                                            : BrandColor.neutral),
+                                      color: isReplyFromMyself || sentByMyself
+                                          ? NeutralColor.white
+                                          : BrandColor.neutral,
+                                    ),
                                   ),
                                   Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -89,17 +98,18 @@ class ReplyChatWidget extends StatelessWidget {
                                       Icon(
                                         Coolicons.image,
                                         size: 14.w,
-                                        color: isSender
-                                            ? NeutralColor.white
-                                            : NeutralColor.body,
+                                        color: isReplyFromMyself || sentByMyself
+                                            ? NeutralColor.body
+                                            : NeutralColor.white,
                                       ),
                                       4.horizontalSpace,
                                       Text(
                                         'Image',
                                         style: AppTypography.metadata3.copyWith(
-                                          color: isSender
-                                              ? NeutralColor.white
-                                              : NeutralColor.body,
+                                          color:
+                                              isReplyFromMyself || sentByMyself
+                                                  ? NeutralColor.white
+                                                  : NeutralColor.body,
                                         ),
                                       ),
                                     ],
@@ -111,11 +121,12 @@ class ReplyChatWidget extends StatelessWidget {
                           4.verticalSpace,
                         ] else ...[
                           Text(
-                            recipientName ?? '',
+                            recipientName,
                             style: AppTypography.metadata3.copyWith(
-                                color: isSender
-                                    ? NeutralColor.white
-                                    : BrandColor.neutral),
+                              color: isReplyFromMyself || sentByMyself
+                                  ? NeutralColor.white
+                                  : BrandColor.neutral,
+                            ),
                           ),
                           4.verticalSpace,
                           Container(
@@ -123,7 +134,7 @@ class ReplyChatWidget extends StatelessWidget {
                             child: Text(
                               message.data,
                               style: AppTypography.bodyText2.copyWith(
-                                color: isSender
+                                color: isReplyFromMyself || sentByMyself
                                     ? NeutralColor.white
                                     : NeutralColor.body,
                               ),

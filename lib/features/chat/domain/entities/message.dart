@@ -43,6 +43,8 @@ class Message with _$Message {
       );
 
   bool get hasReplyMessage => replyMessage != null;
+  bool get isReplyFromMyself =>
+      hasReplyMessage && sentBy == replyMessage!.sentBy;
 }
 
 @freezed

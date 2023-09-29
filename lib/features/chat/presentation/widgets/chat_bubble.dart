@@ -1,10 +1,14 @@
+import 'package:chat_app/features/account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
+import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
 import 'package:chat_app/features/chat/presentation/widgets/reply_chat_widget.dart';
 import 'package:chat_app/shared/swipeable_widget.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:core/utils/extensions/date_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kt_dart/collection.dart';
 
 import '../../domain/entities/entity.dart';
 import 'chat_image.dart';
@@ -12,124 +16,124 @@ import 'chat_image.dart';
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
     Key? key,
-    this.isSender = true,
-    this.isRead = false,
-    required this.body,
-    this.sentAt,
-    this.imageUrl,
-    this.recipientName,
+    required this.message,
     this.onSwipeRight,
-    this.replyMessage,
     this.onReplyTapped,
-  })  : assert(!isSender || recipientName == null,
-            "Sender does not need recipient's name"),
-        assert(!isRead || recipientName == null,
-            "Receipient does not need read info"),
-        super(key: key);
+  }) : super(key: key);
 
-  final bool isSender;
-  final bool isRead;
-  final Widget body;
-  final DateTime? sentAt;
-  final String? imageUrl;
-  final String? recipientName;
+  final Message message;
   final VoidCallback? onSwipeRight;
-  final Message? replyMessage;
   final Function(String messageId)? onReplyTapped;
 
   @override
   Widget build(BuildContext context) {
-    final bubbleBackground = isSender ? BrandColor.neutral : NeutralColor.white;
-    final textColor = isSender ? NeutralColor.white : NeutralColor.active;
-    final metadataColor = isSender ? NeutralColor.white : NeutralColor.disabled;
+    final userId = context.read<AccountWatcherBloc>().state.account.id;
+    final sentByMyself = userId == message.sentBy;
 
-    Widget body = this.body;
+    // get read info list that not from message sender itself
+    final isRead = message.readInfoList
+        .filter((readInfo) => readInfo.uid != userId)
+        .isNotEmpty();
 
-    if (body is Text) {
-      if (body.data?.isEmpty ?? false) {
-        body = const SizedBox();
-      } else {
-        body = DefaultTextStyle(
-          style:
-              body.style ?? AppTypography.bodyText2.copyWith(color: textColor),
-          child: Text(body.data!),
-        );
-      }
-    }
+    final bubbleBackground =
+        sentByMyself ? BrandColor.neutral : NeutralColor.white;
+    final textColor = sentByMyself ? NeutralColor.white : NeutralColor.active;
+    final metadataColor =
+        sentByMyself ? NeutralColor.white : NeutralColor.disabled;
 
-    return SwipeableWidget(
-      onSwipeRight: isSender ? null : onSwipeRight,
-      child: Align(
-        alignment: isSender ? Alignment.centerRight : Alignment.centerLeft,
-        child: Container(
-          padding: EdgeInsets.all(10.w),
-          constraints: BoxConstraints(maxWidth: 317.w),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(16.r),
-              topRight: Radius.circular(16.r),
-              bottomLeft: isSender ? Radius.circular(16.r) : Radius.zero,
-              bottomRight: isSender ? Radius.zero : Radius.circular(16.r),
-            ),
-            color: bubbleBackground,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment:
-                isSender ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-            children: [
-              if (recipientName != null) ...[
-                Text(
-                  recipientName!,
-                  style:
-                      AppTypography.metadata3.copyWith(color: BrandColor.dark),
+    return BlocBuilder<MemberWatcherBloc, MemberWatcherState>(
+      buildWhen: (p, c) => p.members != c.members,
+      builder: (context, state) {
+        if (state.isLoading || state.members.isEmpty()) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // get member room exclude myself
+        final recipients =
+            state.members.filter((member) => member.id != userId);
+
+        // get the sender name
+        final recipientName = recipients
+            .firstOrNull((member) => member.id == message.sentBy)
+            ?.name;
+
+        return SwipeableWidget(
+          onSwipeRight: onSwipeRight,
+          child: Align(
+            alignment:
+                sentByMyself ? Alignment.centerRight : Alignment.centerLeft,
+            child: Container(
+              padding: EdgeInsets.all(10.w),
+              constraints: BoxConstraints(maxWidth: 317.w),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.r),
+                  topRight: Radius.circular(16.r),
+                  bottomLeft:
+                      sentByMyself ? Radius.circular(16.r) : Radius.zero,
+                  bottomRight:
+                      sentByMyself ? Radius.zero : Radius.circular(16.r),
                 ),
-                const SizedBox(height: 4),
-              ],
-              if (replyMessage != null) ...[
-                ReplyChatWidget(
-                  message: replyMessage!,
-                  isSender: isSender,
-                  onTap: onReplyTapped,
-                ),
-                4.verticalSpace,
-              ],
-              if (imageUrl != null) ...[
-                ChatImageNetwork(imageUrl: imageUrl!),
-                // Image.network(imageUrl!),
-                const SizedBox(height: 4),
-              ],
-              body,
-              SizedBox(height: 4.w),
-              Row(
+                color: bubbleBackground,
+              ),
+              child: Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment:
-                    isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+                crossAxisAlignment: sentByMyself
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
                 children: [
-                  if (sentAt != null)
+                  if (recipientName != null) ...[
                     Text(
-                      sentAt!.toStringFormatted('HH:mm'),
-                      style: AppTypography.metadata2
-                          .copyWith(color: metadataColor),
+                      recipientName,
+                      style: AppTypography.metadata3
+                          .copyWith(color: BrandColor.dark),
                     ),
-                  if (isRead) ...[
-                    Text(
-                      ' • ',
-                      style: AppTypography.metadata2
-                          .copyWith(color: metadataColor),
+                    const SizedBox(height: 4),
+                  ],
+                  if (message.replyMessage != null) ...[
+                    ReplyChatWidget(
+                      message: message.replyMessage!,
+                      sentByMyself: sentByMyself,
+                      isReplyFromMyself: message.isReplyFromMyself,
+                      onTap: onReplyTapped,
                     ),
-                    Text(
-                      'Read',
-                      style: AppTypography.metadata2
-                          .copyWith(color: metadataColor),
-                    )
-                  ]
+                    4.verticalSpace,
+                  ],
+                  ChatImageNetwork(imageUrl: message.imageUrl),
+                  const SizedBox(height: 4),
+                  Text(
+                    message.data,
+                    style: AppTypography.bodyText2.copyWith(
+                      color: textColor,
+                    ),
+                  ),
+                  SizedBox(height: 4.w),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: sentByMyself
+                        ? MainAxisAlignment.end
+                        : MainAxisAlignment.start,
+                    children: [
+                      if (message.sentAt != null)
+                        Text(
+                          message.sentAt!.toStringFormatted('HH:mm'),
+                          style: AppTypography.metadata2
+                              .copyWith(color: metadataColor),
+                        ),
+                      if (isRead)
+                        Text(
+                          ' • Read',
+                          style: AppTypography.metadata2
+                              .copyWith(color: metadataColor),
+                        ),
+                    ],
+                  )
                 ],
-              )
-            ],
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
