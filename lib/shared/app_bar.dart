@@ -10,11 +10,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     Key? key,
     this.leading,
     required this.title,
+    this.subtitle,
     this.trailing,
   }) : super(key: key);
 
   final Widget? leading;
   final Widget title;
+  final Widget? subtitle;
   final Widget? trailing;
 
   @override
@@ -48,9 +50,20 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ],
                 Expanded(
-                  child: DefaultTextStyle(
-                    style: AppTypography.subHeading1,
-                    child: title,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      DefaultTextStyle(
+                        style: AppTypography.subHeading1,
+                        child: title,
+                      ),
+                      if (subtitle != null) ...[
+                        DefaultTextStyle(
+                          style: AppTypography.bodyText2,
+                          child: subtitle!,
+                        ),
+                      ]
+                    ],
                   ),
                 ),
                 if (trailing != null) ...[
