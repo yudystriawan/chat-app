@@ -1,14 +1,14 @@
-import 'package:chat_app/features/account/presentation/widgets/profile_avatar.dart';
-import 'package:chat_app/features/account/presentation/widgets/profile_bio_field.dart';
-import 'package:chat_app/features/account/presentation/widgets/profile_email_field.dart';
-import 'package:chat_app/features/account/presentation/widgets/profile_name_field.dart';
-import 'package:chat_app/features/account/presentation/widgets/profile_phone_number_field.dart';
-import 'package:chat_app/features/account/presentation/widgets/profile_username_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../blocs/profile_form/profile_form_bloc.dart';
+import 'profile_avatar.dart';
+import 'profile_bio_field.dart';
+import 'profile_email_field.dart';
+import 'profile_name_field.dart';
+import 'profile_phone_number_field.dart';
+import 'profile_username_field.dart';
 
 class ProfileFormWidget extends StatelessWidget {
   const ProfileFormWidget({super.key});

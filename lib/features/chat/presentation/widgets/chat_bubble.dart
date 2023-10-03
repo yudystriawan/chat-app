@@ -1,7 +1,7 @@
-import 'package:chat_app/features/account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/widgets/reply_chat_widget.dart';
-import 'package:chat_app/shared/swipeable_widget.dart';
+import '../../../account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
+import '../blocs/member_watcher/member_watcher_bloc.dart';
+import 'reply_chat_widget.dart';
+import '../../../../shared/swipeable_widget.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:core/utils/extensions/date_formatter.dart';

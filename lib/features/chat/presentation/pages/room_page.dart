@@ -1,11 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/blocs/messages_watcher/messages_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/blocs/room_actor/room_actor_bloc.dart';
-import 'package:chat_app/features/chat/presentation/blocs/room_watcher/room_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/widgets/reply_chat_widget.dart';
-import 'package:chat_app/features/chat/presentation/widgets/show_attachments_bottom_sheet.dart';
-import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
@@ -19,8 +12,15 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kt_dart/collection.dart';
 
+import '../../../../shared/app_bar.dart';
+import '../blocs/member_watcher/member_watcher_bloc.dart';
 import '../blocs/message_form/message_form_bloc.dart';
+import '../blocs/messages_watcher/messages_watcher_bloc.dart';
+import '../blocs/room_actor/room_actor_bloc.dart';
+import '../blocs/room_watcher/room_watcher_bloc.dart';
 import '../widgets/chat_list_widget.dart';
+import '../widgets/reply_chat_widget.dart';
+import '../widgets/show_attachments_bottom_sheet.dart';
 
 @RoutePage()
 class RoomPage extends StatefulWidget implements AutoRouteWrapper {

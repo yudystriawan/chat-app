@@ -1,4 +1,4 @@
-import 'package:chat_app/features/chat/presentation/blocs/message_form/message_form_bloc.dart';
+import '../blocs/message_form/message_form_bloc.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
 import 'package:core/styles/colors.dart';

@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:chat_app/features/chat/domain/usecases/add_room.dart';
-import 'package:chat_app/features/chat/domain/usecases/enter_room.dart';
-import 'package:chat_app/features/chat/domain/usecases/exit_room.dart';
-import 'package:chat_app/features/chat/domain/usecases/remove_room.dart';
+import '../../../domain/usecases/add_room.dart';
+import '../../../domain/usecases/enter_room.dart';
+import '../../../domain/usecases/exit_room.dart';
+import '../../../domain/usecases/remove_room.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';

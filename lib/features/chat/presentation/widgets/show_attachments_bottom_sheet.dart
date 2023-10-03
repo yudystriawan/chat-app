@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_app/shared/bottom_sheet.dart';
+import '../../../../shared/bottom_sheet.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
 import 'package:core/styles/colors.dart';

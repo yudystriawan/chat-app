@@ -13,6 +13,7 @@ dependencies:
   cloud_firestore: ^4.9.2
   dartz: ^0.10.1
   fake_cloud_firestore: ^2.4.1+1
+  firebase_analytics: ^10.5.0
   firebase_auth: ^4.10.0
   firebase_auth_mocks: ^0.12.0
   firebase_storage: ^11.2.7

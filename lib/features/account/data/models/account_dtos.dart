@@ -1,6 +1,7 @@
-import 'package:chat_app/features/account/domain/entities/account.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kt_dart/collection.dart';
+
+import '../../domain/entities/account.dart';
 
 part 'account_dtos.freezed.dart';
 part 'account_dtos.g.dart';

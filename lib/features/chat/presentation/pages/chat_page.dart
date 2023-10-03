@@ -1,7 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/widgets/room_list_widget.dart';
-import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/core.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
@@ -10,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../shared/app_bar.dart';
+import '../blocs/member_watcher/member_watcher_bloc.dart';
 import '../blocs/rooms_watcher/rooms_watcher_bloc.dart';
+import '../widgets/room_list_widget.dart';
 
 @RoutePage()
 class ChatPage extends StatelessWidget implements AutoRouteWrapper {

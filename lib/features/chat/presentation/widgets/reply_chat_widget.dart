@@ -1,5 +1,5 @@
-import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/widgets/chat_image.dart';
+import '../blocs/member_watcher/member_watcher_bloc.dart';
+import 'chat_image.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
 import 'package:core/styles/colors.dart';

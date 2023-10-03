@@ -1,4 +1,4 @@
-import 'package:chat_app/features/chat/domain/entities/entity.dart';
+import '../../domain/entities/entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'member_dtos.freezed.dart';

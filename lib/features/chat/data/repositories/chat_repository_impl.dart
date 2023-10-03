@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:chat_app/features/chat/data/datasources/message_remote_datasource.dart';
-import 'package:chat_app/features/chat/data/datasources/room_remote_datasource.dart';
-import 'package:chat_app/features/chat/data/models/message_dtos.dart';
-import 'package:chat_app/features/chat/data/models/room_dtos.dart';
+import '../datasources/message_remote_datasource.dart';
+import '../datasources/room_remote_datasource.dart';
+import '../models/message_dtos.dart';
+import '../models/room_dtos.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';

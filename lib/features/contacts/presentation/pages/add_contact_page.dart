@@ -1,7 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_app/features/contacts/presentation/blocs/contact_actor/contact_actor_bloc.dart';
-import 'package:chat_app/features/contacts/presentation/widgets/contact_list_tile.dart';
-import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/core.dart';
 import 'package:core/styles/buttons/primary_button.dart';
@@ -11,8 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../shared/app_bar.dart';
 import '../../../account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
+import '../blocs/contact_actor/contact_actor_bloc.dart';
 import '../blocs/contact_loader/contact_loader_bloc.dart';
+import '../widgets/contact_list_tile.dart';
 
 @RoutePage()
 class AddContactPage extends StatelessWidget implements AutoRouteWrapper {

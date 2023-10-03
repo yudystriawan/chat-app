@@ -1,10 +1,11 @@
 import 'dart:developer';
 
-import 'package:chat_app/features/account/data/models/account_dtos.dart';
 import 'package:core/core.dart';
 import 'package:core/services/firestore/firestore_helper.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../models/account_dtos.dart';
 
 abstract class AccountRemoteDataSource {
   Future<void> saveAccount(AccountDto account);

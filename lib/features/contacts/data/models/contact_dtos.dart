@@ -1,5 +1,5 @@
-import 'package:chat_app/features/account/domain/entities/account.dart';
-import 'package:chat_app/features/contacts/domain/entities/contact.dart';
+import '../../../account/domain/entities/account.dart';
+import '../../domain/entities/contact.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kt_dart/collection.dart';
 
