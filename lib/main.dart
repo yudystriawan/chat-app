@@ -4,6 +4,7 @@ import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/observers/bloc_observer.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/utils/analytics/analytics.dart';
+import 'package:core/utils/routes/observers/route_observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
