@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chat_app/features/contacts/domain/usecases/watch_contacts.dart';
+import '../../../domain/usecases/watch_contacts.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';

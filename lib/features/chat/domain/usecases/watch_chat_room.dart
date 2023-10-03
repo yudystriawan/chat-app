@@ -1,4 +1,4 @@
-import 'package:chat_app/features/chat/domain/reporitories/chat_repository.dart';
+import '../reporitories/chat_repository.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:core/utils/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';

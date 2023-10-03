@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_app/features/chat/presentation/blocs/last_message_watcher/last_message_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/blocs/member_watcher/member_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/blocs/messages_watcher/messages_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/widgets/room_list_tile.dart';
-import 'package:chat_app/routes/routes.gr.dart';
+import '../blocs/last_message_watcher/last_message_watcher_bloc.dart';
+import '../blocs/member_watcher/member_watcher_bloc.dart';
+import '../blocs/messages_watcher/messages_watcher_bloc.dart';
+import 'room_list_tile.dart';
+import '../../../../routes/routes.gr.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';

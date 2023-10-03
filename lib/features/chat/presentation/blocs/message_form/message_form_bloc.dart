@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:chat_app/features/chat/domain/entities/entity.dart';
-import 'package:chat_app/features/chat/domain/usecases/add_message.dart';
-import 'package:chat_app/features/chat/domain/usecases/edit_message.dart';
 import 'package:core/features/images/domain/usecases/upload_image.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../domain/entities/entity.dart';
+import '../../../domain/usecases/add_message.dart';
+import '../../../domain/usecases/edit_message.dart';
 
 part 'message_form_bloc.freezed.dart';
 part 'message_form_event.dart';

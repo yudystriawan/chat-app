@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
-import 'package:chat_app/features/account/domain/usecases/set_online_status.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../domain/usecases/set_online_status.dart';
 
 part 'account_actor_bloc.freezed.dart';
 part 'account_actor_event.dart';

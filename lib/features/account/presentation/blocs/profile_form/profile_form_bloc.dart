@@ -1,10 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:chat_app/features/account/domain/entities/account.dart';
-import 'package:chat_app/features/account/domain/usecases/save_account.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../domain/entities/account.dart';
+import '../../../domain/usecases/save_account.dart';
 
 part 'profile_form_bloc.freezed.dart';
 part 'profile_form_event.dart';

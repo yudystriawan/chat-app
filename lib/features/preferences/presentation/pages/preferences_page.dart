@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_app/features/preferences/presentation/widgets/preference_item.dart';
-import 'package:chat_app/routes/routes.gr.dart';
-import 'package:chat_app/shared/app_bar.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../routes/routes.gr.dart';
+import '../../../../shared/app_bar.dart';
 import '../widgets/account_info_widget.dart';
+import '../widgets/preference_item.dart';
 
 @RoutePage()
 class PreferencesPage extends StatelessWidget {

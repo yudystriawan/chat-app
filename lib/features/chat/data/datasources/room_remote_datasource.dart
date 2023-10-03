@@ -1,11 +1,12 @@
 import 'dart:developer';
 
-import 'package:chat_app/features/chat/data/models/member_dtos.dart';
-import 'package:chat_app/features/chat/data/models/room_dtos.dart';
 import 'package:core/core.dart';
 import 'package:core/services/firestore/firestore_helper.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../models/member_dtos.dart';
+import '../models/room_dtos.dart';
 
 abstract class RoomRemoteDataSource {
   Future<String> createRoom(RoomDto room);

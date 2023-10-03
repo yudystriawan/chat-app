@@ -1,4 +1,3 @@
-import 'package:chat_app/features/contacts/domain/entities/contact.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:kt_dart/collection.dart';
 
 import '../../../chat/domain/entities/entity.dart';
 import '../../../chat/presentation/blocs/room_actor/room_actor_bloc.dart';
+import '../../domain/entities/contact.dart';
 import 'contact_list_tile.dart';
 
 class ContactListWidget extends StatelessWidget {

@@ -1,14 +1,15 @@
 import 'dart:developer';
 
-import 'package:chat_app/features/account/data/datasources/account_remote_datasource.dart';
-import 'package:chat_app/features/account/data/models/account_dtos.dart';
-import 'package:chat_app/features/account/domain/entities/account.dart';
-import 'package:chat_app/features/account/domain/repositories/account_repository.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../domain/entities/account.dart';
+import '../../domain/repositories/account_repository.dart';
+import '../datasources/account_remote_datasource.dart';
+import '../models/account_dtos.dart';
 
 @Injectable(as: AccountRepository)
 class AccountRepositoryImpl implements AccountRepository {

@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:chat_app/features/account/domain/usecases/watch_accounts.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -9,6 +8,7 @@ import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
 
 import '../../../domain/entities/account.dart';
+import '../../../domain/usecases/watch_accounts.dart';
 
 part 'accounts_watcher_bloc.freezed.dart';
 part 'accounts_watcher_event.dart';

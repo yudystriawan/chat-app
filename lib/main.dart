@@ -1,9 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:chat_app/features/account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
-import 'package:chat_app/features/chat/presentation/blocs/room_actor/room_actor_bloc.dart';
-import 'package:chat_app/features/contacts/presentation/blocs/contact_watcher/contact_watcher_bloc.dart';
-import 'package:chat_app/routes/routes.gr.dart';
-import 'package:chat_app/shared/bottom_navigation_bar.dart';
 import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/observers/bloc_observer.dart';
@@ -15,10 +10,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'features/account/presentation/blocs/account_actor/account_actor_bloc.dart';
+import 'features/account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
+import 'features/chat/presentation/blocs/room_actor/room_actor_bloc.dart';
 import 'features/chat/presentation/blocs/rooms_watcher/rooms_watcher_bloc.dart';
+import 'features/contacts/presentation/blocs/contact_watcher/contact_watcher_bloc.dart';
 import 'firebase_options.dart';
 import 'injection.dart';
 import 'routes/routes.dart';
+import 'routes/routes.gr.dart';
+import 'shared/bottom_navigation_bar.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
