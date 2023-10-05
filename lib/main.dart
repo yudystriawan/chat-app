@@ -3,6 +3,7 @@ import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/observers/bloc_observer.dart';
 import 'package:core/styles/colors.dart';
+import 'package:core/styles/typography.dart';
 import 'package:core/utils/analytics/analytics.dart';
 import 'package:core/utils/routes/observers/route_observer.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -83,6 +84,7 @@ class _MyAppState extends State<MyApp> {
                 background: NeutralColor.white,
               ),
               useMaterial3: true,
+              textTheme: AppTypography.setTextTheme(),
             ),
           );
         },
