@@ -29,9 +29,7 @@ class PreferenceItemWidget extends StatelessWidget {
                 icon,
                 size: 24.w,
               ),
-              SizedBox(
-                width: 6.w,
-              ),
+              6.horizontalSpace,
               Expanded(
                 child: Text(
                   label,

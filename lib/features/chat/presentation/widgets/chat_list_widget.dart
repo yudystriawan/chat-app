@@ -1,4 +1,3 @@
-import '../blocs/message_form/message_form_bloc.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
 import 'package:core/styles/colors.dart';
@@ -12,6 +11,7 @@ import 'package:kt_dart/collection.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../../shared/hooks/scroll_controller_for_animation.dart';
+import '../blocs/message_form/message_form_bloc.dart';
 import '../blocs/messages_watcher/messages_watcher_bloc.dart';
 import 'chat_bubble.dart';
 
@@ -90,14 +90,14 @@ class ChatListWidget extends HookWidget {
                         Row(
                           children: [
                             const Expanded(child: Divider()),
-                            SizedBox(width: 16.w),
+                            16.horizontalSpace,
                             Text(
                               message.sentAt!.toStringDate(),
                               style: AppTypography.metadata1.copyWith(
                                 color: NeutralColor.disabled,
                               ),
                             ),
-                            SizedBox(width: 16.w),
+                            16.horizontalSpace,
                             const Expanded(child: Divider()),
                           ],
                         ),

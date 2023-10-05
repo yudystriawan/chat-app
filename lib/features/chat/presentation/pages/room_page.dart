@@ -249,11 +249,11 @@ class _RoomPageState extends State<RoomPage> {
                             size: 24.w,
                           ),
                         ),
-                        SizedBox(width: 12.w),
+                        12.horizontalSpace,
                         const Expanded(
                           child: MessageTextField(),
                         ),
-                        SizedBox(width: 12.w),
+                        12.horizontalSpace,
                         BlocBuilder<MessageFormBloc, MessageFormState>(
                           buildWhen: (p, c) => p.isSubmitting != c.isSubmitting,
                           builder: (context, state) {

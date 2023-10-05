@@ -76,9 +76,7 @@ class _AppBottomNavigationItemWidget extends StatelessWidget {
                   label,
                   style: AppTypography.bodyText1,
                 ),
-                SizedBox(
-                  height: 4.w,
-                ),
+                4.verticalSpace,
                 Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,

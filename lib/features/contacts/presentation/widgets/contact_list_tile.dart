@@ -47,9 +47,7 @@ class ContactListTile extends StatelessWidget {
               hasStory: hasStory,
               isOnline: isOnline,
             ),
-            SizedBox(
-              width: 12.w,
-            ),
+            12.horizontalSpace,
             Expanded(
               child: Column(
                 children: [
@@ -62,7 +60,7 @@ class ContactListTile extends StatelessWidget {
                         ),
                       ),
                       if (date != null) ...[
-                        SizedBox(width: 2.w),
+                        2.horizontalSpace,
                         Text(
                           date!,
                           style: AppTypography.metadata2.copyWith(
@@ -73,9 +71,7 @@ class ContactListTile extends StatelessWidget {
                     ],
                   ),
                   if (subtitle != null) ...[
-                    SizedBox(
-                      height: 2.w,
-                    ),
+                    2.verticalSpace,
                     Row(
                       children: [
                         Expanded(
@@ -87,7 +83,7 @@ class ContactListTile extends StatelessWidget {
                           ),
                         ),
                         if (chatCount != null) ...[
-                          SizedBox(width: 2.w),
+                          2.horizontalSpace,
                           AppBadge(count: chatCount),
                         ]
                       ],
@@ -97,7 +93,7 @@ class ContactListTile extends StatelessWidget {
               ),
             ),
             if (trailing != null) ...[
-              SizedBox(width: 8.w),
+              8.horizontalSpace,
               trailing!,
             ],
           ],

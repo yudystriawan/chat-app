@@ -45,9 +45,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                     ),
                   ),
-                  SizedBox(
-                    width: 8.w,
-                  ),
+                  8.horizontalSpace,
                 ],
                 Expanded(
                   child: Column(
@@ -67,9 +65,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
                 if (trailing != null) ...[
-                  SizedBox(
-                    width: 8.w,
-                  ),
+                  8.horizontalSpace,
                   trailing!,
                 ]
               ],

@@ -1,7 +1,3 @@
-import '../../../account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
-import '../blocs/member_watcher/member_watcher_bloc.dart';
-import 'reply_chat_widget.dart';
-import '../../../../shared/swipeable_widget.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:core/utils/extensions/date_formatter.dart';
@@ -10,8 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kt_dart/collection.dart';
 
+import '../../../../shared/swipeable_widget.dart';
+import '../../../account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
 import '../../domain/entities/entity.dart';
+import '../blocs/member_watcher/member_watcher_bloc.dart';
 import 'chat_image.dart';
+import 'reply_chat_widget.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
@@ -88,7 +88,7 @@ class ChatBubble extends StatelessWidget {
                       style: AppTypography.metadata3
                           .copyWith(color: BrandColor.dark),
                     ),
-                    const SizedBox(height: 4),
+                    4.verticalSpace,
                   ],
                   if (message.replyMessage != null) ...[
                     ReplyChatWidget(
@@ -100,14 +100,14 @@ class ChatBubble extends StatelessWidget {
                     4.verticalSpace,
                   ],
                   ChatImageNetwork(imageUrl: message.imageUrl),
-                  const SizedBox(height: 4),
+                  4.verticalSpace,
                   Text(
                     message.data,
                     style: AppTypography.bodyText2.copyWith(
                       color: textColor,
                     ),
                   ),
-                  SizedBox(height: 4.w),
+                  4.verticalSpace,
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: sentByMyself

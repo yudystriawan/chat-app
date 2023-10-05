@@ -27,7 +27,7 @@ class ChatPage extends StatelessWidget implements AutoRouteWrapper {
               onPressed: () {},
               child: const Icon(Coolicons.message_plus_alt),
             ),
-            SizedBox(width: 8.w),
+            9.horizontalSpace,
             GhostButton(
               onPressed: () {},
               child: const Icon(Coolicons.list_check),

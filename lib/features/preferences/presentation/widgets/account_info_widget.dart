@@ -47,9 +47,7 @@ class AccountInfoWidget extends StatelessWidget {
                     ? const Icon(Coolicons.user)
                     : null,
               ),
-              SizedBox(
-                width: 20.w,
-              ),
+              20.horizontalSpace,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

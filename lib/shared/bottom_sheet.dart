@@ -48,11 +48,7 @@ Future<T?> showAppBottomSheet<T>(
                 ),
               ),
             ),
-            SliverPinnedHeader(
-              child: SizedBox(
-                height: 24.w,
-              ),
-            ),
+            SliverPinnedHeader(child: 24.verticalSpace),
             SliverToBoxAdapter(
               child: Column(
                 mainAxisSize: MainAxisSize.min,

@@ -23,37 +23,37 @@ class PreferencesPage extends StatelessWidget {
         child: Column(
           children: [
             const AccountInfoWidget(),
-            SizedBox(height: 24.w),
+            24.verticalSpace,
             PreferenceItemWidget(
               icon: Coolicons.user,
               label: 'Account',
               onTapped: () => context.pushRoute(const AccountRoute()),
             ),
-            SizedBox(height: 8.w),
+            8.verticalSpace,
             PreferenceItemWidget(
               icon: Coolicons.message_circle,
               label: 'Chats',
               onTapped: () {},
             ),
-            SizedBox(height: 24.w),
+            24.verticalSpace,
             PreferenceItemWidget(
               icon: Coolicons.sun,
               label: 'Appereance',
               onTapped: () {},
             ),
-            SizedBox(height: 8.w),
+            8.verticalSpace,
             PreferenceItemWidget(
               icon: Coolicons.notification_outline,
               label: 'Notification',
               onTapped: () {},
             ),
-            SizedBox(height: 8.w),
+            8.verticalSpace,
             PreferenceItemWidget(
               icon: Icons.privacy_tip_outlined,
               label: 'Privacy',
               onTapped: () {},
             ),
-            SizedBox(height: 8.w),
+            8.verticalSpace,
             PreferenceItemWidget(
               icon: Coolicons.folder,
               label: 'Data usage',
@@ -65,7 +65,7 @@ class PreferencesPage extends StatelessWidget {
               label: 'Help',
               onTapped: () {},
             ),
-            SizedBox(height: 8.w),
+            8.verticalSpace,
             PreferenceItemWidget(
               icon: Coolicons.mail,
               label: 'Invite Your Friends',
