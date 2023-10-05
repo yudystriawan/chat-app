@@ -49,7 +49,7 @@ class PreferencesPage extends StatelessWidget {
             ),
             SizedBox(height: 8.w),
             PreferenceItemWidget(
-              icon: Coolicons.info_circle_outline,
+              icon: Icons.privacy_tip_outlined,
               label: 'Privacy',
               onTapped: () {},
             ),
