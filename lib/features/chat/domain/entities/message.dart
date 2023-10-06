@@ -32,14 +32,13 @@ class Message with _$Message {
     Message? replyMessage,
   }) = _Message;
 
-  factory Message.empty() => Message(
+  factory Message.empty() => const Message(
         id: '',
         data: '',
         type: MessageType.text,
         sentBy: '',
         imageUrl: '',
-        readInfoList: const KtList.empty(),
-        sentAt: DateTime.now(),
+        readInfoList: KtList.empty(),
       );
 
   bool get hasReplyMessage => replyMessage != null;
