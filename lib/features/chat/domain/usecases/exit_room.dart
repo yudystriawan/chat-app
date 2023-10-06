@@ -13,7 +13,9 @@ class ExitRoom implements Usecase<Unit, ExitRoomParams> {
   ExitRoom(this._chatRepository);
 
   @override
-  Future<Either<Failure, Unit>> call(params) {
+  Future<Either<Failure, Unit>> call(params) async {
+    if (params.failure != null) return left(params.failure!);
+
     return _chatRepository.exitRoom(params.roomId);
   }
 }
@@ -22,6 +24,13 @@ class ExitRoomParams extends Equatable {
   final String roomId;
 
   const ExitRoomParams(this.roomId);
+
+  Failure? get failure {
+    if (roomId.isEmpty) {
+      return const Failure.invalidParameter(message: 'RoomId cannot be empty.');
+    }
+    return null;
+  }
 
   @override
   List<Object> get props => [roomId];
