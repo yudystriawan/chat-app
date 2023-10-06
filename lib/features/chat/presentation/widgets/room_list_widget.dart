@@ -1,9 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import '../blocs/last_message_watcher/last_message_watcher_bloc.dart';
-import '../blocs/member_watcher/member_watcher_bloc.dart';
-import '../blocs/messages_watcher/messages_watcher_bloc.dart';
-import 'room_list_tile.dart';
-import '../../../../routes/routes.gr.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
@@ -15,7 +10,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kt_dart/collection.dart';
 
+import '../../../../routes/routes.gr.dart';
 import '../../domain/entities/entity.dart';
+import '../blocs/last_message_watcher/last_message_watcher_bloc.dart';
+import '../blocs/member_watcher/member_watcher_bloc.dart';
+import '../blocs/messages_watcher/messages_watcher_bloc.dart';
+import 'room_list_tile.dart';
 
 class RoomListWidget extends StatelessWidget {
   const RoomListWidget({

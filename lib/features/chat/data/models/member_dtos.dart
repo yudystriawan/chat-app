@@ -1,5 +1,6 @@
-import '../../domain/entities/entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../domain/entities/entity.dart';
 
 part 'member_dtos.freezed.dart';
 part 'member_dtos.g.dart';
