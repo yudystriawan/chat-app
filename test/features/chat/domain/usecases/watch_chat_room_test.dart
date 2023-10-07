@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:chat_app/features/chat/domain/entities/entity.dart';
 import 'package:chat_app/features/chat/domain/reporitories/chat_repository.dart';
 import 'package:chat_app/features/chat/domain/usecases/watch_chat_room.dart';
@@ -12,21 +14,21 @@ import 'watch_chat_room_test.mocks.dart';
 
 @GenerateMocks([ChatRepository])
 void main() {
-  late WatchChatRoom watchChatRoom;
+  late WatchChatRoom sut;
   late MockChatRepository mockRepository;
 
   setUp(() {
     mockRepository = MockChatRepository();
-    watchChatRoom = WatchChatRoom(mockRepository);
+    sut = WatchChatRoom(mockRepository);
   });
 
   group('WatchChatRoom Use Case', () {
-    test('should emit Failure if roomId is empty', () {
+    test('should emit Failure if roomId is empty', () async {
       // Arrange
       const params = WatchChatRoomParams(roomId: '');
 
       // Act
-      final result = watchChatRoom(params);
+      final result = sut(params);
 
       // Assert
       expect(
@@ -58,7 +60,7 @@ void main() {
       );
 
       // Act
-      final result = watchChatRoom(params);
+      final result = sut(params);
 
       // Assert
       expect(result, emits(isA<Right<Failure, Room>>()));
