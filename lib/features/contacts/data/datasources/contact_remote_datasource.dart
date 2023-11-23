@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:core/core.dart';
-import 'package:core/features/auth/data/models/user.dart';
+import 'package:core/features/auth/data/models/user_dtos.dart';
 import 'package:core/services/firestore/firestore_helper.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
