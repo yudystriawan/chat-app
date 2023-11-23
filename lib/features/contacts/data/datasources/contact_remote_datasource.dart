@@ -28,7 +28,7 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
 
     yield* userRef.snapshots().map((userDoc) {
       // get array userId in contacts
-      final user = UserDto.fromFirestore(userDoc);
+      final user = UserDto.fromJson(userDoc.data() as Map<String, dynamic>);
       final contacts = user.contacts;
       return contacts;
     }).switchMap((contacts) {
@@ -62,7 +62,7 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
       final userDoc = await userRef.get();
 
       if (userDoc.exists) {
-        var user = UserDto.fromFirestore(userDoc);
+        var user = UserDto.fromJson(userDoc.data() as Map<String, dynamic>);
 
         final contacts = user.contacts ?? [];
 

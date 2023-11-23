@@ -47,14 +47,23 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
       final user = userCredential.user;
       if (user == null) return null;
 
+      var userDto = UserDto(
+        id: user.uid,
+        email: user.email,
+        name: user.displayName,
+        photoUrl: user.photoURL,
+        phoneNumber: user.phoneNumber,
+      );
+
       // store data new user
       if ((userCredential.additionalUserInfo?.isNewUser ?? false)) {
-        await _firestore.collection('users').doc(user.uid).set(
-              UserDto.fromFirebaseAuth(user).toJson(),
-            );
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(userDto.toJson());
       }
 
-      return UserDto.fromFirebaseAuth(user);
+      return userDto;
     } catch (e) {
       throw const Failure.unexpectedError();
     }
@@ -76,7 +85,13 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
   Stream<UserDto?> watchUser() {
     return _firebaseAuth.authStateChanges().map((user) {
       if (user == null) throw const Failure.unauthenticated();
-      return UserDto.fromFirebaseAuth(user);
+      return UserDto(
+        id: user.uid,
+        email: user.email,
+        name: user.displayName,
+        photoUrl: user.photoURL,
+        phoneNumber: user.phoneNumber,
+      );
     }).onErrorReturnWith(
       (error, stackTrace) => throw Failure.serverError(
         message: error.toString(),
@@ -90,7 +105,8 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
       final userDoc = await _firestore.userDocument();
       final userData = await userDoc.get();
 
-      return UserDto.fromFirestore(userData);
+      return UserDto.fromJson(userData.data() as Map<String, dynamic>)
+          .copyWith(id: userData.id);
     } catch (e) {
       throw const Failure.unexpectedError();
     }
