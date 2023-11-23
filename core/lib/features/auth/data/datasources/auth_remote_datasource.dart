@@ -6,7 +6,7 @@ import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../../../../utils/errors/failure.dart';
-import '../models/model.dart';
+import '../models/user_dtos.dart';
 
 abstract class AuthRemoteDataSource {
   Future<UserDto?> loginWithGoogle();
