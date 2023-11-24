@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:core/services/firestore/firestore_helper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
@@ -11,8 +12,7 @@ import '../models/user_dtos.dart';
 abstract class AuthRemoteDataSource {
   Future<UserDto?> loginWithGoogle();
   Future<void> signOut();
-  Stream<UserDto?> watchUser();
-  Future<UserDto?> getCurrentUser();
+  Stream<UserDto?> watchCurrentUser();
 }
 
 @Injectable(as: AuthRemoteDataSource)
@@ -59,12 +59,13 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
       if ((userCredential.additionalUserInfo?.isNewUser ?? false)) {
         await _firestore
             .collection('users')
-            .doc(user.uid)
+            .doc(userDto.id)
             .set(userDto.toJson());
       }
 
       return userDto;
     } catch (e) {
+      log('loginWithGoogle error', error: e);
       throw const Failure.unexpectedError();
     }
   }
@@ -77,38 +78,21 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
         _firebaseAuth.signOut(),
       ]);
     } catch (e) {
+      log('signOut error', error: e);
       throw const Failure.unexpectedError();
     }
   }
 
   @override
-  Stream<UserDto?> watchUser() {
-    return _firebaseAuth.authStateChanges().map((user) {
-      if (user == null) throw const Failure.unauthenticated();
-      return UserDto(
-        id: user.uid,
-        email: user.email,
-        name: user.displayName,
-        photoUrl: user.photoURL,
-        phoneNumber: user.phoneNumber,
-      );
-    }).onErrorReturnWith(
-      (error, stackTrace) => throw Failure.serverError(
-        message: error.toString(),
-      ),
-    );
-  }
-
-  @override
-  Future<UserDto?> getCurrentUser() async {
-    try {
-      final userDoc = await _firestore.userDocument();
-      final userData = await userDoc.get();
-
-      return UserDto.fromJson(userData.data() as Map<String, dynamic>)
-          .copyWith(id: userData.id);
-    } catch (e) {
-      throw const Failure.unexpectedError();
-    }
+  Stream<UserDto?> watchCurrentUser() {
+    return _firebaseAuth
+        .authStateChanges()
+        .switchMap((user) {
+          if (user == null) throw const Failure.unauthenticated();
+          return _firestore.collection('users').doc(user.uid).snapshots();
+        })
+        .map((doc) => UserDto.fromJson(doc.data() as Map<String, dynamic>))
+        .onErrorReturnWith((error, stackTrace) =>
+            throw Failure.serverError(message: error.toString()));
   }
 }

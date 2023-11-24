@@ -41,8 +41,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Stream<Either<Failure, User>> watchUser() {
-    return _remoteDatasource.watchUser().map((userDto) {
+  Stream<Either<Failure, User>> watchCurrentUser() {
+    return _remoteDatasource.watchCurrentUser().map((userDto) {
       if (userDto == null) return right<Failure, User>(User.empty());
       return right<Failure, User>(userDto.toDomain());
     }).onErrorReturnWith((error, stackTrace) {
@@ -51,17 +51,17 @@ class AuthRepositoryImpl implements AuthRepository {
     });
   }
 
-  @override
-  Future<Either<Failure, User>> getSignedInUser() async {
-    try {
-      final result = await _remoteDatasource.getCurrentUser();
-      if (result == null) return left(const Failure.unauthenticated());
+  // @override
+  // Future<Either<Failure, User>> getSignedInUser() async {
+  //   try {
+  //     final result = await _remoteDatasource.getCurrentUser();
+  //     if (result == null) return left(const Failure.unauthenticated());
 
-      return right(result.toDomain());
-    } on Failure catch (e) {
-      return left(e);
-    } catch (e) {
-      return left(const Failure.unexpectedError());
-    }
-  }
+  //     return right(result.toDomain());
+  //   } on Failure catch (e) {
+  //     return left(e);
+  //   } catch (e) {
+  //     return left(const Failure.unexpectedError());
+  //   }
+  // }
 }

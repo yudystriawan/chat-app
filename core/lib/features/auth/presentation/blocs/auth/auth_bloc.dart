@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:core/features/auth/domain/entities/user.dart';
-import 'package:core/features/auth/domain/usecases/get_signed_in_user.dart';
 import 'package:core/features/auth/domain/usecases/sign_out.dart';
-import 'package:core/features/auth/domain/usecases/watch_user_auth.dart';
+import 'package:core/features/auth/domain/usecases/watch_current_user.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:core/utils/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
@@ -19,9 +18,9 @@ part 'auth_state.dart';
 @injectable
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignOut _signOut;
-  final WatchUserAuth _watchUserAuth;
+  final WatchCurretUser _watchUserAuth;
   final AuthProvider _authProvider;
-  final GetSignedInUser _getSignedInUser;
+  // final GetSignedInUser _getSignedInUser;
 
   StreamSubscription<Either<Failure, User>>? _userAuthSubscription;
 
@@ -31,7 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     this._signOut,
     this._watchUserAuth,
     this._authProvider,
-    this._getSignedInUser,
+    // this._getSignedInUser,
   ) : super(AuthState.initial()) {
     on<_WatchUserStarted>(_onWatchUserStarted);
     on<_SignOut>(_onSignOut);
@@ -73,22 +72,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           failureOption: optionOf(f),
           status: AuthStatus.unauthenticated,
         ),
-        (_) async {
-          final failureOrUser = await _getSignedInUser(const NoParams());
-          return failureOrUser.fold(
-            (f) => state.copyWith(
-              failureOption: optionOf(f),
-              status: AuthStatus.unauthenticated,
-            ),
-            (user) => state.copyWith(
-              failureOption: none(),
-              user: user,
-              status: user.isEmpty
-                  ? AuthStatus.unauthenticated
-                  : AuthStatus.authenticated,
-            ),
-          );
-        },
+        (user) async => state.copyWith(
+          failureOption: none(),
+          user: user,
+          status: user.isEmpty
+              ? AuthStatus.unauthenticated
+              : AuthStatus.authenticated,
+        ),
       ),
     );
     _authProvider.statusChanged(state.isAuthenticated);

@@ -6,13 +6,13 @@ import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 
 @injectable
-class WatchUserAuth implements StreamUsecase<User, NoParams> {
+class WatchCurretUser implements StreamUsecase<User, NoParams> {
   final AuthRepository _repository;
 
-  WatchUserAuth(this._repository);
+  WatchCurretUser(this._repository);
 
   @override
   Stream<Either<Failure, User>> call(NoParams params) {
-    return _repository.watchUser();
+    return _repository.watchCurrentUser();
   }
 }
