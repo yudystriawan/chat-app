@@ -50,18 +50,4 @@ class AuthRepositoryImpl implements AuthRepository {
       return left(const Failure.unexpectedError());
     });
   }
-
-  // @override
-  // Future<Either<Failure, User>> getSignedInUser() async {
-  //   try {
-  //     final result = await _remoteDatasource.getCurrentUser();
-  //     if (result == null) return left(const Failure.unauthenticated());
-
-  //     return right(result.toDomain());
-  //   } on Failure catch (e) {
-  //     return left(e);
-  //   } catch (e) {
-  //     return left(const Failure.unexpectedError());
-  //   }
-  // }
 }
