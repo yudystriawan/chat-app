@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:core/features/images/domain/repositories/image_repository.dart';
-import 'package:core/utils/errors/failure.dart';
-import 'package:core/utils/usecases/usecase.dart';
+import '../repositories/image_repository.dart';
+import '../../../../utils/errors/failure.dart';
+import '../../../../utils/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 

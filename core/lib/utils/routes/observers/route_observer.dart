@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:core/utils/analytics/analytics.dart';
+import '../../analytics/analytics.dart';
 import 'package:flutter/material.dart';
 
 class AppRouteObserver extends AutoRouteObserver {

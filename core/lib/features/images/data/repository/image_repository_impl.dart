@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:core/features/images/data/data_sources/image_remote_data_source.dart';
-import 'package:core/utils/errors/failure.dart';
+import '../data_sources/image_remote_data_source.dart';
+import '../../../../utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 

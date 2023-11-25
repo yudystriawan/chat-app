@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:core/core.dart';
+import '../../../../core.dart';
 import 'package:dartz/dartz.dart';
 
 abstract class ImageRepository {

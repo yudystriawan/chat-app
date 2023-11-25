@@ -1,8 +1,8 @@
-import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../colors.dart';
+import '../typography.dart';
 
 class SecondaryButton extends StatelessWidget {
   const SecondaryButton({
