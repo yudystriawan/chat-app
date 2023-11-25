@@ -18,7 +18,7 @@ part 'auth_state.dart';
 @injectable
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignOut _signOut;
-  final WatchCurretUser _watchUserAuth;
+  final WatchCurrentUser _watchUserAuth;
   final AuthProvider _authProvider;
   // final GetSignedInUser _getSignedInUser;
 
