@@ -9,7 +9,7 @@ import 'package:kt_dart/collection.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'watch_current_user.mocks.dart';
+import 'watch_current_user_test.mocks.dart';
 
 @GenerateMocks([AuthRepository])
 void main() {
