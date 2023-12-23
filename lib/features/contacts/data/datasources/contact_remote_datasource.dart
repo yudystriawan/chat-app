@@ -61,6 +61,7 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
 
       final userDoc = await userRef.get();
 
+      //TODO: use transaction.
       if (userDoc.exists) {
         var user = UserDto.fromJson(userDoc.data() as Map<String, dynamic>);
 
