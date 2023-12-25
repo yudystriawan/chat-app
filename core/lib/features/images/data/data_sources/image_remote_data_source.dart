@@ -1,12 +1,9 @@
-// ignore_for_file: unused_import
-
 import 'dart:io';
 
 import 'package:core/core.dart';
 import 'package:core/services/auth/auth_service.dart';
 import 'package:core/services/firebase_storage/storage.dart';
 import 'package:core/services/firebase_storage/storage_helper.dart';
-import 'package:core/services/firestore/firestore_helper.dart';
 import 'package:injectable/injectable.dart';
 import 'package:path/path.dart' as p;
 
