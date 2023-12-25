@@ -1,8 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:core/services/auth/auth_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -17,34 +16,18 @@ abstract class AuthRemoteDataSource {
 
 @Injectable(as: AuthRemoteDataSource)
 class AuthFirebaseDataSource implements AuthRemoteDataSource {
-  final GoogleSignIn _googleSignIn;
-  final FirebaseAuth _firebaseAuth;
+  final AuthService _service;
   final FirebaseFirestore _firestore;
 
   AuthFirebaseDataSource(
-    this._googleSignIn,
-    this._firebaseAuth,
+    this._service,
     this._firestore,
   );
 
   @override
   Future<UserDto?> loginWithGoogle() async {
     try {
-      final signInAccount = await _googleSignIn.signIn();
-
-      if (signInAccount == null) return null;
-
-      final googleAuth = await signInAccount.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-        accessToken: googleAuth.accessToken,
-      );
-
-      final userCredential =
-          await _firebaseAuth.signInWithCredential(credential);
-
-      final user = userCredential.user;
+      final user = await _service.loginWithGoogle();
       if (user == null) return null;
 
       var userDto = UserDto(
@@ -56,7 +39,10 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
       );
 
       // store data new user
-      if ((userCredential.additionalUserInfo?.isNewUser ?? false)) {
+      final isExist =
+          (await _firestore.collection('users').doc(userDto.id).get()).exists;
+
+      if (!isExist) {
         await _firestore
             .collection('users')
             .doc(userDto.id)
@@ -73,10 +59,7 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
   @override
   Future<void> signOut() async {
     try {
-      await Future.wait([
-        _googleSignIn.signOut(),
-        _firebaseAuth.signOut(),
-      ]);
+      await _service.signOut();
     } catch (e) {
       log('signOut error', error: e);
       throw const Failure.unexpectedError();
@@ -85,8 +68,8 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
 
   @override
   Stream<UserDto?> watchCurrentUser() {
-    return _firebaseAuth
-        .authStateChanges()
+    return _service
+        .watchCurrentUser()
         .switchMap((user) {
           if (user == null) throw const Failure.unauthenticated();
           return _firestore.collection('users').doc(user.uid).snapshots();
