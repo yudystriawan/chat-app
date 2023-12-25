@@ -28,7 +28,7 @@ class FirestoreService {
         .map((snap) => snap.docs.map((e) => e.data()).toList());
   }
 
-  Stream<Map<String, dynamic>?> watch(String collectionPath, String docId) {
+  Stream<Map<String, dynamic>?> watch(String collectionPath, String? docId) {
     return _firestore
         .collection(collectionPath)
         .doc(docId)
@@ -38,14 +38,20 @@ class FirestoreService {
 
   Future<void> upsert(
     String collectionPath,
-    String docId,
+    String? docId,
     Map<String, dynamic> data,
   ) async {
     return _firestore.collection(collectionPath).doc(docId).set(data);
   }
 
-  Future<void> delete(String collectionPath, String docId) {
+  Future<void> delete(String collectionPath, String? docId) {
     return _firestore.collection(collectionPath).doc(docId).delete();
+  }
+
+  Future<bool> checkIfExist(String collectionPath, String? docId) async {
+    final snapshot =
+        await _firestore.collection(collectionPath).doc(docId).get();
+    return snapshot.exists;
   }
 }
 
