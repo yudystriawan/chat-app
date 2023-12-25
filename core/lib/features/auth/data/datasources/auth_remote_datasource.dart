@@ -1,11 +1,10 @@
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:core/core.dart';
 import 'package:core/services/auth/auth_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../utils/errors/failure.dart';
 import '../models/user_dtos.dart';
 
 abstract class AuthRemoteDataSource {
@@ -16,18 +15,18 @@ abstract class AuthRemoteDataSource {
 
 @Injectable(as: AuthRemoteDataSource)
 class AuthFirebaseDataSource implements AuthRemoteDataSource {
-  final AuthService _service;
-  final FirebaseFirestore _firestore;
+  final AuthService _authService;
+  final FirestoreService _firestoreService;
 
   AuthFirebaseDataSource(
-    this._service,
-    this._firestore,
+    this._authService,
+    this._firestoreService,
   );
 
   @override
   Future<UserDto?> loginWithGoogle() async {
     try {
-      final user = await _service.loginWithGoogle();
+      final user = await _authService.loginWithGoogle();
       if (user == null) return null;
 
       var userDto = UserDto(
@@ -38,15 +37,11 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
         phoneNumber: user.phoneNumber,
       );
 
-      // store data new user
-      final isExist =
-          (await _firestore.collection('users').doc(userDto.id).get()).exists;
+      // store data new user when is not exist
+      final isExist = await _firestoreService.checkIfExist('users', userDto.id);
 
       if (!isExist) {
-        await _firestore
-            .collection('users')
-            .doc(userDto.id)
-            .set(userDto.toJson());
+        await _firestoreService.upsert('users', userDto.id, userDto.toJson());
       }
 
       return userDto;
@@ -59,7 +54,7 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
   @override
   Future<void> signOut() async {
     try {
-      await _service.signOut();
+      await _authService.signOut();
     } catch (e) {
       log('signOut error', error: e);
       throw const Failure.unexpectedError();
@@ -68,13 +63,13 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
 
   @override
   Stream<UserDto?> watchCurrentUser() {
-    return _service
+    return _authService
         .watchCurrentUser()
         .switchMap((user) {
           if (user == null) throw const Failure.unauthenticated();
-          return _firestore.collection('users').doc(user.uid).snapshots();
+          return _firestoreService.watch('users', user.uid);
         })
-        .map((doc) => UserDto.fromJson(doc.data() as Map<String, dynamic>))
+        .map((json) => UserDto.fromJson(json!))
         .onErrorReturnWith((error, stackTrace) =>
             throw Failure.serverError(message: error.toString()));
   }
