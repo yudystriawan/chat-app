@@ -128,7 +128,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
   @override
   Stream<MessageDto?> watchLastMessage(String roomId) {
     return _service
-        .watchAll('rooms/$roomId/messsages',
+        .watchAll('rooms/$roomId/messages',
             orderConditions: [OrderCondition('sentAt', descending: true)],
             limit: 1)
         .map((docs) => docs.map((json) => MessageDto.fromJson(json)).toList())
