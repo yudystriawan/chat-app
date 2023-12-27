@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:core/core.dart';
 import 'package:core/features/auth/data/models/user_dtos.dart';
-import 'package:core/services/firestore/firestore_helper.dart';
+import 'package:core/services/auth/auth_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -19,35 +19,27 @@ abstract class ContactRemoteDataSource {
 @Injectable(as: ContactRemoteDataSource)
 class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
   final FirestoreService _service;
+  final AuthService _authService;
 
-  ContactRemoteDataSourceImpl(this._service);
+  ContactRemoteDataSourceImpl(
+    this._service,
+    this._authService,
+  );
 
   @override
-  Stream<List<ContactDto>?> watchContacts({String? username}) async* {
-    final userRef = await _service.instance.userDocument();
+  Stream<List<ContactDto>?> watchContacts({String? username}) {
+    final userId = _authService.currentUser!.uid;
 
-    yield* userRef.snapshots().map((userDoc) {
-      // get array userId in contacts
-      final user = UserDto.fromJson(userDoc.data() as Map<String, dynamic>);
-      final contacts = user.contacts;
-      return contacts;
-    }).switchMap((contacts) {
-      // get the user data of contacts
-      if (contacts == null || contacts.isEmpty) return Stream.value(null);
+    return _service
+        .watch('users', userId)
+        .map((json) => UserDto.fromJson(json!))
+        .map((userDto) => userDto.contacts)
+        .switchMap<List<ContactDto>>((contacts) {
+      if (contacts == null || contacts.isEmpty) return Stream.value([]);
 
-      final query =
-          _service.instance.userCollection.where('id', whereIn: contacts);
-
-      if (username != null) query.where('username', isEqualTo: username);
-
-      return query.snapshots().map(
-            (snap) => snap.docs
-                .map(
-                  (doc) =>
-                      ContactDto.fromJson(doc.data() as Map<String, dynamic>),
-                )
-                .toList(),
-          );
+      return _service.watchAll('users', whereConditions: [
+        WhereCondition('id', whereIn: contacts)
+      ]).map((docs) => docs.map((e) => ContactDto.fromJson(e)).toList());
     }).onErrorReturnWith((error, stackTrace) {
       log('error occured', error: error, stackTrace: stackTrace);
       throw Failure.serverError(message: error.toString());
@@ -57,24 +49,10 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
   @override
   Future<void> addContact(String userId) async {
     try {
-      final userRef = await _service.instance.userDocument();
-
-      final userDoc = await userRef.get();
-
-      //TODO: use transaction.
-      if (userDoc.exists) {
-        var user = UserDto.fromJson(userDoc.data() as Map<String, dynamic>);
-
-        final contacts = user.contacts ?? [];
-
-        if (!contacts.contains(userId)) {
-          // friend is not in contacts, add them
-          contacts.add(userId);
-
-          // Update the user's document with the new contacts array
-          await userRef.update({'contacts': contacts});
-        }
-      }
+      final currentUserId = _authService.currentUser!.uid;
+      return _service.upsert('users', currentUserId, {
+        'contacts': FieldValue.arrayUnion([userId])
+      });
     } catch (e) {
       throw const Failure.serverError();
     }
@@ -83,15 +61,12 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
   @override
   Future<ContactDto?> findContact(String username) async {
     try {
-      var querySnapshot = await _service.instance.userCollection
-          .where('username', isEqualTo: username)
-          .get();
-
-      if (querySnapshot.docs.isEmpty) return null;
-
-      var contactDto = ContactDto.fromJson(
-          querySnapshot.docs[0].data() as Map<String, dynamic>);
-      return contactDto;
+      return _service
+          .watchAll('users', whereConditions: [
+            WhereCondition('username', isEqualTo: username)
+          ])
+          .map((docs) => docs.map((e) => ContactDto.fromJson(e)).toList().first)
+          .first;
     } catch (e, s) {
       log('error occured', error: e, stackTrace: s);
       throw const Failure.serverError();
