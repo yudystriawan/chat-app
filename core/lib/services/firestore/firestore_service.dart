@@ -20,11 +20,11 @@ class FirestoreService {
     List<OrderCondition>? orderConditions,
     int? limit,
   }) {
-    final collection = _firestore.collection(collectionPath);
+    Query<Map<String, dynamic>> query = _firestore.collection(collectionPath);
 
     if (whereConditions != null && whereConditions.isNotEmpty) {
       for (final condition in whereConditions) {
-        collection.where(
+        query = query.where(
           condition.field,
           isEqualTo: condition.isEqualTo,
           arrayContains: condition.arrayContains,
@@ -43,15 +43,15 @@ class FirestoreService {
 
     if (orderConditions != null && orderConditions.isNotEmpty) {
       for (var order in orderConditions) {
-        collection.orderBy(order.field, descending: order.descending);
+        query = query.orderBy(order.field, descending: order.descending);
       }
     }
 
     if (limit != null && limit > 0) {
-      collection.limit(limit);
+      query = query.limit(limit);
     }
 
-    return collection
+    return query
         .snapshots()
         .map((snap) => snap.docs.map((e) => e.data()).toList());
   }
