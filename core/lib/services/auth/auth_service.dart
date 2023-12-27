@@ -38,5 +38,8 @@ class AuthService {
     return _firebaseAuth.authStateChanges();
   }
 
+  void useEmulator(String host, int port) =>
+      _firebaseAuth.useAuthEmulator(host, port);
+
   User? get currentUser => _firebaseAuth.currentUser;
 }

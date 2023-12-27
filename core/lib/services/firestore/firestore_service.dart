@@ -86,6 +86,9 @@ class FirestoreService {
   }
 
   String generateId() => const Uuid().v4();
+
+  void useEmulator(String host, int port) =>
+      _firestore.useFirestoreEmulator(host, port);
 }
 
 class ServerTimestampConverter implements JsonConverter<Timestamp, Object> {
