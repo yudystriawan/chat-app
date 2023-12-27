@@ -2,11 +2,13 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/observers/bloc_observer.dart';
+import 'package:core/services/auth/auth_service.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:core/utils/analytics/analytics.dart';
 import 'package:core/utils/routes/observers/route_observer.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -31,6 +33,11 @@ Future<void> main() async {
 
   // setup firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // use firebase emulator when debug
+  if (kDebugMode) {
+    getIt<FirestoreService>().useEmulator('localhost', 8080);
+    getIt<AuthService>().useEmulator('localhost', 9099);
+  }
 
   // setup bloc observer
   Bloc.observer = MyBlocObserver();
