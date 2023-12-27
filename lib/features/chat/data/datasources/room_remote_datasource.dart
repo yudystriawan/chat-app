@@ -132,7 +132,9 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
   Future<void> enterRoom(String roomId) {
     try {
       final userId = _authService.currentUser?.uid;
-      return _service.upsert('rooms', roomId, {'enteredBy.$userId': true});
+      return _service.upsert('rooms', roomId, {
+        'enteredBy': {userId: true}
+      });
     } catch (e) {
       throw const Failure.serverError();
     }
@@ -142,7 +144,9 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
   Future<void> exitRoom(String roomId) {
     try {
       final userId = _authService.currentUser?.uid;
-      return _service.upsert('rooms', roomId, {'enteredBy.$userId': false});
+      return _service.upsert('rooms', roomId, {
+        'enteredBy': {userId: false}
+      });
     } catch (e) {
       throw const Failure.serverError();
     }
