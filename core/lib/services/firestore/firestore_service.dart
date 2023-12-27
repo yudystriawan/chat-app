@@ -69,7 +69,10 @@ class FirestoreService {
     String? docId,
     Map<String, dynamic> data,
   ) async {
-    return _firestore.collection(collectionPath).doc(docId).set(data);
+    return _firestore
+        .collection(collectionPath)
+        .doc(docId)
+        .set(data, SetOptions(merge: true));
   }
 
   Future<void> delete(String collectionPath, String? docId) {
