@@ -37,9 +37,16 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
         .switchMap<List<ContactDto>>((contacts) {
       if (contacts == null || contacts.isEmpty) return Stream.value([]);
 
-      return _service.watchAll('users', whereConditions: [
-        WhereCondition('id', whereIn: contacts)
-      ]).map((docs) => docs.map((e) => ContactDto.fromJson(e)).toList());
+      final whereConditions = <WhereCondition>[];
+      if (username != null) {
+        whereConditions.add(WhereCondition('username', isEqualTo: username));
+      }
+
+      whereConditions.add(WhereCondition('id', whereIn: contacts));
+
+      return _service
+          .watchAll('users', whereConditions: whereConditions)
+          .map((docs) => docs.map((e) => ContactDto.fromJson(e)).toList());
     }).onErrorReturnWith((error, stackTrace) {
       log('error occured', error: error, stackTrace: stackTrace);
       throw Failure.serverError(message: error.toString());
