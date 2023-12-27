@@ -110,9 +110,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
           'rooms/$roomId/messages',
           whereConditions: [
             WhereCondition('sentBy', isEqualTo: userId),
-            WhereCondition('readInfo', whereNotIn: [
-              {'uid': userId}
-            ])
+            WhereCondition('readBy.$userId', isEqualTo: false)
           ],
         )
         .map((docs) => docs.map((e) => MessageDto.fromJson(e)).toList())
