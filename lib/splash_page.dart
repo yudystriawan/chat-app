@@ -13,8 +13,8 @@ class SplashPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (p, c) => p.status != c.status,
-      listener: (context, state) {
-        Future.delayed(const Duration(seconds: 3), () {
+      listener: (context, state) async {
+        await Future.delayed(const Duration(seconds: 3), () {
           context.router.replace(const HomeRoute());
         });
       },
