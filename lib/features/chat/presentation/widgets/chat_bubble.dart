@@ -30,10 +30,11 @@ class ChatBubble extends StatelessWidget {
     final userId = context.read<AccountWatcherBloc>().state.account.id;
     final sentByMyself = userId == message.sentBy;
 
-    // get read info list that not from message sender itself
-    final isRead = message.readInfoList
-        .filter((readInfo) => readInfo.uid != userId)
-        .isNotEmpty();
+    // get read status that not from message sender itself
+    final readBy = message.readBy.filter(
+      (entry) => entry.value && entry.key != userId,
+    );
+    final isRead = readBy.isNotEmpty();
 
     final bubbleBackground =
         sentByMyself ? BrandColor.neutral : NeutralColor.white;
