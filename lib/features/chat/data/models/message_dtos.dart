@@ -1,7 +1,8 @@
-import '../../domain/entities/entity.dart';
 import 'package:core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kt_dart/collection.dart';
+
+import '../../domain/entities/entity.dart';
 
 part 'message_dtos.freezed.dart';
 part 'message_dtos.g.dart';
@@ -17,7 +18,7 @@ class MessageDto with _$MessageDto {
     String? imageUrl,
     MessageDto? replyMessage,
     @ServerTimestampConverter() Timestamp? sentAt,
-    @JsonKey(name: 'readInfo') List<ReadInfoDto>? readInfoList,
+    @JsonKey(includeIfNull: true) Map<String, bool>? readBy,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
@@ -34,10 +35,7 @@ class MessageDto with _$MessageDto {
       replyMessage: domain.replyMessage != null
           ? MessageDto.fromDomain(domain.replyMessage!)
           : null,
-      readInfoList: domain.readInfoList
-          .map((readInfo) => ReadInfoDto.fromDomain(readInfo))
-          .iter
-          .toList(),
+      readBy: domain.readBy.asMap(),
     );
   }
 
@@ -49,8 +47,7 @@ class MessageDto with _$MessageDto {
       type: MessageType.fromValue(type),
       sentBy: sentBy ?? empty.sentBy,
       sentAt: sentAt?.toDate() ?? empty.sentAt,
-      readInfoList: readInfoList?.map((e) => e.toDomain()).toImmutableList() ??
-          empty.readInfoList,
+      readBy: readBy != null ? KtMap.from(readBy!) : const KtMap.empty(),
       imageUrl: imageUrl ?? empty.imageUrl,
       replyMessage: replyMessage?.toDomain(),
     );
