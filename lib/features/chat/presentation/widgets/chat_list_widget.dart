@@ -91,13 +91,15 @@ class ChatListWidget extends HookWidget {
                           children: [
                             const Expanded(child: Divider()),
                             16.horizontalSpace,
-                            Text(
-                              message.sentAt!.toStringDate(),
-                              style: AppTypography.metadata1.copyWith(
-                                color: NeutralColor.disabled,
+                            if (message.sentAt != null) ...[
+                              Text(
+                                message.sentAt!.toStringDate(),
+                                style: AppTypography.metadata1.copyWith(
+                                  color: NeutralColor.disabled,
+                                ),
                               ),
-                            ),
-                            16.horizontalSpace,
+                              16.horizontalSpace,
+                            ],
                             const Expanded(child: Divider()),
                           ],
                         ),
