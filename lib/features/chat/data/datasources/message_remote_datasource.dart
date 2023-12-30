@@ -108,9 +108,10 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
     return _service
         .watchAll(
           'rooms/$roomId/messages',
-          whereConditions: [
-            WhereCondition('sentBy', isEqualTo: userId),
-            WhereCondition('readBy.$userId', isEqualTo: false)
+          whereConditions: [WhereCondition('sentBy', isEqualTo: userId)],
+          orConditions: [
+            WhereCondition('readBy', isEqualTo: {}),
+            WhereCondition('readBy.$userId', isEqualTo: false),
           ],
         )
         .map((docs) => docs.map((e) => MessageDto.fromJson(e)).toList())
@@ -130,7 +131,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
             orderConditions: [OrderCondition('sentAt', descending: true)],
             limit: 1)
         .map((docs) => docs.map((json) => MessageDto.fromJson(json)).toList())
-        .map((messages) => messages.first)
+        .map((messages) => messages.firstOrNull)
         .onErrorReturnWith((error, stackTrace) {
       log('watchLastMessage',
           name: runtimeType.toString(), error: error, stackTrace: stackTrace);
