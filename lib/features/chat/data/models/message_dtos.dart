@@ -18,7 +18,7 @@ class MessageDto with _$MessageDto {
     String? imageUrl,
     MessageDto? replyMessage,
     @ServerTimestampConverter() Timestamp? sentAt,
-    @JsonKey(includeIfNull: true) Map<String, bool>? readBy,
+    @Default({}) Map<String, bool> readBy,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
@@ -47,7 +47,7 @@ class MessageDto with _$MessageDto {
       type: MessageType.fromValue(type),
       sentBy: sentBy ?? empty.sentBy,
       sentAt: sentAt?.toDate() ?? empty.sentAt,
-      readBy: readBy != null ? KtMap.from(readBy!) : const KtMap.empty(),
+      readBy: KtMap.from(readBy),
       imageUrl: imageUrl ?? empty.imageUrl,
       replyMessage: replyMessage?.toDomain(),
     );
