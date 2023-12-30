@@ -18,8 +18,16 @@ class FirestoreService {
     String collectionPath, {
     List<WhereCondition>? whereConditions,
     List<OrderCondition>? orderConditions,
+    List<WhereCondition>? orConditions,
     int? limit,
   }) {
+    if (orConditions != null) {
+      assert(
+        orConditions.length >= 2 && orConditions.length <= 10,
+        'OR conditions length must be between 2 and 10',
+      );
+    }
+
     Query<Map<String, dynamic>> query = _firestore.collection(collectionPath);
 
     if (whereConditions != null && whereConditions.isNotEmpty) {
@@ -39,6 +47,11 @@ class FirestoreService {
           whereNotIn: condition.whereNotIn,
         );
       }
+    }
+
+    if (orConditions != null) {
+      final filterOr = WhereCondition.or(orConditions);
+      query = query.where(filterOr);
     }
 
     if (orderConditions != null && orderConditions.isNotEmpty) {
@@ -129,6 +142,44 @@ class WhereCondition {
     this.whereNotIn,
     this.isNull,
   });
+
+  static Filter or(List<WhereCondition?> conditions) {
+    final length = conditions.length;
+    return Filter.or(
+      _mapFilter(conditions[0])!,
+      _mapFilter(conditions[1])!,
+      _hasElementIndex(2, length) ? _mapFilter(conditions[2]) : null,
+      _hasElementIndex(3, length) ? _mapFilter(conditions[3]) : null,
+      _hasElementIndex(4, length) ? _mapFilter(conditions[4]) : null,
+      _hasElementIndex(5, length) ? _mapFilter(conditions[5]) : null,
+      _hasElementIndex(6, length) ? _mapFilter(conditions[6]) : null,
+      _hasElementIndex(7, length) ? _mapFilter(conditions[7]) : null,
+      _hasElementIndex(8, length) ? _mapFilter(conditions[8]) : null,
+      _hasElementIndex(9, length) ? _mapFilter(conditions[9]) : null,
+    );
+  }
+
+  static bool _hasElementIndex(int index, int length) {
+    return index < length;
+  }
+
+  static Filter? _mapFilter(WhereCondition? condition) {
+    if (condition == null) return null;
+    return Filter(
+      condition.field,
+      isEqualTo: condition.isEqualTo,
+      arrayContains: condition.arrayContains,
+      arrayContainsAny: condition.arrayContainsAny,
+      isGreaterThan: condition.isGreaterThan,
+      isGreaterThanOrEqualTo: condition.isGreaterThanOrEqualTo,
+      isLessThan: condition.isLessThan,
+      isLessThanOrEqualTo: condition.isLessThanOrEqualTo,
+      isNotEqualTo: condition.isNotEqualTo,
+      isNull: condition.isNull,
+      whereIn: condition.whereIn,
+      whereNotIn: condition.whereNotIn,
+    );
+  }
 }
 
 class OrderCondition {
@@ -140,3 +191,5 @@ class OrderCondition {
     this.descending = false,
   });
 }
+
+class OrCondition {}
