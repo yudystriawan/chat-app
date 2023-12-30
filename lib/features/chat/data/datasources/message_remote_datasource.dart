@@ -108,7 +108,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
     return _service
         .watchAll(
           'rooms/$roomId/messages',
-          whereConditions: [WhereCondition('sentBy', isEqualTo: userId)],
+          whereConditions: [WhereCondition('sentBy', isNotEqualTo: userId)],
           orConditions: [
             WhereCondition('readBy', isEqualTo: {}),
             WhereCondition('readBy.$userId', isEqualTo: false),
