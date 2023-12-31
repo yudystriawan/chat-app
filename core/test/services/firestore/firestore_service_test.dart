@@ -12,6 +12,7 @@ import 'firestore_service_test.mocks.dart';
   QuerySnapshot,
   DocumentReference,
   DocumentSnapshot,
+  SetOptions,
 ])
 void main() {
   group('FirestoreService Tests', () {
@@ -39,12 +40,15 @@ void main() {
               includeMetadataChanges:
                   argThat(isA<bool>(), named: 'includeMetadataChanges')))
           .thenAnswer((_) => Stream.value(mockQuerySnapshot));
-      when(mockDocumentReference.set(argThat(isA<Map<String, dynamic>>())))
-          .thenAnswer((_) async {});
+      when(mockDocumentReference.set(
+        argThat(isA<Map<String, dynamic>>()),
+      )).thenAnswer((_) async {});
       when(mockDocumentReference.snapshots(
               includeMetadataChanges:
                   argThat(isA<bool>(), named: 'includeMetadataChanges')))
           .thenAnswer((_) => Stream.value(mockDocumentSnapshot));
+      when(mockDocumentReference.get())
+          .thenAnswer((_) async => mockDocumentSnapshot);
     });
 
     test('watchAll returns a stream of lists', () {
@@ -80,7 +84,8 @@ void main() {
       await sut.upsert(collectionPath, docId, data);
 
       // Assert
-      verify(mockDocumentReference.set(data)).called(1);
+      verify(mockDocumentReference.set(data, argThat(isA<SetOptions>())))
+          .called(1);
     });
 
     test('delete calls delete on the firestore collection', () async {
@@ -93,6 +98,73 @@ void main() {
 
       // Assert
       verify(mockDocumentReference.delete()).called(1);
+    });
+
+    test('checkIfExist returns true if document exists', () async {
+      // Arrange
+      const collectionPath = 'your_collection_path';
+      const docId = 'existing_document_id';
+
+      // Mocking the Firestore snapshot result
+      when(mockDocumentSnapshot.exists).thenAnswer((_) => true);
+
+      // Act
+      final result = await sut.checkIfExist(collectionPath, docId);
+
+      // Assert
+      expect(result, true);
+    });
+
+    test('checkIfExist returns false if document does not exist', () async {
+      // Arrange
+      const collectionPath = 'your_collection_path';
+      const docId = 'non_existing_document_id';
+
+      // Mocking the Firestore snapshot result
+      when(mockDocumentSnapshot.exists).thenAnswer((_) => false);
+
+      // Act
+      final result = await sut.checkIfExist(collectionPath, docId);
+
+      // Assert
+      expect(result, false);
+    });
+
+    test('generateId returns a non-null string', () {
+      // Act
+      final generatedId = sut.generateId();
+
+      // Assert
+      expect(generatedId, isNotNull);
+      expect(generatedId, isNotEmpty);
+      expect(generatedId, isA<String>());
+    });
+
+    test('generated IDs are unique', () {
+      // Arrange
+      final Set<String> generatedIds = {};
+
+      // Act & Assert
+      for (int i = 0; i < 1000; i++) {
+        final generatedId = sut.generateId();
+
+        // Check uniqueness
+        expect(generatedIds.contains(generatedId), isFalse);
+
+        generatedIds.add(generatedId);
+      }
+    });
+
+    test('useEmulator sets Firestore emulator host and port', () {
+      // Arrange
+      const host = 'localhost';
+      const port = 8080;
+
+      // Act
+      sut.useEmulator(host, port);
+
+      // Assert
+      verify(mockFirestore.useFirestoreEmulator(host, port)).called(1);
     });
   });
 }
