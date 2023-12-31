@@ -3,9 +3,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:uuid/uuid.dart';
 
-export 'package:cloud_firestore/cloud_firestore.dart'
-    show FieldValue, FieldPath, Timestamp;
-
 @lazySingleton
 class FirestoreService {
   final FirebaseFirestore _firestore;
@@ -102,19 +99,18 @@ class FirestoreService {
       _firestore.useFirestoreEmulator(host, port);
 }
 
-class ServerTimestampConverter implements JsonConverter<DateTime?, dynamic> {
+class ServerTimestampConverter
+    implements JsonConverter<ServerTimestamp?, dynamic> {
   const ServerTimestampConverter();
 
   @override
-  DateTime? fromJson(json) {
-    if (json is Timestamp) return json.toDate();
-    return json;
-  }
+  ServerTimestamp? fromJson(json) => ServerTimestamp.create(json);
 
   @override
-  toJson(DateTime? object) {
-    if (object == null) return FieldValue.serverTimestamp();
-    return Timestamp.fromDate(object);
+  toJson(ServerTimestamp? object) {
+    if (object == null || object.isAlways) return FieldValue.serverTimestamp();
+
+    return object.timestamp ?? FieldValue.serverTimestamp();
   }
 }
 
@@ -196,4 +192,60 @@ class OrderCondition {
   });
 }
 
-class OrCondition {}
+class FieldArray {
+  final List<dynamic> data;
+
+  FieldArray(this.data);
+
+  FieldValue union() => FieldValue.arrayUnion(data);
+  FieldValue remove() => FieldValue.arrayRemove(data);
+}
+
+enum TimestampType { ifNotSet, always }
+
+class ServerTimestamp {
+  Timestamp? _timestamp;
+  TimestampType _type = TimestampType.ifNotSet;
+
+  ServerTimestamp.create([dynamic value]) {
+    if (value is ServerTimestamp) {
+      _timestamp = value.timestamp;
+      return;
+    }
+
+    if (value is DateTime) {
+      _timestamp = Timestamp.fromDate(value);
+      return;
+    }
+
+    if (value is Timestamp) {
+      _timestamp = value;
+      return;
+    }
+
+    _timestamp = Timestamp.fromDate(DateTime.now());
+  }
+
+  ServerTimestamp config(TimestampType type) {
+    _type = type;
+    return this;
+  }
+
+  bool get isAlways => _type == TimestampType.always;
+  bool get isIfNotSet => _type == TimestampType.ifNotSet;
+
+  Timestamp? get timestamp => _timestamp;
+  DateTime? toDate() => timestamp?.toDate();
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is ServerTimestamp &&
+        other._timestamp == _timestamp &&
+        other._type == _type;
+  }
+
+  @override
+  int get hashCode => _timestamp.hashCode ^ _type.hashCode;
+}
