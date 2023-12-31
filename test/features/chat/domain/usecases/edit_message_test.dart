@@ -27,7 +27,7 @@ void main() {
       id: 'messageId',
       data: 'Test message',
       imageUrl: '',
-      readInfoList: const KtList.empty(),
+      readBy: KtMap.from({'user1': true, 'user2': false}),
       sentBy: 'userId',
       type: MessageType.text,
       sentAt: DateTime.now(),
