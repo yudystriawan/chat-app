@@ -17,7 +17,7 @@ class MessageDto with _$MessageDto {
     String? sentBy,
     String? imageUrl,
     MessageDto? replyMessage,
-    @ServerTimestampConverter() DateTime? sentAt,
+    @ServerTimestampConverter() ServerTimestamp? sentAt,
     @Default({}) Map<String, bool> readBy,
   }) = _MessageDto;
 
@@ -30,7 +30,7 @@ class MessageDto with _$MessageDto {
       data: domain.data,
       type: domain.type.value,
       sentBy: domain.sentBy,
-      sentAt: domain.sentAt,
+      sentAt: ServerTimestamp.create(domain.sentAt),
       imageUrl: domain.imageUrl,
       replyMessage: domain.replyMessage != null
           ? MessageDto.fromDomain(domain.replyMessage!)
@@ -46,7 +46,7 @@ class MessageDto with _$MessageDto {
       data: data ?? empty.data,
       type: MessageType.fromValue(type),
       sentBy: sentBy ?? empty.sentBy,
-      sentAt: sentAt ?? empty.sentAt,
+      sentAt: ServerTimestamp.create(sentAt).toDate(),
       readBy: KtMap.from(readBy),
       imageUrl: imageUrl ?? empty.imageUrl,
       replyMessage: replyMessage?.toDomain(),

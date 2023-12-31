@@ -7,6 +7,9 @@ import 'package:kt_dart/collection.dart';
 void main() {
   group('RoomDto', () {
     test('fromJson should return a valid RoomDto object', () {
+      final createdAtJson =
+          const ServerTimestampConverter().toJson(ServerTimestamp.create());
+
       final Map<String, dynamic> json = {
         'id': '123',
         'members': ['user1', 'user2'],
@@ -15,7 +18,7 @@ void main() {
         'description': 'This is a test room',
         'imageUrl': 'http://example.com/image.jpg',
         'createdBy': 'user1',
-        'createdAt': Timestamp.now(),
+        'createdAt': createdAtJson,
       };
 
       final roomDto = RoomDto.fromJson(json);
@@ -27,8 +30,7 @@ void main() {
       expect(roomDto.description, json['description']);
       expect(roomDto.imageUrl, json['imageUrl']);
       expect(roomDto.createdBy, json['createdBy']);
-      expect(roomDto.createdAt,
-          const ServerTimestampConverter().fromJson(json['createdAt']));
+      expect(roomDto.createdAt?.timestamp, json['createdAt']);
     });
 
     test('toJson should return a valid JSON map', () {
@@ -40,7 +42,7 @@ void main() {
         description: 'This is a test room',
         imageUrl: 'http://example.com/image.jpg',
         createdBy: 'user1',
-        createdAt: DateTime.now(),
+        createdAt: ServerTimestamp.create(),
       );
 
       final json = roomDto.toJson();
@@ -58,6 +60,8 @@ void main() {
     });
 
     test('toDomain should return a valid Room object', () {
+      final createdAt = ServerTimestamp.create();
+
       final roomDto = RoomDto(
         id: '123',
         members: ['user1', 'user2'],
@@ -66,7 +70,7 @@ void main() {
         description: 'This is a test room',
         imageUrl: 'http://example.com/image.jpg',
         createdBy: 'user1',
-        createdAt: DateTime.now(),
+        createdAt: createdAt,
       );
 
       final room = roomDto.toDomain();
@@ -78,7 +82,7 @@ void main() {
       expect(room.description, roomDto.description);
       expect(room.imageUrl, roomDto.imageUrl);
       expect(room.createdBy, roomDto.createdBy);
-      expect(room.createdAt, roomDto.createdAt);
+      expect(room.createdAt, roomDto.createdAt?.toDate());
     });
   });
 }

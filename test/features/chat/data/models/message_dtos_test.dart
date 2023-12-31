@@ -27,7 +27,7 @@ void main() {
       expect(messageDto.data, message.data);
       expect(messageDto.type, message.type.value);
       expect(messageDto.sentBy, message.sentBy);
-      expect(messageDto.sentAt, message.sentAt);
+      expect(messageDto.sentAt?.toDate(), message.sentAt);
       expect(messageDto.imageUrl, message.imageUrl);
       expect(messageDto.replyMessage, message.replyMessage);
       expect(messageDto.readBy, message.readBy.asMap());
@@ -40,7 +40,7 @@ void main() {
         data: 'Hello, World!',
         type: 'text',
         sentBy: 'user1',
-        sentAt: DateTime.now(),
+        sentAt: ServerTimestamp.create(),
         imageUrl: 'https://example.com/image.jpg',
         replyMessage: null,
         readBy: {'user1': true, 'user2': false},
@@ -53,7 +53,7 @@ void main() {
       expect(message.id, messageDto.id);
       expect(message.data, messageDto.data);
       expect(message.type, MessageType.fromValue(messageDto.type));
-      expect(message.sentAt, messageDto.sentAt);
+      expect(message.sentAt, messageDto.sentAt?.toDate());
       expect(message.sentBy, messageDto.sentBy);
       expect(message.imageUrl, messageDto.imageUrl);
       expect(message.replyMessage, isNull);
@@ -67,7 +67,7 @@ void main() {
         'data': 'Hello, World!',
         'type': 'text',
         'sentBy': 'user1',
-        'sentAt': Timestamp.fromDate(DateTime.now()),
+        'sentAt': ServerTimestamp.create(),
         'imageUrl': 'https://example.com/image.jpg',
         'replyMessage': null,
         'readBy': {'user1': true, 'user2': false},
@@ -95,7 +95,7 @@ void main() {
         data: 'Hello, World!',
         type: 'text',
         sentBy: 'user1',
-        sentAt: DateTime.now(),
+        sentAt: ServerTimestamp.create(),
         imageUrl: 'https://example.com/image.jpg',
         replyMessage: null,
         readBy: {'user1': true, 'user2': false},

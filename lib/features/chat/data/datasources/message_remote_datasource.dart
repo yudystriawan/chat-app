@@ -65,7 +65,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
           .toJson();
 
       // add server timestamp
-      request.addAll({'sentAt': FieldValue.serverTimestamp()});
+      // request.addAll({'sentAt': FieldValue.serverTimestamp()});
 
       await _service.upsert(collectionPath, messageId, request);
 

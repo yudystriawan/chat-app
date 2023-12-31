@@ -64,7 +64,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
           .toJson();
 
       // add server timestamp
-      request.addAll({'createdAt': FieldValue.serverTimestamp()});
+      // request.addAll({'createdAt': FieldValue.serverTimestamp()});
 
       await _service
           .upsert('rooms', roomId, request)

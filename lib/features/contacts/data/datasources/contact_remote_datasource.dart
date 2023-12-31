@@ -58,7 +58,7 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
     try {
       final currentUserId = _authService.currentUser!.uid;
       return _service.upsert('users', currentUserId, {
-        'contacts': FieldValue.arrayUnion([userId])
+        'contacts': FieldArray([userId]).union(),
       });
     } catch (e) {
       throw const Failure.serverError();
