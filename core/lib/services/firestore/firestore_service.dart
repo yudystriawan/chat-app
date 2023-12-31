@@ -82,10 +82,8 @@ class FirestoreService {
     String? docId,
     Map<String, dynamic> data,
   ) async {
-    return _firestore
-        .collection(collectionPath)
-        .doc(docId)
-        .set(data, SetOptions(merge: true));
+    final options = SetOptions(merge: true);
+    return _firestore.collection(collectionPath).doc(docId).set(data, options);
   }
 
   Future<void> delete(String collectionPath, String? docId) {
@@ -104,14 +102,20 @@ class FirestoreService {
       _firestore.useFirestoreEmulator(host, port);
 }
 
-class ServerTimestampConverter implements JsonConverter<Timestamp, Object> {
+class ServerTimestampConverter implements JsonConverter<DateTime?, dynamic> {
   const ServerTimestampConverter();
 
   @override
-  Timestamp fromJson(Object json) => json as Timestamp;
+  DateTime? fromJson(json) {
+    if (json is Timestamp) return json.toDate();
+    return json;
+  }
 
   @override
-  Object toJson(Timestamp object) => object;
+  toJson(DateTime? object) {
+    if (object == null) return FieldValue.serverTimestamp();
+    return Timestamp.fromDate(object);
+  }
 }
 
 class WhereCondition {
