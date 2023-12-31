@@ -11,95 +11,24 @@ void main() {
         'id': '123',
         'members': ['user1', 'user2'],
         'type': 1,
-        'roomName': 'Test Room',
-        'roomDescription': 'This is a test room',
-        'roomImageUrl': 'http://example.com/image.jpg',
+        'name': 'Test Room',
+        'description': 'This is a test room',
+        'imageUrl': 'http://example.com/image.jpg',
         'createdBy': 'user1',
         'createdAt': Timestamp.now(),
       };
 
       final roomDto = RoomDto.fromJson(json);
 
-      expect(roomDto.id, '123');
-      expect(roomDto.members, ['user1', 'user2']);
-      expect(roomDto.type, 1);
-      expect(roomDto.roomName, 'Test Room');
-      expect(roomDto.roomDescription, 'This is a test room');
-      expect(roomDto.roomImageUrl, 'http://example.com/image.jpg');
-      expect(roomDto.createdBy, 'user1');
-      expect(roomDto.createdAt, isA<Timestamp>());
-    });
-
-    test('toDomain should return a valid Room object', () {
-      final roomDto = RoomDto(
-        id: '123',
-        members: ['user1', 'user2'],
-        type: 1,
-        roomName: 'Test Room',
-        roomDescription: 'This is a test room',
-        roomImageUrl: 'http://example.com/image.jpg',
-        createdBy: 'user1',
-        createdAt: Timestamp.now(),
-      );
-
-      final room = roomDto.toDomain();
-
-      expect(room.id, '123');
-      expect(room.members, isA<KtList<String>>());
-      expect(room.type, isA<RoomType>());
-      expect(room.name, 'Test Room');
-      expect(room.description, 'This is a test room');
-      expect(room.imageUrl, 'http://example.com/image.jpg');
-      expect(room.createdBy, 'user1');
-      expect(room.createdAt, isA<DateTime>());
-    });
-
-    test('fromJson should return a valid RoomDto object', () {
-      final Map<String, dynamic> json = {
-        'id': '123',
-        'members': ['user1', 'user2'],
-        'type': 1,
-        'roomName': 'Test Room',
-        'roomDescription': 'This is a test room',
-        'roomImageUrl': 'http://example.com/image.jpg',
-        'createdBy': 'user1',
-        'createdAt': Timestamp.now(),
-      };
-
-      final roomDto = RoomDto.fromJson(json);
-
-      expect(roomDto.id, '123');
-      expect(roomDto.members, ['user1', 'user2']);
-      expect(roomDto.type, 1);
-      expect(roomDto.roomName, 'Test Room');
-      expect(roomDto.roomDescription, 'This is a test room');
-      expect(roomDto.roomImageUrl, 'http://example.com/image.jpg');
-      expect(roomDto.createdBy, 'user1');
-      expect(roomDto.createdAt, isA<Timestamp>());
-    });
-
-    test('toDomain should return a valid Room object', () {
-      final roomDto = RoomDto(
-        id: '123',
-        members: ['user1', 'user2'],
-        type: 1,
-        roomName: 'Test Room',
-        roomDescription: 'This is a test room',
-        roomImageUrl: 'http://example.com/image.jpg',
-        createdBy: 'user1',
-        createdAt: Timestamp.now(),
-      );
-
-      final room = roomDto.toDomain();
-
-      expect(room.id, '123');
-      expect(room.members, isA<KtList<String>>());
-      expect(room.type, isA<RoomType>());
-      expect(room.name, 'Test Room');
-      expect(room.description, 'This is a test room');
-      expect(room.imageUrl, 'http://example.com/image.jpg');
-      expect(room.createdBy, 'user1');
-      expect(room.createdAt, isA<DateTime>());
+      expect(roomDto.id, json['id']);
+      expect(roomDto.members, json['members']);
+      expect(roomDto.type, json['type']);
+      expect(roomDto.name, json['name']);
+      expect(roomDto.description, json['description']);
+      expect(roomDto.imageUrl, json['imageUrl']);
+      expect(roomDto.createdBy, json['createdBy']);
+      expect(roomDto.createdAt,
+          const ServerTimestampConverter().fromJson(json['createdAt']));
     });
 
     test('toJson should return a valid JSON map', () {
@@ -107,24 +36,49 @@ void main() {
         id: '123',
         members: ['user1', 'user2'],
         type: 1,
-        roomName: 'Test Room',
-        roomDescription: 'This is a test room',
-        roomImageUrl: 'http://example.com/image.jpg',
+        name: 'Test Room',
+        description: 'This is a test room',
+        imageUrl: 'http://example.com/image.jpg',
         createdBy: 'user1',
-        createdAt: Timestamp.now(),
+        createdAt: DateTime.now(),
       );
 
       final json = roomDto.toJson();
 
       expect(json, isA<Map<String, dynamic>>());
-      expect(json['id'], '123');
-      expect(json['members'], ['user1', 'user2']);
-      expect(json['type'], 1);
-      expect(json['roomName'], 'Test Room');
-      expect(json['roomDescription'], 'This is a test room');
-      expect(json['roomImageUrl'], 'http://example.com/image.jpg');
-      expect(json['createdBy'], 'user1');
-      expect(json['createdAt'], isA<Timestamp>());
+      expect(json['id'], roomDto.id);
+      expect(json['members'], roomDto.members);
+      expect(json['type'], roomDto.type);
+      expect(json['name'], roomDto.name);
+      expect(json['description'], roomDto.description);
+      expect(json['imageUrl'], roomDto.imageUrl);
+      expect(json['createdBy'], roomDto.createdBy);
+      expect(json['createdAt'],
+          const ServerTimestampConverter().toJson(roomDto.createdAt));
+    });
+
+    test('toDomain should return a valid Room object', () {
+      final roomDto = RoomDto(
+        id: '123',
+        members: ['user1', 'user2'],
+        type: 1,
+        name: 'Test Room',
+        description: 'This is a test room',
+        imageUrl: 'http://example.com/image.jpg',
+        createdBy: 'user1',
+        createdAt: DateTime.now(),
+      );
+
+      final room = roomDto.toDomain();
+
+      expect(room.id, roomDto.id);
+      expect(room.members, KtList.from(roomDto.members!));
+      expect(room.type, RoomType.fromValue(roomDto.type));
+      expect(room.name, roomDto.name);
+      expect(room.description, roomDto.description);
+      expect(room.imageUrl, roomDto.imageUrl);
+      expect(room.createdBy, roomDto.createdBy);
+      expect(room.createdAt, roomDto.createdAt);
     });
   });
 }

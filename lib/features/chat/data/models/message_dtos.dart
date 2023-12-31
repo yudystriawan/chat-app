@@ -17,7 +17,7 @@ class MessageDto with _$MessageDto {
     String? sentBy,
     String? imageUrl,
     MessageDto? replyMessage,
-    @ServerTimestampConverter() Timestamp? sentAt,
+    @ServerTimestampConverter() DateTime? sentAt,
     @Default({}) Map<String, bool> readBy,
   }) = _MessageDto;
 
@@ -30,7 +30,7 @@ class MessageDto with _$MessageDto {
       data: domain.data,
       type: domain.type.value,
       sentBy: domain.sentBy,
-      sentAt: domain.sentAt != null ? Timestamp.fromDate(domain.sentAt!) : null,
+      sentAt: domain.sentAt,
       imageUrl: domain.imageUrl,
       replyMessage: domain.replyMessage != null
           ? MessageDto.fromDomain(domain.replyMessage!)
@@ -46,37 +46,10 @@ class MessageDto with _$MessageDto {
       data: data ?? empty.data,
       type: MessageType.fromValue(type),
       sentBy: sentBy ?? empty.sentBy,
-      sentAt: sentAt?.toDate() ?? empty.sentAt,
+      sentAt: sentAt ?? empty.sentAt,
       readBy: KtMap.from(readBy),
       imageUrl: imageUrl ?? empty.imageUrl,
       replyMessage: replyMessage?.toDomain(),
-    );
-  }
-}
-
-@freezed
-class ReadInfoDto with _$ReadInfoDto {
-  const ReadInfoDto._();
-  const factory ReadInfoDto({
-    String? uid,
-    @ServerTimestampConverter() Timestamp? readAt,
-  }) = _ReadInfoDto;
-
-  factory ReadInfoDto.fromJson(Map<String, dynamic> json) =>
-      _$ReadInfoDtoFromJson(json);
-
-  factory ReadInfoDto.fromDomain(ReadInfo domain) {
-    return ReadInfoDto(
-      uid: domain.uid,
-      readAt: Timestamp.fromDate(domain.readAt),
-    );
-  }
-
-  ReadInfo toDomain() {
-    final empty = ReadInfo.empty();
-    return ReadInfo(
-      uid: uid ?? empty.uid,
-      readAt: readAt?.toDate() ?? empty.readAt,
     );
   }
 }
