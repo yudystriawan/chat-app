@@ -11,30 +11,28 @@ void main() {
       expect(message.data, '');
       expect(message.type, MessageType.text);
       expect(message.sentBy, '');
-      expect(message.readInfoList, const KtList.empty());
-      expect(message.sentAt, isNotNull);
+      expect(message.sentAt, isNull);
+      expect(message.readBy, const KtMap.empty());
     });
 
     test('Message should be created with specified values', () {
+      final sentAt = DateTime.now();
       final message = Message(
         id: '123',
         data: 'Hello, World!',
         type: MessageType.text,
         sentBy: 'user1',
         imageUrl: 'image.jpg',
-        readInfoList: KtList.of(
-          ReadInfo(uid: 'user2', readAt: DateTime.now()),
-          ReadInfo(uid: 'user3', readAt: DateTime.now()),
-        ),
-        sentAt: DateTime.now(),
+        readBy: KtMap.from({'user1': true, 'user2': false}),
+        sentAt: sentAt,
       );
 
       expect(message.id, '123');
       expect(message.data, 'Hello, World!');
       expect(message.type, MessageType.text);
       expect(message.sentBy, 'user1');
-      expect(message.readInfoList.size, 2);
-      expect(message.sentAt, isNotNull);
+      expect(message.readBy, KtMap.from({'user1': true, 'user2': false}));
+      expect(message.sentAt, sentAt);
     });
 
     test(
@@ -46,10 +44,7 @@ void main() {
         type: MessageType.text,
         sentBy: 'user1',
         imageUrl: 'image.jpg',
-        readInfoList: KtList.of(
-          ReadInfo(uid: 'user2', readAt: DateTime.now()),
-          ReadInfo(uid: 'user3', readAt: DateTime.now()),
-        ),
+        readBy: KtMap.from({'user1': true, 'user2': false}),
         sentAt: DateTime.now(),
       );
 
@@ -60,7 +55,7 @@ void main() {
       expect(updatedMessage.data, 'Updated');
       expect(updatedMessage.type, message1.type);
       expect(updatedMessage.sentBy, 'user2');
-      expect(updatedMessage.readInfoList, message1.readInfoList);
+      expect(updatedMessage.readBy, message1.readBy);
       expect(updatedMessage.sentAt, message1.sentAt);
     });
 
@@ -71,10 +66,7 @@ void main() {
         type: MessageType.text,
         sentBy: 'user1',
         imageUrl: 'image.jpg',
-        readInfoList: KtList.of(
-          ReadInfo(uid: 'user2', readAt: DateTime.now()),
-          ReadInfo(uid: 'user3', readAt: DateTime.now()),
-        ),
+        readBy: KtMap.from({'user1': true, 'user2': false}),
         sentAt: DateTime.now(),
       );
 
@@ -95,10 +87,7 @@ void main() {
         type: MessageType.text,
         sentBy: 'user1',
         imageUrl: 'image.jpg',
-        readInfoList: KtList.of(
-          ReadInfo(uid: 'user2', readAt: dateTime),
-          ReadInfo(uid: 'user3', readAt: dateTime),
-        ),
+        readBy: KtMap.from({'user1': true, 'user2': false}),
         sentAt: dateTime,
       );
 
@@ -108,10 +97,7 @@ void main() {
         type: MessageType.text,
         sentBy: 'user1',
         imageUrl: 'image.jpg',
-        readInfoList: KtList.of(
-          ReadInfo(uid: 'user2', readAt: dateTime),
-          ReadInfo(uid: 'user3', readAt: dateTime),
-        ),
+        readBy: KtMap.from({'user1': true, 'user2': false}),
         sentAt: dateTime,
       );
 
@@ -128,10 +114,7 @@ void main() {
         type: MessageType.text,
         sentBy: 'user1',
         imageUrl: 'image.jpg',
-        readInfoList: KtList.of(
-          ReadInfo(uid: 'user2', readAt: dateTime),
-          ReadInfo(uid: 'user3', readAt: dateTime),
-        ),
+        readBy: KtMap.from({'user1': true, 'user2': false}),
         sentAt: dateTime,
       );
 
@@ -141,10 +124,8 @@ void main() {
         type: MessageType.text,
         sentBy: 'user1',
         imageUrl: 'image.jpg',
-        readInfoList: KtList.of(
-          ReadInfo(uid: 'user2', readAt: dateTime),
-          ReadInfo(uid: 'user3', readAt: dateTime),
-        ),
+        readBy: KtMap.from({'user1': true, 'user2': false}),
+
         sentAt: dateTime,
       );
 
@@ -158,87 +139,6 @@ void main() {
       expect(MessageType.fromValue('image'), MessageType.image);
       expect(MessageType.fromValue('invalid'),
           MessageType.text); // Handle invalid value
-    });
-  });
-
-  group('ReadInfo', () {
-    test('ReadInfo.empty() should create a ReadInfo object with default values',
-        () {
-      final readInfo = ReadInfo.empty();
-
-      expect(readInfo.uid, '');
-      expect(readInfo.readAt, isNotNull);
-    });
-
-    test('ReadInfo should be created with specified values', () {
-      final readInfo = ReadInfo(
-        uid: 'user1',
-        readAt: DateTime.now(),
-      );
-
-      expect(readInfo.uid, 'user1');
-      expect(readInfo.readAt, isNotNull);
-    });
-
-    test(
-        'ReadInfo.copyWith() should create a new instance with updated properties',
-        () {
-      final dateTime = DateTime.now();
-
-      final readInfo1 = ReadInfo(
-        uid: 'user1',
-        readAt: dateTime,
-      );
-
-      final updatedReadInfo =
-          readInfo1.copyWith(uid: 'user2', readAt: dateTime);
-
-      expect(updatedReadInfo.uid, 'user2');
-      expect(updatedReadInfo.readAt, readInfo1.readAt);
-    });
-
-    test('ReadInfo.copyWith() should not modify the original readInfo', () {
-      final readInfo1 = ReadInfo(
-        uid: 'user1',
-        readAt: DateTime.now(),
-      );
-
-      final updatedReadInfo =
-          readInfo1.copyWith(uid: 'user2', readAt: DateTime.now());
-
-      expect(updatedReadInfo.uid, 'user2');
-      expect(readInfo1.uid, 'user1');
-    });
-
-    test('ReadInfo should be equal when all properties are the same', () {
-      final dateTime = DateTime.now();
-
-      final readInfo1 = ReadInfo(
-        uid: 'user1',
-        readAt: dateTime,
-      );
-
-      final readInfo2 = ReadInfo(
-        uid: 'user1',
-        readAt: dateTime,
-      );
-
-      expect(readInfo1, equals(readInfo2));
-    });
-
-    test('ReadInfo should not be equal when at least one property is different',
-        () {
-      final readInfo1 = ReadInfo(
-        uid: 'user1',
-        readAt: DateTime.now(),
-      );
-
-      final readInfo2 = ReadInfo(
-        uid: 'user2', // Different uid
-        readAt: DateTime.now(),
-      );
-
-      expect(readInfo1, isNot(equals(readInfo2)));
     });
   });
 }
