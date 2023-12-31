@@ -1,5 +1,5 @@
 import 'package:core/services/auth/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mockito/annotations.dart';
@@ -8,12 +8,12 @@ import 'package:mockito/mockito.dart';
 import 'auth_service_test.mocks.dart';
 
 @GenerateMocks([
-  FirebaseAuth,
+  fb.FirebaseAuth,
   GoogleSignIn,
   GoogleSignInAccount,
   GoogleSignInAuthentication,
-  UserCredential,
-  User,
+  fb.UserCredential,
+  fb.User,
 ])
 void main() {
   late MockFirebaseAuth mockFirebaseAuth;
@@ -46,7 +46,7 @@ void main() {
           .thenAnswer((_) async => userCredential);
       when(userCredential.user).thenReturn(user);
       when(userCredential.additionalUserInfo)
-          .thenReturn(AdditionalUserInfo(isNewUser: true));
+          .thenReturn(fb.AdditionalUserInfo(isNewUser: true));
       when(user.uid).thenReturn('123');
       when(user.email).thenReturn('example.com');
       when(user.displayName).thenReturn('John Doe');
@@ -115,7 +115,7 @@ void main() {
       // Assert
       expect(
         userStream,
-        emits(isNull),
+        emits(isA<User>()),
       );
     });
   });

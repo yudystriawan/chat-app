@@ -2,7 +2,6 @@ import 'package:core/core.dart';
 import 'package:core/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:core/features/auth/data/models/user_dtos.dart';
 import 'package:core/services/auth/auth_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
