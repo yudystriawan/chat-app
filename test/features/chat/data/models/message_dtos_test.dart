@@ -13,23 +13,24 @@ void main() {
         data: 'Hello, World!',
         type: MessageType.text,
         sentBy: 'user1',
-        sentAt: DateTime(2023, 10, 11),
+        sentAt: DateTime.now(),
         imageUrl: 'https://example.com/image.jpg',
         replyMessage: null,
-        readInfoList: const KtList.empty(),
+        readBy: KtMap.from({'user1': true, 'user2': false}),
       );
 
       // Convert the Message object to a MessageDto.
       final messageDto = MessageDto.fromDomain(message);
 
       // Validate that the MessageDto was created correctly.
-      expect(messageDto.id, '1');
-      expect(messageDto.data, 'Hello, World!');
-      expect(messageDto.type, 'text');
-      expect(messageDto.sentBy, 'user1');
-      expect(messageDto.imageUrl, 'https://example.com/image.jpg');
-      expect(messageDto.replyMessage, isNull);
-      expect(messageDto.readInfoList, isEmpty);
+      expect(messageDto.id, message.id);
+      expect(messageDto.data, message.data);
+      expect(messageDto.type, message.type.value);
+      expect(messageDto.sentBy, message.sentBy);
+      expect(messageDto.sentAt, message.sentAt);
+      expect(messageDto.imageUrl, message.imageUrl);
+      expect(messageDto.replyMessage, message.replyMessage);
+      expect(messageDto.readBy, message.readBy.asMap());
     });
 
     test('toDomain should create a valid Message from a MessageDto', () {
@@ -39,23 +40,24 @@ void main() {
         data: 'Hello, World!',
         type: 'text',
         sentBy: 'user1',
-        sentAt: Timestamp.fromDate(DateTime(2023, 10, 11)),
+        sentAt: DateTime.now(),
         imageUrl: 'https://example.com/image.jpg',
         replyMessage: null,
-        readInfoList: null,
+        readBy: {'user1': true, 'user2': false},
       );
 
       // Convert the MessageDto object to a Message.
       final message = messageDto.toDomain();
 
       // Validate that the Message was created correctly.
-      expect(message.id, '1');
-      expect(message.data, 'Hello, World!');
-      expect(message.type, MessageType.text);
-      expect(message.sentBy, 'user1');
-      expect(message.imageUrl, 'https://example.com/image.jpg');
+      expect(message.id, messageDto.id);
+      expect(message.data, messageDto.data);
+      expect(message.type, MessageType.fromValue(messageDto.type));
+      expect(message.sentAt, messageDto.sentAt);
+      expect(message.sentBy, messageDto.sentBy);
+      expect(message.imageUrl, messageDto.imageUrl);
       expect(message.replyMessage, isNull);
-      expect(message.readInfoList, const KtList.empty());
+      expect(message.readBy, KtMap.from(messageDto.readBy));
     });
 
     test('fromJson should create a valid MessageDto from JSON', () {
@@ -65,23 +67,25 @@ void main() {
         'data': 'Hello, World!',
         'type': 'text',
         'sentBy': 'user1',
-        'sentAt': Timestamp.fromDate(DateTime(2023, 10, 11)),
+        'sentAt': Timestamp.fromDate(DateTime.now()),
         'imageUrl': 'https://example.com/image.jpg',
         'replyMessage': null,
-        'readInfo': [],
+        'readBy': {'user1': true, 'user2': false},
       };
 
       // Convert the JSON Map to a MessageDto.
       final messageDto = MessageDto.fromJson(json);
 
       // Validate that the MessageDto was created correctly.
-      expect(messageDto.id, '1');
-      expect(messageDto.data, 'Hello, World!');
-      expect(messageDto.type, 'text');
-      expect(messageDto.sentBy, 'user1');
-      expect(messageDto.imageUrl, 'https://example.com/image.jpg');
+      expect(messageDto.id, json['id']);
+      expect(messageDto.data, json['data']);
+      expect(messageDto.type, json['type']);
+      expect(messageDto.sentBy, json['sentBy']);
+      expect(messageDto.sentAt,
+          const ServerTimestampConverter().fromJson(json['sentAt']));
+      expect(messageDto.imageUrl, json['imageUrl']);
       expect(messageDto.replyMessage, isNull);
-      expect(messageDto.readInfoList, isEmpty);
+      expect(messageDto.readBy, json['readBy']);
     });
 
     test('toJson should convert a MessageDto to a valid JSON Map', () {
@@ -91,85 +95,25 @@ void main() {
         data: 'Hello, World!',
         type: 'text',
         sentBy: 'user1',
-        sentAt: Timestamp.fromDate(DateTime(2023, 10, 11)),
+        sentAt: DateTime.now(),
         imageUrl: 'https://example.com/image.jpg',
         replyMessage: null,
-        readInfoList: [],
+        readBy: {'user1': true, 'user2': false},
       );
 
       // Convert the MessageDto to a JSON Map.
       final json = messageDto.toJson();
 
       // Validate that the JSON Map is correct.
-      expect(json['id'], '1');
-      expect(json['data'], 'Hello, World!');
-      expect(json['type'], 'text');
-      expect(json['sentBy'], 'user1');
-      expect(json['imageUrl'], 'https://example.com/image.jpg');
+      expect(json['id'], messageDto.id);
+      expect(json['data'], messageDto.data);
+      expect(json['type'], messageDto.type);
+      expect(json['sentBy'], messageDto.sentBy);
+      expect(json['sentAt'],
+          const ServerTimestampConverter().toJson(messageDto.sentAt));
+      expect(json['imageUrl'], messageDto.imageUrl);
       expect(json['replyMessage'], isNull);
-      expect(json['readInfo'], isEmpty);
-    });
-  });
-
-  group('ReadInfoDto', () {
-    test('fromDomain should create a valid ReadInfoDto from a ReadInfo', () {
-      // Create a sample ReadInfo object.
-      final readInfo = ReadInfo(
-        uid: 'user1',
-        readAt: DateTime(2023, 10, 11),
-      );
-
-      // Convert the ReadInfo object to a ReadInfoDto.
-      final readInfoDto = ReadInfoDto.fromDomain(readInfo);
-
-      // Validate that the ReadInfoDto was created correctly.
-      expect(readInfoDto.uid, 'user1');
-      expect(readInfoDto.readAt, Timestamp.fromDate(DateTime(2023, 10, 11)));
-    });
-
-    test('toDomain should create a valid ReadInfo from a ReadInfoDto', () {
-      // Create a sample ReadInfoDto object.
-      final readInfoDto = ReadInfoDto(
-        uid: 'user1',
-        readAt: Timestamp.fromDate(DateTime(2023, 10, 11)),
-      );
-
-      // Convert the ReadInfoDto object to a ReadInfo.
-      final readInfo = readInfoDto.toDomain();
-
-      // Validate that the ReadInfo was created correctly.
-      expect(readInfo.uid, 'user1');
-      expect(readInfo.readAt, DateTime(2023, 10, 11));
-    });
-
-    test('fromJson should create a valid ReadInfoDto from JSON', () {
-      // Create a sample JSON Map representing a ReadInfo.
-      final Map<String, dynamic> json = {
-        'uid': 'user1',
-        'readAt': Timestamp.fromDate(DateTime(2023, 10, 11)),
-      };
-
-      // Convert the JSON Map to a ReadInfoDto.
-      final readInfoDto = ReadInfoDto.fromJson(json);
-
-      // Validate that the ReadInfoDto was created correctly.
-      expect(readInfoDto.uid, 'user1');
-      expect(readInfoDto.readAt, Timestamp.fromDate(DateTime(2023, 10, 11)));
-    });
-
-    test('toJson should convert a ReadInfoDto to a valid JSON Map', () {
-      // Create a sample ReadInfoDto object.
-      final readInfoDto = ReadInfoDto(
-        uid: 'user1',
-        readAt: Timestamp.fromDate(DateTime(2023, 10, 11)),
-      );
-
-      // Convert the ReadInfoDto to a JSON Map.
-      final json = readInfoDto.toJson();
-
-      // Validate that the JSON Map is correct.
-      expect(json['uid'], 'user1');
-      expect(json['readAt'], Timestamp.fromDate(DateTime(2023, 10, 11)));
+      expect(json['readBy'], messageDto.readBy);
     });
   });
 }
