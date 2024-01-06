@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:core/features/images/domain/usecases/upload_image.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -17,11 +16,9 @@ part 'message_form_state.dart';
 @injectable
 class MessageFormBloc extends Bloc<MessageFormEvent, MessageFormState> {
   final AddMessage _createMessage;
-  final UploadImage _uploadImage;
 
   MessageFormBloc(
     this._createMessage,
-    this._uploadImage,
   ) : super(MessageFormState.initial()) {
     on<_Initialized>((event, emit) {
       // TODO: implement event handler
@@ -68,8 +65,6 @@ class MessageFormBloc extends Bloc<MessageFormEvent, MessageFormState> {
     Emitter<MessageFormState> emit,
   ) async {
     if (state.data.isEmpty && state.imageFile == null) return;
-
-    final imageFile = state.imageFile;
 
     emit(state.copyWith(
       isSubmitting: true,
