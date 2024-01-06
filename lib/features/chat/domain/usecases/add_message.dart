@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:core/utils/errors/failure.dart';
 import 'package:core/utils/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
@@ -8,20 +10,21 @@ import '../entities/entity.dart';
 import '../reporitories/chat_repository.dart';
 
 @injectable
-class AddMessage implements Usecase<Message, AddMessageParams> {
+class AddMessage implements Usecase<Unit, AddMessageParams> {
   final ChatRepository _repostory;
 
   AddMessage(this._repostory);
 
   @override
-  Future<Either<Failure, Message>> call(AddMessageParams params) async {
+  Future<Either<Failure, Unit>> call(AddMessageParams params) async {
     if (params.failure != null) return left(params.failure!);
 
-    return await _repostory.addMessage(
+    return _repostory.addEditMessage(
       roomId: params.roomId,
       message: params.message,
       type: params.type,
       replyMessage: params.replyMessage,
+      image: params.image,
     );
   }
 }
@@ -31,13 +34,14 @@ class AddMessageParams extends Equatable {
   final String message;
   final MessageType type;
   final Message? replyMessage;
+  final File? image;
 
   const AddMessageParams({
     required this.roomId,
     required this.message,
-    required this.type,
     this.replyMessage,
-  });
+    this.image,
+  }) : type = image == null ? MessageType.text : MessageType.image;
 
   Failure? get failure {
     if (roomId.isEmpty) {

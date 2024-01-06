@@ -1,10 +1,8 @@
-import 'package:chat_app/features/chat/domain/entities/entity.dart';
 import 'package:chat_app/features/chat/domain/reporitories/chat_repository.dart';
 import 'package:chat_app/features/chat/domain/usecases/add_message.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kt_dart/collection.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -20,43 +18,32 @@ void main() {
     sut = AddMessage(mockRepository);
   });
 
-  const params = AddMessageParams(
+  const textMessageParams = AddMessageParams(
     roomId: 'roomId',
     message: 'Test message',
-    type: MessageType.text,
     replyMessage: null,
-  );
-
-  final responseMessage = Message(
-    id: 'messageId',
-    data: 'Test message',
-    imageUrl: '',
-    readBy: KtMap.from({'user1': true, 'user2': false}),
-    sentBy: 'userId',
-    type: MessageType.text,
-    sentAt: DateTime.now(),
   );
 
   group('AddMessage Use Case', () {
     test('should add a message to the repository', () async {
       // Arrange
-      when(mockRepository.addMessage(
+      when(mockRepository.addEditMessage(
         roomId: anyNamed('roomId'),
         message: anyNamed('message'),
         type: anyNamed('type'),
         replyMessage: anyNamed('replyMessage'),
-      )).thenAnswer((_) async => Right(responseMessage));
+      )).thenAnswer((_) async => const Right(unit));
 
       // Act
-      final result = await sut(params);
+      final result = await sut(textMessageParams);
 
       // Assert
-      expect(result, Right(responseMessage));
-      verify(mockRepository.addMessage(
-        roomId: params.roomId,
-        message: params.message,
-        type: params.type,
-        replyMessage: params.replyMessage,
+      expect(result, const Right(unit));
+      verify(mockRepository.addEditMessage(
+        roomId: textMessageParams.roomId,
+        message: textMessageParams.message,
+        type: textMessageParams.type,
+        replyMessage: textMessageParams.replyMessage,
       )).called(1);
       verifyNoMoreInteractions(mockRepository);
     });
@@ -64,7 +51,7 @@ void main() {
     test('should return a Failure when the repository call fails', () async {
       // Arrange
       const failure = Failure.serverError();
-      when(mockRepository.addMessage(
+      when(mockRepository.addEditMessage(
         roomId: anyNamed('roomId'),
         message: anyNamed('message'),
         type: anyNamed('type'),
@@ -72,15 +59,15 @@ void main() {
       )).thenAnswer((_) async => const Left(failure));
 
       // Act
-      final result = await sut(params);
+      final result = await sut(textMessageParams);
 
       // Assert
       expect(result, const Left(failure));
-      verify(mockRepository.addMessage(
-        roomId: params.roomId,
-        message: params.message,
-        type: params.type,
-        replyMessage: params.replyMessage,
+      verify(mockRepository.addEditMessage(
+        roomId: textMessageParams.roomId,
+        message: textMessageParams.message,
+        type: textMessageParams.type,
+        replyMessage: textMessageParams.replyMessage,
       )).called(1);
       verifyNoMoreInteractions(mockRepository);
     });
@@ -90,7 +77,6 @@ void main() {
       const invalidParams = AddMessageParams(
         roomId: '', // Invalid roomId
         message: 'Test message',
-        type: MessageType.text,
         replyMessage: null,
       );
 

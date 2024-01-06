@@ -1,21 +1,20 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:core/core.dart';
 import 'package:core/services/auth/auth_service.dart';
+import 'package:core/services/storage/storage_service.dart';
 import 'package:injectable/injectable.dart';
+import 'package:path/path.dart' as p;
 import 'package:rxdart/rxdart.dart';
 
 import '../models/message_dtos.dart';
 
 abstract class MessageRemoteDataSource {
-  Future<MessageDto?> createMessage({
+  Future<void> upsertMessage({
     required String roomId,
     required MessageDto message,
-  });
-
-  Future<MessageDto?> updateMessage({
-    required String roomId,
-    required MessageDto message,
+    File? image,
   });
 
   Stream<List<MessageDto>?> fetchMessages(
@@ -35,18 +34,21 @@ abstract class MessageRemoteDataSource {
 
 @Injectable(as: MessageRemoteDataSource)
 class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
-  final FirestoreService _service;
+  final FirestoreService _firestoreService;
   final AuthService _authService;
+  final StorageService _storageService;
 
   MessageRemoteDataSourceImpl(
-    this._service,
+    this._firestoreService,
     this._authService,
+    this._storageService,
   );
 
   @override
-  Future<MessageDto?> createMessage({
+  Future<void> upsertMessage({
     required String roomId,
     required MessageDto message,
+    File? image,
   }) async {
     try {
       final collectionPath = 'rooms/$roomId/messages';
@@ -55,22 +57,26 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
       final userId = _authService.currentUser!.uid;
 
       // modify message payload
-      final messageId = _service.generateId();
+      String? messageId = message.id;
+      messageId ??= _firestoreService.generateId();
+
+      // upload image
+      String? downloadUrl;
+      if (image != null) {
+        final result = await _storageService.uploadImage(
+          fullPath: 'rooms/$roomId/$messageId.${p.extension(image.path)}',
+          image: image,
+        );
+        downloadUrl = result;
+      }
 
       final request = message
-          .copyWith(
-            id: messageId,
-            sentBy: userId,
-          )
+          .copyWith(id: messageId, sentBy: userId, imageUrl: downloadUrl)
           .toJson();
 
-      // add server timestamp
-      // request.addAll({'sentAt': FieldValue.serverTimestamp()});
+      await _firestoreService.upsert(collectionPath, messageId, request);
 
-      await _service.upsert(collectionPath, messageId, request);
-
-      // get message
-      return fetchMessage(roomId: roomId, messageId: messageId);
+      return;
     } catch (e, s) {
       log('createMessage',
           name: runtimeType.toString(), error: e, stackTrace: s);
@@ -83,7 +89,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
     String roomId, {
     int? limit,
   }) {
-    return _service
+    return _firestoreService
         .watchAll(
           'rooms/$roomId/messages',
           orderConditions: [OrderCondition('sentAt', descending: true)],
@@ -105,7 +111,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
   Stream<List<MessageDto>?> watchUnreadMessages(String roomId) {
     final userId = _authService.currentUser?.uid;
 
-    return _service
+    return _firestoreService
         .watchAll(
           'rooms/$roomId/messages',
           whereConditions: [WhereCondition('sentBy', isNotEqualTo: userId)],
@@ -126,37 +132,18 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
 
   @override
   Stream<MessageDto?> watchLastMessage(String roomId) {
-    return _service
+    return _firestoreService
         .watchAll('rooms/$roomId/messages',
             orderConditions: [OrderCondition('sentAt', descending: true)],
             limit: 1)
-        .map((docs) => docs.map((json) => MessageDto.fromJson(json)).toList())
-        .map((messages) => messages.firstOrNull)
-        .onErrorReturnWith((error, stackTrace) {
+        .map((docs) {
+      if (docs.isNotEmpty) return MessageDto.fromJson(docs[0]);
+      return null;
+    }).onErrorReturnWith((error, stackTrace) {
       log('watchLastMessage',
           name: runtimeType.toString(), error: error, stackTrace: stackTrace);
       throw const Failure.serverError();
     });
-  }
-
-  @override
-  Future<MessageDto?> updateMessage({
-    required String roomId,
-    required MessageDto message,
-  }) async {
-    try {
-      final request = message.toJson();
-
-      // update message
-      await _service.upsert('rooms/$roomId/messages', message.id, request);
-
-      // get message
-      return fetchMessage(roomId: roomId, messageId: message.id!);
-    } catch (e, s) {
-      log('updateMessage',
-          name: runtimeType.toString(), error: e, stackTrace: s);
-      throw const Failure.serverError();
-    }
   }
 
   @override
@@ -165,8 +152,9 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
     required String messageId,
   }) async {
     try {
-      final result =
-          await _service.watch('rooms/$roomId/messages', messageId).first;
+      final result = await _firestoreService
+          .watch('rooms/$roomId/messages', messageId)
+          .first;
 
       final message = MessageDto.fromJson(result!);
 

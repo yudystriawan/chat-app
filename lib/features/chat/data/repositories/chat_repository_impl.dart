@@ -1,9 +1,6 @@
 import 'dart:developer';
+import 'dart:io';
 
-import '../datasources/message_remote_datasource.dart';
-import '../datasources/room_remote_datasource.dart';
-import '../models/message_dtos.dart';
-import '../models/room_dtos.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
@@ -12,6 +9,10 @@ import 'package:rxdart/rxdart.dart';
 
 import '../../domain/entities/entity.dart';
 import '../../domain/reporitories/chat_repository.dart';
+import '../datasources/message_remote_datasource.dart';
+import '../datasources/room_remote_datasource.dart';
+import '../models/message_dtos.dart';
+import '../models/room_dtos.dart';
 
 @Injectable(as: ChatRepository)
 class ChatRepositoryImpl implements ChatRepository {
@@ -23,11 +24,11 @@ class ChatRepositoryImpl implements ChatRepository {
     this._messageRemoteDataSource,
   );
   @override
-  Future<Either<Failure, Message>> addMessage({
+  Future<Either<Failure, Unit>> addEditMessage({
     required String roomId,
     required String message,
     required MessageType type,
-    String? imageUrl,
+    File? image,
     Message? replyMessage,
   }) async {
     try {
@@ -37,16 +38,16 @@ class ChatRepositoryImpl implements ChatRepository {
       final data = MessageDto(
         data: message,
         type: type.value,
-        imageUrl: imageUrl,
         replyMessage: replyMessageDto,
       );
 
-      final result = await _messageRemoteDataSource.createMessage(
+      await _messageRemoteDataSource.upsertMessage(
         roomId: roomId,
         message: data,
+        image: image,
       );
 
-      return right(result?.toDomain() ?? Message.empty());
+      return right(unit);
     } on Failure catch (e) {
       return left(e);
     } catch (e, s) {
@@ -225,25 +226,5 @@ class ChatRepositoryImpl implements ChatRepository {
       log('watchLastMessage', error: error, stackTrace: stackTrace);
       return left(const Failure.unexpectedError());
     });
-  }
-
-  @override
-  Future<Either<Failure, Unit>> editMessage({
-    required String roomId,
-    required Message message,
-  }) async {
-    try {
-      await _messageRemoteDataSource.updateMessage(
-        roomId: roomId,
-        message: MessageDto.fromDomain(message),
-      );
-
-      return right(unit);
-    } on Failure catch (e) {
-      return left(e);
-    } catch (e, s) {
-      log('createMessage', error: e, stackTrace: s);
-      return left(const Failure.unexpectedError());
-    }
   }
 }
