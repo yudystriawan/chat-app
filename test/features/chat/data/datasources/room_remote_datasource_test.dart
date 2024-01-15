@@ -16,7 +16,7 @@ import 'room_remote_datasource_test.mocks.dart';
   User,
 ])
 void main() {
-  late RoomRemoteDataSource dataSource;
+  late RoomRemoteDataSource sut;
   late MockFirestoreService mockFirestoreService;
   late MockAuthService mockAuthService;
 
@@ -25,8 +25,7 @@ void main() {
   setUp(() {
     mockFirestoreService = MockFirestoreService();
     mockAuthService = MockAuthService();
-    dataSource =
-        RoomRemoteDataSourceImpl(mockFirestoreService, mockAuthService);
+    sut = RoomRemoteDataSourceImpl(mockFirestoreService, mockAuthService);
 
     when(user.uid).thenReturn('user1');
     when(user.email).thenReturn('example.com');
@@ -56,7 +55,7 @@ void main() {
           .thenAnswer((_) => Future.value());
 
       // Act
-      final result = await dataSource.createRoom(roomDto);
+      final result = await sut.createRoom(roomDto);
 
       // Assert
       expect(result, '123');
@@ -86,7 +85,7 @@ void main() {
           .thenAnswer((_) => Stream.value([roomDto.toJson()]));
 
       // Act
-      final result = await dataSource.createRoom(roomDto);
+      final result = await sut.createRoom(roomDto);
 
       // Assert
       expect(result, isNotNull);
@@ -112,8 +111,8 @@ void main() {
       when(mockAuthService.currentUser).thenThrow(Exception());
 
       // Act and Assert
-      expect(() async => await dataSource.createRoom(roomDto),
-          throwsA(isA<Failure>()));
+      expect(
+          () async => await sut.createRoom(roomDto), throwsA(isA<Failure>()));
     });
   });
 
@@ -124,7 +123,7 @@ void main() {
           .thenAnswer((_) => Future.value());
 
       // Act
-      await dataSource.deleteRoom('mockRoomId');
+      await sut.deleteRoom('mockRoomId');
 
       // Assert
       verify(mockFirestoreService.delete(any, any)).called(1);
@@ -135,7 +134,7 @@ void main() {
       when(mockFirestoreService.delete(any, any)).thenThrow(Exception());
 
       // Act and Assert
-      expect(() async => await dataSource.deleteRoom('mockRoomId'),
+      expect(() async => await sut.deleteRoom('mockRoomId'),
           throwsA(isA<Failure>()));
     });
   });
@@ -162,7 +161,7 @@ void main() {
               (_) => Stream.value(listRoomDto.map((e) => e.toJson()).toList()));
 
       // Act
-      final result = dataSource.watchRooms();
+      final result = sut.watchRooms();
 
       // Assert
       await expectLater(result, emits(listRoomDto));
@@ -180,7 +179,7 @@ void main() {
 
       // Act and Assert
       expectLater(
-          () => dataSource.watchRooms(), throwsA(const TypeMatcher<Failure>()));
+          () => sut.watchRooms(), throwsA(const TypeMatcher<Failure>()));
     });
   });
   group('watchRoom', () {
@@ -200,7 +199,7 @@ void main() {
           .thenAnswer((_) => Stream.value(roomDto.toJson()));
 
       // Act
-      final result = dataSource.watchRoom('mockRoomId');
+      final result = sut.watchRoom('mockRoomId');
 
       // Assert
       await expectLater(result, emits(isA<RoomDto?>()));
@@ -213,7 +212,7 @@ void main() {
           .thenThrow(const Failure.serverError());
 
       // Act and Assert
-      expectLater(() => dataSource.watchRoom('mockRoomId'),
+      expectLater(() => sut.watchRoom('mockRoomId'),
           throwsA(const TypeMatcher<Failure>()));
     });
   });
@@ -232,7 +231,7 @@ void main() {
           .thenAnswer((_) => Stream.value([memberJson]));
 
       // Act
-      final result = dataSource.watchMembers(['mockUserId']);
+      final result = sut.watchMembers(['mockUserId']);
 
       // Assert
       await expectLater(result, emits(isA<List<MemberDto>?>()));
@@ -248,7 +247,7 @@ void main() {
           .thenThrow(const Failure.serverError());
 
       // Act and Assert
-      expectLater(() => dataSource.watchMembers(['mockUserId']),
+      expectLater(() => sut.watchMembers(['mockUserId']),
           throwsA(const TypeMatcher<Failure>()));
     });
   });
@@ -261,7 +260,7 @@ void main() {
           .thenAnswer((_) => Future.value());
 
       // Act
-      await dataSource.enterRoom('mockRoomId');
+      await sut.enterRoom('mockRoomId');
 
       // Assert
       verify(mockFirestoreService.upsert(any, any, any)).called(1);
@@ -272,7 +271,7 @@ void main() {
       when(mockAuthService.currentUser).thenThrow(Exception());
 
       // Act and Assert
-      expect(() async => await dataSource.enterRoom('mockRoomId'),
+      expect(() async => await sut.enterRoom('mockRoomId'),
           throwsA(isA<Failure>()));
     });
   });
@@ -285,7 +284,7 @@ void main() {
           .thenAnswer((_) => Future.value());
 
       // Act
-      await dataSource.exitRoom('mockRoomId');
+      await sut.exitRoom('mockRoomId');
 
       // Assert
       verify(mockFirestoreService.upsert(any, any, any)).called(1);
@@ -296,7 +295,7 @@ void main() {
       when(mockAuthService.currentUser).thenThrow(Exception());
 
       // Act and Assert
-      expect(() async => await dataSource.exitRoom('mockRoomId'),
+      expect(() async => await sut.exitRoom('mockRoomId'),
           throwsA(isA<Failure>()));
     });
   });
