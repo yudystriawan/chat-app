@@ -1,10 +1,10 @@
 import 'dart:developer';
 
-import 'package:core/core.dart';
-import 'package:core/services/auth/auth_service.dart';
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../../../../core.dart';
+import '../../../../services/auth/auth_service.dart';
 import '../models/user_dtos.dart';
 
 abstract class AuthRemoteDataSource {

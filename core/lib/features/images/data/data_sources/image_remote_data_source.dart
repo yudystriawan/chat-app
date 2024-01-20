@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:core/core.dart';
-import 'package:core/services/storage/storage_service.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../../core.dart';
+import '../../../../services/storage/storage_service.dart';
 
 abstract class ImageRemoteDataSource {
   Future<String?> uploadImage({
