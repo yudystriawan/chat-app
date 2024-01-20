@@ -62,12 +62,17 @@ void main() {
       // Assert
       expect(result, mockDownloadURL);
     });
+
+    test('useEmulator sets Storage emulator host and port', () {
+      // Arrange
+      const host = 'localhost';
+      const port = 9199;
+
+      // Act
+      sut.useEmulator(host, port);
+
+      // Assert
+      verify(mockFirebaseStorage.useStorageEmulator(host, port)).called(1);
+    });
   });
 }
-
-// // Mock TaskSnapshot class using Mockito
-// class MockTaskSnapshot extends Mock implements TaskSnapshot {
-//   @override
-//   Reference get ref =>
-//       super.noSuchMethod(Invocation.method(#ref, [])) as Reference;
-// }
