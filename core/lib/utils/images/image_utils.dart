@@ -86,13 +86,17 @@ class ImageUtils {
     try {
       final directory = await getTemporaryDirectory();
 
-      String targetPath = p.join(directory.path,
-          '${DateTime.now().toIso8601String()}.${p.extension(sourcePath)}');
+      final fileExtension = p.extension(sourcePath);
+
+      String targetPath = p.join(
+          directory.path, '${DateTime.now().toIso8601String()}.$fileExtension');
 
       final compressedFile = await FlutterImageCompress.compressAndGetFile(
         sourcePath,
         targetPath,
         quality: quality,
+        format:
+            fileExtension == '.png' ? CompressFormat.png : CompressFormat.jpeg,
       );
 
       if (compressedFile == null) return null;
