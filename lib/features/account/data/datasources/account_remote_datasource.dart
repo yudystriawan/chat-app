@@ -40,7 +40,14 @@ class AccountFirebaseDataSourceImpl implements AccountRemoteDataSource {
     return _authService
         .watchCurrentUser()
         .switchMap((user) => _firestoreService.watch('users', user?.uid))
-        .map((json) => AccountDto.fromJson(json!));
+        .map((json) {
+      if (json != null) return AccountDto.fromJson(json);
+
+      // return empty
+      return const AccountDto();
+    }).onErrorReturnWith(
+      (error, stackTrace) => throw const Failure.serverError(),
+    );
   }
 
   @override

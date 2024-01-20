@@ -34,7 +34,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
       // get current user
       final user = _authService.currentUser!;
       final members = room.members?.toList();
-      members?.add(user.uid);
+      members?.add(user.uid!);
 
       // check if room exist, return the existing members
       var rooms = await _service

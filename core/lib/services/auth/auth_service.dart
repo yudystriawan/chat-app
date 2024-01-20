@@ -53,7 +53,7 @@ class User {
     _user = user;
   }
 
-  String get uid => _user!.uid;
+  String? get uid => _user?.uid;
   String? get displayName => _user?.displayName;
   String? get email => _user?.email;
   String? get phoneNumber => _user?.phoneNumber;
