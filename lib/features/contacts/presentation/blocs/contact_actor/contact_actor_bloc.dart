@@ -1,8 +1,9 @@
 import 'package:bloc/bloc.dart';
-import '../../../domain/usecases/add_contact.dart';
 import 'package:core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
+
+import '../../../domain/usecases/add_contact.dart';
 
 part 'contact_actor_bloc.freezed.dart';
 part 'contact_actor_event.dart';
