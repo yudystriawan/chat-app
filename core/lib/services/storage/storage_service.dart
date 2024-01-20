@@ -29,4 +29,7 @@ class StorageService {
 
     return imageRef.getDownloadURL();
   }
+
+  Future<void> useEmulator(String host, int port) =>
+      _storage.useStorageEmulator(host, port);
 }
