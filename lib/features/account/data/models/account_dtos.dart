@@ -32,6 +32,7 @@ class AccountDto with _$AccountDto {
       email: account.email,
       photoUrl: account.photoUrl,
       phoneNumber: account.phoneNumber,
+      contacts: account.contacts.iter.toList(),
     );
   }
 
