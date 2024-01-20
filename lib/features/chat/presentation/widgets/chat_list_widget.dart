@@ -69,73 +69,75 @@ class ChatListWidget extends HookWidget {
                 );
               }
 
-              return ListView.separated(
-                controller: scrollController,
-                padding: EdgeInsets.all(16.w),
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: messages.size,
-                shrinkWrap: true,
-                reverse: true,
-                itemBuilder: (context, index) {
-                  final message = messages[index];
+              return Positioned.fill(
+                child: ListView.separated(
+                  controller: scrollController,
+                  padding: EdgeInsets.all(16.w),
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  itemCount: messages.size,
+                  shrinkWrap: true,
+                  reverse: true,
+                  itemBuilder: (context, index) {
+                    final message = messages[index];
 
-                  // check if current message'sentAt is different from previous
-                  final showDate = (index < messages.size - 1) &&
-                      messages[index + 1].sentAt?.day != message.sentAt?.day;
+                    // check if current message'sentAt is different from previous
+                    final showDate = (index < messages.size - 1) &&
+                        messages[index + 1].sentAt?.day != message.sentAt?.day;
 
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (showDate) ...[
-                        Row(
-                          children: [
-                            const Expanded(child: Divider()),
-                            16.horizontalSpace,
-                            if (message.sentAt != null) ...[
-                              Text(
-                                message.sentAt!.toStringDate(),
-                                style: AppTypography.metadata1.copyWith(
-                                  color: NeutralColor.disabled,
-                                ),
-                              ),
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (showDate) ...[
+                          Row(
+                            children: [
+                              const Expanded(child: Divider()),
                               16.horizontalSpace,
+                              if (message.sentAt != null) ...[
+                                Text(
+                                  message.sentAt!.toStringDate(),
+                                  style: AppTypography.metadata1.copyWith(
+                                    color: NeutralColor.disabled,
+                                  ),
+                                ),
+                                16.horizontalSpace,
+                              ],
+                              const Expanded(child: Divider()),
                             ],
-                            const Expanded(child: Divider()),
-                          ],
-                        ),
-                        10.verticalSpace,
+                          ),
+                          10.verticalSpace,
+                        ],
+                        AutoScrollTag(
+                          key: ValueKey(message.id),
+                          controller: scrollController,
+                          index: index,
+                          child: ChatBubble(
+                            message: message,
+                            onReplyTapped: (messageId) async {
+                              // get message object
+                              final replyMessage = messages.firstOrNull(
+                                  (message) => message.id == messageId);
+                              if (replyMessage == null) return;
+
+                              // get message index on list
+                              final replyIndex = messages.indexOf(replyMessage);
+
+                              // scroll todesignated widget
+                              await scrollController.scrollToIndex(replyIndex);
+
+                              // show button
+                              hideFabAnimController.forward();
+                            },
+                            onSwipeRight: () => context
+                                .read<MessageFormBloc>()
+                                .add(MessageFormEvent.replyMessageChanged(
+                                    message)),
+                          ),
+                        )
                       ],
-                      AutoScrollTag(
-                        key: ValueKey(message.id),
-                        controller: scrollController,
-                        index: index,
-                        child: ChatBubble(
-                          message: message,
-                          onReplyTapped: (messageId) async {
-                            // get message object
-                            final replyMessage = messages.firstOrNull(
-                                (message) => message.id == messageId);
-                            if (replyMessage == null) return;
-
-                            // get message index on list
-                            final replyIndex = messages.indexOf(replyMessage);
-
-                            // scroll todesignated widget
-                            await scrollController.scrollToIndex(replyIndex);
-
-                            // show button
-                            hideFabAnimController.forward();
-                          },
-                          onSwipeRight: () => context
-                              .read<MessageFormBloc>()
-                              .add(MessageFormEvent.replyMessageChanged(
-                                  message)),
-                        ),
-                      )
-                    ],
-                  );
-                },
-                separatorBuilder: (context, index) => 12.verticalSpace,
+                    );
+                  },
+                  separatorBuilder: (context, index) => 12.verticalSpace,
+                ),
               );
             },
           ),
