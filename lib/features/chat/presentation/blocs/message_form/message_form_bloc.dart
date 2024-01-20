@@ -81,58 +81,14 @@ class MessageFormBloc extends Bloc<MessageFormEvent, MessageFormState> {
     // change right value to unit.
     var failureOrUnit = failureOrMessage.map((r) => unit);
 
-    emit(state.copyWith(
+    MessageFormState newState = state;
+    if (failureOrUnit.isRight()) {
+      newState = newState.copyWith(imageFile: null);
+    }
+
+    emit(newState.copyWith(
       failureOrSuccessOption: optionOf(failureOrUnit),
       isSubmitting: false,
     ));
-
-    // // emit state when create message success, and if type is image upload file.
-    // if (failureOrUnit.isRight()) {
-    //   emit(MessageFormState.initial().copyWith(
-    //     failureOrSuccessOption: optionOf(failureOrUnit),
-    //   ));
-    // }
-
-    // emit(await failureOrMessage.fold(
-    //   (f) async => state.copyWith(
-    //     isSubmitting: false,
-    //     failureOrSuccessOption: optionOf(failureOrUnit),
-    //   ),
-    //   (message) async {
-    //     if (message.type.isText) {
-    //       return MessageFormState.initial().copyWith(
-    //         failureOrSuccessOption: optionOf(failureOrUnit),
-    //       );
-    //     }
-
-    //     //updload image
-    //     final failureOrImageUrl = await _uploadImage.call(
-    //       UploadImageParams(imageFile!),
-    //     );
-
-    //     //change right value to unit.
-    //     failureOrUnit = failureOrImageUrl.map((r) => unit);
-
-    //     return await failureOrImageUrl.fold(
-    //       (f) async => state.copyWith(
-    //           isSubmitting: false,
-    //           failureOrSuccessOption: optionOf(failureOrUnit)),
-    //       (imageUrl) async {
-    //         // update message with imageUrl.
-    //         final newMessage = message.copyWith(imageUrl: imageUrl);
-
-    //         // update to server
-    //         await _editMessage.call(EditMessageParams(
-    //           roomId: event.roomId,
-    //           message: newMessage,
-    //         ));
-
-    //         return MessageFormState.initial().copyWith(
-    //           failureOrSuccessOption: optionOf(failureOrUnit),
-    //         );
-    //       },
-    //     );
-    //   },
-    // ));
   }
 }
