@@ -3,6 +3,7 @@ import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/observers/bloc_observer.dart';
 import 'package:core/services/auth/auth_service.dart';
+import 'package:core/services/storage/storage_service.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:core/utils/analytics/analytics.dart';
@@ -37,6 +38,7 @@ Future<void> main() async {
   if (kDebugMode) {
     getIt<FirestoreService>().useEmulator('localhost', 8080);
     getIt<AuthService>().useEmulator('localhost', 9099);
+    getIt<StorageService>().useEmulator('localhost', 9199);
   }
 
   // setup bloc observer
