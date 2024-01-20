@@ -1,4 +1,10 @@
-part of 'model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kt_dart/collection.dart';
+
+import '../../domain/entities/user.dart';
+
+part 'user_dtos.freezed.dart';
+part 'user_dtos.g.dart';
 
 @freezed
 class UserDto with _$UserDto {
@@ -17,23 +23,6 @@ class UserDto with _$UserDto {
   factory UserDto.fromJson(Map<String, dynamic> json) =>
       _$UserDtoFromJson(json);
 
-  factory UserDto.fromFirebaseAuth(f_auth.User user) {
-    return UserDto(
-      bio: '',
-      username: '',
-      id: user.uid,
-      name: user.displayName,
-      email: user.email,
-      photoUrl: user.photoURL,
-      phoneNumber: user.phoneNumber,
-    );
-  }
-
-  factory UserDto.fromFirestore(DocumentSnapshot doc) {
-    return UserDto.fromJson(doc.data() as Map<String, dynamic>)
-        .copyWith(id: doc.id);
-  }
-
   User toDomain() {
     final empty = User.empty();
     return User(
@@ -44,7 +33,7 @@ class UserDto with _$UserDto {
       email: email ?? empty.email,
       photoUrl: photoUrl ?? empty.photoUrl,
       phoneNumber: phoneNumber ?? empty.phoneNumber,
-      contacts: contacts?.map((e) => e).toImmutableList() ?? empty.contacts,
+      contacts: contacts?.toImmutableList() ?? empty.contacts,
     );
   }
 }

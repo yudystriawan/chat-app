@@ -1,21 +1,20 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:core/core.dart';
-import 'package:core/services/firestore/firestore_helper.dart';
+import 'package:core/services/auth/auth_service.dart';
+import 'package:core/services/storage/storage_service.dart';
 import 'package:injectable/injectable.dart';
+import 'package:path/path.dart' as p;
 import 'package:rxdart/rxdart.dart';
 
 import '../models/message_dtos.dart';
 
 abstract class MessageRemoteDataSource {
-  Future<MessageDto?> createMessage({
+  Future<void> upsertMessage({
     required String roomId,
     required MessageDto message,
-  });
-
-  Future<MessageDto?> updateMessage({
-    required String roomId,
-    required MessageDto message,
+    File? image,
   });
 
   Stream<List<MessageDto>?> fetchMessages(
@@ -35,40 +34,49 @@ abstract class MessageRemoteDataSource {
 
 @Injectable(as: MessageRemoteDataSource)
 class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
-  final FirestoreService _service;
+  final FirestoreService _firestoreService;
+  final AuthService _authService;
+  final StorageService _storageService;
 
-  MessageRemoteDataSourceImpl(this._service);
+  MessageRemoteDataSourceImpl(
+    this._firestoreService,
+    this._authService,
+    this._storageService,
+  );
 
   @override
-  Future<MessageDto?> createMessage({
+  Future<void> upsertMessage({
     required String roomId,
     required MessageDto message,
+    File? image,
   }) async {
     try {
-      final messageCollection =
-          _service.instance.roomCollection.doc(roomId).collection('messages');
+      final collectionPath = 'rooms/$roomId/messages';
 
       // get current user
-      final userId = _service.instance.currentUser!.uid;
+      final userId = _authService.currentUser!.uid;
 
       // modify message payload
-      final messageId = messageCollection.doc().id;
+      String? messageId = message.id;
+      messageId ??= _firestoreService.generateId();
+
+      // upload image
+      String? downloadUrl;
+      if (image != null) {
+        final result = await _storageService.uploadImage(
+          fullPath: 'rooms/$roomId/$messageId.${p.extension(image.path)}',
+          image: image,
+        );
+        downloadUrl = result;
+      }
 
       final request = message
-          .copyWith(
-            id: messageId,
-            sentBy: userId,
-          )
+          .copyWith(id: messageId, sentBy: userId, imageUrl: downloadUrl)
           .toJson();
 
-      // add server timestamp
-      request.addAll({'sentAt': FieldValue.serverTimestamp()});
+      await _firestoreService.upsert(collectionPath, messageId, request);
 
-      // create message
-      await messageCollection.doc(messageId).set(request);
-
-      // get message
-      return fetchMessage(roomId: roomId, messageId: messageId);
+      return;
     } catch (e, s) {
       log('createMessage',
           name: runtimeType.toString(), error: e, stackTrace: s);
@@ -81,94 +89,61 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
     String roomId, {
     int? limit,
   }) {
-    var query = _service.instance.roomCollection
-        .doc(roomId)
-        .collection('messages')
-        .orderBy('sentAt', descending: true);
-
-    if (limit != null && limit > 0) {
-      query = query.limit(limit);
-    }
-
-    return query
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => MessageDto.fromJson(doc.data()))
-            .toList())
+    return _firestoreService
+        .watchAll(
+          'rooms/$roomId/messages',
+          orderConditions: [OrderCondition('sentAt', descending: true)],
+          limit: limit,
+        )
+        .map((docs) => docs.map((json) => MessageDto.fromJson(json)).toList())
         .onErrorReturnWith((error, stackTrace) {
-      log('fetchMessages',
-          name: runtimeType.toString(), error: error, stackTrace: stackTrace);
+      log(
+        'fetchMessages',
+        name: runtimeType.toString(),
+        error: error,
+        stackTrace: stackTrace,
+      );
       throw const Failure.serverError();
     });
   }
 
   @override
   Stream<List<MessageDto>?> watchUnreadMessages(String roomId) {
-    final userId = _service.instance.currentUser?.uid;
+    final userId = _authService.currentUser?.uid;
 
-    return _service.instance.roomCollection
-        .doc(roomId)
-        .collection('messages')
-        .where(
-          'sentBy',
-          isNotEqualTo: userId,
+    return _firestoreService
+        .watchAll(
+          'rooms/$roomId/messages',
+          whereConditions: [WhereCondition('sentBy', isNotEqualTo: userId)],
+          orConditions: [
+            WhereCondition('readBy', isEqualTo: {}),
+            WhereCondition('readBy.$userId', isEqualTo: false),
+          ],
         )
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => MessageDto.fromJson(doc.data()))
-            .toList())
-        .map((messages) => messages
-            .where((message) =>
-                message.readInfoList
-                    ?.every((readInfo) => readInfo.uid != userId) ??
-                true)
-            .toList())
+        .map((docs) => docs.map((e) => MessageDto.fromJson(e)).toList())
         .onErrorReturnWith((error, stackTrace) {
-      log('fetchUnreadMessages',
-          name: runtimeType.toString(), error: error, stackTrace: stackTrace);
-      throw const Failure.serverError();
-    });
+          log('fetchUnreadMessages',
+              name: runtimeType.toString(),
+              error: error,
+              stackTrace: stackTrace);
+          throw const Failure.serverError();
+        });
   }
 
   @override
   Stream<MessageDto?> watchLastMessage(String roomId) {
-    return _service.instance.roomCollection
-        .doc(roomId)
-        .collection('messages')
-        .orderBy('sentAt', descending: true)
-        .limit(1)
-        .snapshots()
-        .map((snap) =>
-            snap.docs.map((doc) => MessageDto.fromJson(doc.data())).toList())
-        .map((messages) => messages.first)
-        .onErrorReturnWith((error, stackTrace) {
+    return _firestoreService
+        .watchAll('rooms/$roomId/messages',
+            orderConditions: [OrderCondition('sentAt', descending: true)],
+            limit: 1)
+        .map((docs) {
+      if (docs.isNotEmpty) return MessageDto.fromJson(docs[0]);
+      return null;
+    }).onErrorReturnWith((error, stackTrace) {
       log('watchLastMessage',
           name: runtimeType.toString(), error: error, stackTrace: stackTrace);
       throw const Failure.serverError();
     });
-  }
-
-  @override
-  Future<MessageDto?> updateMessage({
-    required String roomId,
-    required MessageDto message,
-  }) async {
-    try {
-      final messageCollection =
-          _service.instance.roomCollection.doc(roomId).collection('messages');
-
-      final request = message.toJson();
-
-      // update message
-      await messageCollection.doc(message.id).update(request);
-
-      // get message
-      return fetchMessage(roomId: roomId, messageId: message.id!);
-    } catch (e, s) {
-      log('updateMessage',
-          name: runtimeType.toString(), error: e, stackTrace: s);
-      throw const Failure.serverError();
-    }
   }
 
   @override
@@ -177,13 +152,11 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
     required String messageId,
   }) async {
     try {
-      final doc = await _service.instance.roomCollection
-          .doc(roomId)
-          .collection('messages')
-          .doc(messageId)
-          .get();
+      final result = await _firestoreService
+          .watch('rooms/$roomId/messages', messageId)
+          .first;
 
-      final message = MessageDto.fromJson(doc.data() as Map<String, dynamic>);
+      final message = MessageDto.fromJson(result!);
 
       return message;
     } catch (e, s) {

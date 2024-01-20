@@ -1,15 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import '../../../domain/usecases/add_room.dart';
-import '../../../domain/usecases/enter_room.dart';
-import '../../../domain/usecases/exit_room.dart';
-import '../../../domain/usecases/remove_room.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
 
 import '../../../domain/entities/entity.dart';
+import '../../../domain/usecases/add_room.dart';
+import '../../../domain/usecases/enter_room.dart';
+import '../../../domain/usecases/exit_room.dart';
+import '../../../domain/usecases/remove_room.dart';
 
 part 'room_actor_bloc.freezed.dart';
 part 'room_actor_event.dart';
@@ -57,7 +57,7 @@ class RoomActorBloc extends Bloc<RoomActorEvent, RoomActorState> {
   ) async {
     emit(const RoomActorState.actionInProgress());
 
-    final failureOrSuccess = await _deleteRoom(DeleteRoomParams(event.roomId));
+    final failureOrSuccess = await _deleteRoom(RemoveRoomParams(event.roomId));
 
     emit(failureOrSuccess.fold(
       (f) => RoomActorState.actionFailure(f),

@@ -14,11 +14,11 @@ class RoomDto with _$RoomDto {
     String? id,
     List<String>? members,
     int? type,
-    String? roomName,
-    String? roomDescription,
-    String? roomImageUrl,
+    String? name,
+    String? description,
+    String? imageUrl,
     String? createdBy,
-    @ServerTimestampConverter() Timestamp? createdAt,
+    @ServerTimestampConverter() ServerTimestamp? createdAt,
   }) = _RoomDto;
 
   factory RoomDto.fromJson(Map<String, dynamic> json) =>
@@ -32,10 +32,10 @@ class RoomDto with _$RoomDto {
       members: members?.toImmutableList() ?? empty.members,
       createdBy: createdBy ?? empty.createdBy,
       type: RoomType.fromValue(type),
-      description: roomDescription ?? empty.description,
-      imageUrl: roomImageUrl ?? empty.imageUrl,
-      name: roomName ?? empty.name,
-      createdAt: createdAt?.toDate(),
+      description: description ?? empty.description,
+      imageUrl: imageUrl ?? empty.imageUrl,
+      name: name ?? empty.name,
+      createdAt: ServerTimestamp.create(createdAt).toDate(),
     );
   }
 }

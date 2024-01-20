@@ -17,9 +17,7 @@ class LoginWithGoogle implements Usecase<User, NoParams> {
     final failureOrSuccess = await _repository.loginWithGoogle();
     return await failureOrSuccess.fold(
       (f) async => left(f),
-      (_) async {
-        return await _repository.getSignedInUser();
-      },
+      (_) async => await _repository.watchCurrentUser().first,
     );
   }
 }

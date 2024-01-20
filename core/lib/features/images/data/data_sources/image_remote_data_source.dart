@@ -1,41 +1,38 @@
-// ignore_for_file: unused_import
-
 import 'dart:io';
 
-import 'package:core/core.dart';
-import 'package:core/services/firebase_storage/storage.dart';
-import 'package:core/services/firebase_storage/storage_helper.dart';
-import 'package:core/services/firestore/firestore_helper.dart';
 import 'package:injectable/injectable.dart';
-import 'package:path/path.dart' as p;
+
+import '../../../../core.dart';
+import '../../../../services/storage/storage_service.dart';
 
 abstract class ImageRemoteDataSource {
-  Future<String?> uploadImage(File imageFile);
+  Future<String?> uploadImage({
+    required File imageFile,
+    required String fullPath,
+    Map<String, String>? metadata,
+  });
 }
 
 @Injectable(as: ImageRemoteDataSource)
 class ImageRemoteDataSourceImpl implements ImageRemoteDataSource {
   final StorageService _storageService;
-  final FirestoreService _firestoreService;
 
   ImageRemoteDataSourceImpl(
     this._storageService,
-    this._firestoreService,
   );
+
   @override
-  Future<String?> uploadImage(File imageFile) async {
+  Future<String?> uploadImage({
+    required File imageFile,
+    required String fullPath,
+    Map<String, String>? metadata,
+  }) async {
     try {
-      final uid = _firestoreService.instance.currentUser!.uid;
-      String targetPath = 'room_$uid.${p.extension(imageFile.path)}';
-
-      final imageRef =
-          _storageService.instance.imageRef.child(uid).child(targetPath);
-
-      await imageRef.putFile(imageFile);
-
-      final downloadUrl = await imageRef.getDownloadURL();
-
-      return downloadUrl;
+      return _storageService.uploadImage(
+        fullPath: fullPath,
+        image: imageFile,
+        metadata: metadata,
+      );
     } catch (e) {
       throw const Failure.serverError();
     }

@@ -1,7 +1,8 @@
-import '../../domain/entities/entity.dart';
 import 'package:core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kt_dart/collection.dart';
+
+import '../../domain/entities/entity.dart';
 
 part 'message_dtos.freezed.dart';
 part 'message_dtos.g.dart';
@@ -16,8 +17,8 @@ class MessageDto with _$MessageDto {
     String? sentBy,
     String? imageUrl,
     MessageDto? replyMessage,
-    @ServerTimestampConverter() Timestamp? sentAt,
-    @JsonKey(name: 'readInfo') List<ReadInfoDto>? readInfoList,
+    @ServerTimestampConverter() ServerTimestamp? sentAt,
+    @Default({}) Map<String, bool> readBy,
   }) = _MessageDto;
 
   factory MessageDto.fromJson(Map<String, dynamic> json) =>
@@ -29,15 +30,12 @@ class MessageDto with _$MessageDto {
       data: domain.data,
       type: domain.type.value,
       sentBy: domain.sentBy,
-      sentAt: domain.sentAt != null ? Timestamp.fromDate(domain.sentAt!) : null,
+      sentAt: ServerTimestamp.create(domain.sentAt),
       imageUrl: domain.imageUrl,
       replyMessage: domain.replyMessage != null
           ? MessageDto.fromDomain(domain.replyMessage!)
           : null,
-      readInfoList: domain.readInfoList
-          .map((readInfo) => ReadInfoDto.fromDomain(readInfo))
-          .iter
-          .toList(),
+      readBy: domain.readBy.asMap(),
     );
   }
 
@@ -48,38 +46,10 @@ class MessageDto with _$MessageDto {
       data: data ?? empty.data,
       type: MessageType.fromValue(type),
       sentBy: sentBy ?? empty.sentBy,
-      sentAt: sentAt?.toDate() ?? empty.sentAt,
-      readInfoList: readInfoList?.map((e) => e.toDomain()).toImmutableList() ??
-          empty.readInfoList,
+      sentAt: ServerTimestamp.create(sentAt).toDate(),
+      readBy: KtMap.from(readBy),
       imageUrl: imageUrl ?? empty.imageUrl,
       replyMessage: replyMessage?.toDomain(),
-    );
-  }
-}
-
-@freezed
-class ReadInfoDto with _$ReadInfoDto {
-  const ReadInfoDto._();
-  const factory ReadInfoDto({
-    String? uid,
-    @ServerTimestampConverter() Timestamp? readAt,
-  }) = _ReadInfoDto;
-
-  factory ReadInfoDto.fromJson(Map<String, dynamic> json) =>
-      _$ReadInfoDtoFromJson(json);
-
-  factory ReadInfoDto.fromDomain(ReadInfo domain) {
-    return ReadInfoDto(
-      uid: domain.uid,
-      readAt: Timestamp.fromDate(domain.readAt),
-    );
-  }
-
-  ReadInfo toDomain() {
-    final empty = ReadInfo.empty();
-    return ReadInfo(
-      uid: uid ?? empty.uid,
-      readAt: readAt?.toDate() ?? empty.readAt,
     );
   }
 }

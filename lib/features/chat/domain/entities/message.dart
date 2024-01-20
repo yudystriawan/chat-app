@@ -26,20 +26,19 @@ class Message with _$Message {
     required String data,
     required MessageType type,
     required String sentBy,
-    required KtList<ReadInfo> readInfoList,
+    required KtMap<String, bool> readBy,
     required String imageUrl,
     DateTime? sentAt,
     Message? replyMessage,
   }) = _Message;
 
-  factory Message.empty() => Message(
+  factory Message.empty() => const Message(
         id: '',
         data: '',
         type: MessageType.text,
         sentBy: '',
         imageUrl: '',
-        readInfoList: const KtList.empty(),
-        sentAt: DateTime.now(),
+        readBy: KtMap.empty(),
       );
 
   bool get hasReplyMessage => replyMessage != null;

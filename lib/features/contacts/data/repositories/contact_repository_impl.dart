@@ -1,11 +1,12 @@
-import '../datasources/contact_remote_datasource.dart';
-import '../../domain/entities/contact.dart';
-import '../../domain/repositories/contact_repository.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
 import 'package:kt_dart/collection.dart';
 import 'package:rxdart/rxdart.dart';
+
+import '../../domain/entities/contact.dart';
+import '../../domain/repositories/contact_repository.dart';
+import '../datasources/contact_remote_datasource.dart';
 
 @Injectable(as: ContactRepository)
 class ContactRepositoryImpl implements ContactRepository {

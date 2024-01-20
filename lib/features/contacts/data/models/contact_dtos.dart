@@ -1,7 +1,8 @@
-import '../../../account/domain/entities/account.dart';
-import '../../domain/entities/contact.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kt_dart/collection.dart';
+
+import '../../../account/domain/entities/account.dart';
+import '../../domain/entities/contact.dart';
 
 part 'contact_dtos.freezed.dart';
 part 'contact_dtos.g.dart';

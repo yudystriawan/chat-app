@@ -1,61 +1,52 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:core/services/firestore/firestore_helper.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:developer';
+
 import 'package:injectable/injectable.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../../utils/errors/failure.dart';
-import '../models/model.dart';
+import '../../../../core.dart';
+import '../../../../services/auth/auth_service.dart';
+import '../models/user_dtos.dart';
 
 abstract class AuthRemoteDataSource {
   Future<UserDto?> loginWithGoogle();
   Future<void> signOut();
-  Stream<UserDto?> watchUser();
-  Future<UserDto?> getCurrentUser();
+  Stream<UserDto?> watchCurrentUser();
 }
 
 @Injectable(as: AuthRemoteDataSource)
 class AuthFirebaseDataSource implements AuthRemoteDataSource {
-  final GoogleSignIn _googleSignIn;
-  final FirebaseAuth _firebaseAuth;
-  final FirebaseFirestore _firestore;
+  final AuthService _authService;
+  final FirestoreService _firestoreService;
 
   AuthFirebaseDataSource(
-    this._googleSignIn,
-    this._firebaseAuth,
-    this._firestore,
+    this._authService,
+    this._firestoreService,
   );
 
   @override
   Future<UserDto?> loginWithGoogle() async {
     try {
-      final signInAccount = await _googleSignIn.signIn();
-
-      if (signInAccount == null) return null;
-
-      final googleAuth = await signInAccount.authentication;
-
-      final credential = GoogleAuthProvider.credential(
-        idToken: googleAuth.idToken,
-        accessToken: googleAuth.accessToken,
-      );
-
-      final userCredential =
-          await _firebaseAuth.signInWithCredential(credential);
-
-      final user = userCredential.user;
+      final user = await _authService.loginWithGoogle();
       if (user == null) return null;
 
-      // store data new user
-      if ((userCredential.additionalUserInfo?.isNewUser ?? false)) {
-        await _firestore.collection('users').doc(user.uid).set(
-              UserDto.fromFirebaseAuth(user).toJson(),
-            );
+      var userDto = UserDto(
+        id: user.uid,
+        email: user.email,
+        name: user.displayName,
+        photoUrl: user.photoURL,
+        phoneNumber: user.phoneNumber,
+      );
+
+      // store data new user when is not exist
+      final isExist = await _firestoreService.checkIfExist('users', userDto.id);
+
+      if (!isExist) {
+        await _firestoreService.upsert('users', userDto.id, userDto.toJson());
       }
 
-      return UserDto.fromFirebaseAuth(user);
+      return userDto;
     } catch (e) {
+      log('loginWithGoogle error', error: e);
       throw const Failure.unexpectedError();
     }
   }
@@ -63,36 +54,23 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
   @override
   Future<void> signOut() async {
     try {
-      await Future.wait([
-        _googleSignIn.signOut(),
-        _firebaseAuth.signOut(),
-      ]);
+      await _authService.signOut();
     } catch (e) {
+      log('signOut error', error: e);
       throw const Failure.unexpectedError();
     }
   }
 
   @override
-  Stream<UserDto?> watchUser() {
-    return _firebaseAuth.authStateChanges().map((user) {
-      if (user == null) throw const Failure.unauthenticated();
-      return UserDto.fromFirebaseAuth(user);
-    }).onErrorReturnWith(
-      (error, stackTrace) => throw Failure.serverError(
-        message: error.toString(),
-      ),
-    );
-  }
-
-  @override
-  Future<UserDto?> getCurrentUser() async {
-    try {
-      final userDoc = await _firestore.userDocument();
-      final userData = await userDoc.get();
-
-      return UserDto.fromFirestore(userData);
-    } catch (e) {
-      throw const Failure.unexpectedError();
-    }
+  Stream<UserDto?> watchCurrentUser() {
+    return _authService
+        .watchCurrentUser()
+        .switchMap((user) {
+          if (user == null) throw const Failure.unauthenticated();
+          return _firestoreService.watch('users', user.uid);
+        })
+        .map((json) => UserDto.fromJson(json!))
+        .onErrorReturnWith((error, stackTrace) =>
+            throw Failure.serverError(message: error.toString()));
   }
 }
