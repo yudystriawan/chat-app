@@ -50,8 +50,12 @@ class ChatRepositoryImpl implements ChatRepository {
       return right(unit);
     } on Failure catch (e) {
       return left(e);
-    } catch (e, s) {
-      log('createMessage', error: e, stackTrace: s);
+    } catch (e) {
+      log(
+        'an error occured',
+        name: 'addEditMessage',
+        error: e,
+      );
       return left(const Failure.unexpectedError());
     }
   }
@@ -72,8 +76,12 @@ class ChatRepositoryImpl implements ChatRepository {
       return right(roomId);
     } on Failure catch (e) {
       return left(e);
-    } catch (e, s) {
-      log('addRoom', error: e, stackTrace: s);
+    } catch (e) {
+      log(
+        'an error occured',
+        name: 'addRoom',
+        error: e,
+      );
 
       return left(const Failure.unexpectedError());
     }
@@ -86,8 +94,12 @@ class ChatRepositoryImpl implements ChatRepository {
       return right(unit);
     } on Failure catch (e) {
       return left(e);
-    } catch (e, s) {
-      log('removeRoom', error: e, stackTrace: s);
+    } catch (e) {
+      log(
+        'an error occured',
+        name: 'removeRoom',
+        error: e,
+      );
 
       return left(const Failure.unexpectedError());
     }
@@ -104,7 +116,11 @@ class ChatRepositoryImpl implements ChatRepository {
 
       return right<Failure, KtList<Room>>(data);
     }).onErrorReturnWith((error, stackTrace) {
-      log('getChatRooms', error: error, stackTrace: stackTrace);
+      log(
+        'an error occured',
+        name: 'getChatRooms',
+        error: error,
+      );
 
       if (error is Failure) return left(error);
 
@@ -123,7 +139,11 @@ class ChatRepositoryImpl implements ChatRepository {
 
       return right<Failure, KtList<Member>>(data);
     }).onErrorReturnWith((error, stackTrace) {
-      log('getMembers', error: error, stackTrace: stackTrace);
+      log(
+        'an error occured',
+        name: 'watchMembers',
+        error: error,
+      );
 
       if (error is Failure) return left(error);
 
@@ -140,7 +160,11 @@ class ChatRepositoryImpl implements ChatRepository {
 
       return right<Failure, Room>(room.toDomain());
     }).onErrorReturnWith((error, stackTrace) {
-      log('getChatRoom', error: error, stackTrace: stackTrace);
+      log(
+        'an error occured',
+        name: 'watchChatRoom',
+        error: error,
+      );
 
       if (error is Failure) return left(error);
 
@@ -163,7 +187,11 @@ class ChatRepositoryImpl implements ChatRepository {
       final data = messages.map((e) => e.toDomain()).toImmutableList();
       return right<Failure, KtList<Message>>(data);
     }).onErrorReturnWith((error, stackTrace) {
-      log('getMessages', error: error, stackTrace: stackTrace);
+      log(
+        'an error occured',
+        name: 'watchMessages',
+        error: error,
+      );
 
       if (error is Failure) return left(error);
 
@@ -179,6 +207,11 @@ class ChatRepositoryImpl implements ChatRepository {
     } on Failure catch (e) {
       return left(e);
     } catch (e) {
+      log(
+        'an error occured',
+        name: 'enterRoom',
+        error: e,
+      );
       return left(const Failure.unexpectedError());
     }
   }
@@ -191,6 +224,11 @@ class ChatRepositoryImpl implements ChatRepository {
     } on Failure catch (e) {
       return left(e);
     } catch (e) {
+      log(
+        'an error occured',
+        name: 'exitRoom',
+        error: e,
+      );
       return left(const Failure.unexpectedError());
     }
   }
@@ -207,7 +245,11 @@ class ChatRepositoryImpl implements ChatRepository {
     }).onErrorReturnWith((error, stackTrace) {
       if (error is Failure) return left(error);
 
-      log('getUnreadMessageCount', error: error, stackTrace: stackTrace);
+      log(
+        'an error occured',
+        name: 'getUnreadMessageCount',
+        error: error,
+      );
       return left(const Failure.unexpectedError());
     });
   }
@@ -223,7 +265,11 @@ class ChatRepositoryImpl implements ChatRepository {
     }).onErrorReturnWith((error, stackTrace) {
       if (error is Failure) return left(error);
 
-      log('watchLastMessage', error: error, stackTrace: stackTrace);
+      log(
+        'an error occured',
+        name: 'watchLastMessage',
+        error: error,
+      );
       return left(const Failure.unexpectedError());
     });
   }
