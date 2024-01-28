@@ -10,9 +10,9 @@ class AuthGuard extends AutoRouteGuard {
     final context = router.navigatorKey.currentContext;
 
     if (context != null) {
-      final isAuthenticaed = context.read<AuthBloc>().state.isAuthenticated;
+      final isAuthenticated = context.read<AuthBloc>().state.isAuthenticated;
 
-      if (isAuthenticaed) {
+      if (isAuthenticated) {
         resolver.next();
         return;
       }
