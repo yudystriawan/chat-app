@@ -27,22 +27,16 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
   Future<UserDto?> loginWithGoogle() async {
     try {
       final user = await _authService.loginWithGoogle();
+
       if (user == null) return null;
 
-      var userDto = UserDto(
+      final userDto = UserDto(
         id: user.uid,
         email: user.email,
         name: user.displayName,
         photoUrl: user.photoURL,
         phoneNumber: user.phoneNumber,
       );
-
-      // store data new user when is not exist
-      final isExist = await _firestoreService.checkIfExist('users', userDto.id);
-
-      if (!isExist) {
-        await _firestoreService.upsert('users', userDto.id, userDto.toJson());
-      }
 
       return userDto;
     } catch (e) {
@@ -63,14 +57,20 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
 
   @override
   Stream<UserDto?> watchCurrentUser() {
-    return _authService
-        .watchCurrentUser()
-        .switchMap((user) {
-          if (user == null) throw const Failure.unauthenticated();
-          return _firestoreService.watch('users', user.uid);
-        })
-        .map((json) => UserDto.fromJson(json!))
-        .onErrorReturnWith((error, stackTrace) =>
-            throw Failure.serverError(message: error.toString()));
+    return _authService.watchCurrentUser().switchMap((user) {
+      if (user == null) throw const Failure.unauthenticated();
+
+      return _firestoreService.watch('users', user.uid).map((json) {
+        if (json != null) return UserDto.fromJson(json);
+        return UserDto(
+          id: user.uid,
+          email: user.email,
+          name: user.displayName,
+          phoneNumber: user.phoneNumber,
+          photoUrl: user.photoURL,
+        );
+      });
+    }).onErrorReturnWith((error, stackTrace) =>
+        throw Failure.serverError(message: error.toString()));
   }
 }
