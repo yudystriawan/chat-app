@@ -22,7 +22,10 @@ class StorageService {
 
     SettableMetadata? settableMetadata;
     if (metadata != null) {
-      settableMetadata = SettableMetadata(customMetadata: metadata);
+      settableMetadata = SettableMetadata(
+        customMetadata: metadata,
+        contentType: 'image/jpeg',
+      );
     }
 
     await imageRef.putFile(image, settableMetadata);
