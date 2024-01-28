@@ -31,6 +31,11 @@ class AccountFirebaseDataSourceImpl implements AccountRemoteDataSource {
     } on Failure {
       rethrow;
     } catch (e) {
+      log(
+        'an error occured',
+        name: 'saveAccount',
+        error: e,
+      );
       throw const Failure.unexpectedError();
     }
   }
@@ -46,7 +51,14 @@ class AccountFirebaseDataSourceImpl implements AccountRemoteDataSource {
       // return empty
       return const AccountDto();
     }).onErrorReturnWith(
-      (error, stackTrace) => throw const Failure.serverError(),
+      (error, stackTrace) {
+        log(
+          'an error occured',
+          name: 'watchCurrentAccount',
+          error: error,
+        );
+        throw const Failure.serverError();
+      },
     );
   }
 
@@ -61,8 +73,15 @@ class AccountFirebaseDataSourceImpl implements AccountRemoteDataSource {
         .watchAll('users', whereConditions: conditions)
         .map((docs) => docs.map((json) => AccountDto.fromJson(json)).toList())
         .onErrorReturnWith(
-          (error, stackTrace) => throw const Failure.serverError(),
+      (error, stackTrace) {
+        log(
+          'an error occured',
+          name: 'watchAccounts',
+          error: error,
         );
+        throw const Failure.serverError();
+      },
+    );
   }
 
   @override
