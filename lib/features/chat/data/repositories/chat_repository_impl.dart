@@ -118,7 +118,7 @@ class ChatRepositoryImpl implements ChatRepository {
     }).onErrorReturnWith((error, stackTrace) {
       log(
         'an error occured',
-        name: 'getChatRooms',
+        name: 'watchChatRooms',
         error: error,
       );
 
