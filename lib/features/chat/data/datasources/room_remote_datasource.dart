@@ -111,7 +111,7 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
         .onErrorReturnWith((error, stackTrace) {
           log(
             'an error occured',
-            name: 'fetchRooms',
+            name: 'watchRooms',
             error: error,
           );
           throw const Failure.serverError();
