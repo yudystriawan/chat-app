@@ -23,7 +23,7 @@ class ProfileNameField extends HookWidget {
               .read<ProfileFormBloc>()
               .add(ProfileFormEvent.nameChanged(value)),
           validator: (value) =>
-              (value?.isEmpty ?? false) ? 'Tidak boleh kosong' : null,
+              (value?.isEmpty ?? false) ? 'Must not empty.' : null,
         );
       },
     );

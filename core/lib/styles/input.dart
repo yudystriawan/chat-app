@@ -17,6 +17,7 @@ class AppTextField extends StatefulWidget {
     this.onFieldSubmitted,
     this.keyboardType,
     this.prefixIcon,
+    this.enabled = true,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -29,6 +30,7 @@ class AppTextField extends StatefulWidget {
   final Function(String value)? onFieldSubmitted;
   final TextInputType? keyboardType;
   final Widget? prefixIcon;
+  final bool enabled;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -55,10 +57,11 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      enabled: widget.enabled,
       controller: widget.controller,
       focusNode: _focusNode,
       autofocus: widget.autoFocus,
-      readOnly: widget.readOnly,
+      readOnly: widget.readOnly || !widget.enabled,
       keyboardType: widget.keyboardType,
       style: AppTypography.bodyText1.copyWith(
         color: widget.readOnly ? NeutralColor.disabled : null,

@@ -13,17 +13,19 @@ class ProfileUsernameField extends HookWidget {
     final controller = useTextEditingController(
       text: context.read<ProfileFormBloc>().state.account.username,
     );
+    final isEnabled = controller.text.isEmpty;
     return BlocBuilder<ProfileFormBloc, ProfileFormState>(
       buildWhen: (p, c) => p.account.username != c.account.username,
       builder: (context, state) {
         return AppTextField(
           controller: controller,
+          enabled: isEnabled,
           placeholder: 'Username (required)',
           onChange: (value) => context
               .read<ProfileFormBloc>()
               .add(ProfileFormEvent.usernameChanged(value)),
           validator: (value) =>
-              (value?.isEmpty ?? false) ? 'Tidak boleh kosong' : null,
+              (value?.isEmpty ?? false) ? 'Must not empty.' : null,
         );
       },
     );

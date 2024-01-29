@@ -23,7 +23,7 @@ class ProfileEmailField extends HookWidget {
               .read<ProfileFormBloc>()
               .add(ProfileFormEvent.emailChanged(value)),
           validator: (value) =>
-              (value?.isEmpty ?? false) ? 'Tidak boleh kosong' : null,
+              (value?.isEmpty ?? false) ? 'Must not empty.' : null,
         );
       },
     );

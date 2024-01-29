@@ -20,7 +20,7 @@ class ProfilePhoneNumberField extends HookWidget {
           controller: controller,
           placeholder: 'Phone number (required)',
           validator: (value) =>
-              (value?.isEmpty ?? false) ? 'Tidak boleh kosong' : null,
+              (value?.isEmpty ?? false) ? 'Must not empty.' : null,
           onChange: (value) => context
               .read<ProfileFormBloc>()
               .add(ProfileFormEvent.phoneNumberChanged(value)),

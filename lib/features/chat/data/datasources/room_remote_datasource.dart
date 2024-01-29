@@ -71,8 +71,12 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
           .then((_) => log('room created with ID $roomId'));
 
       return roomId;
-    } catch (e, s) {
-      log('createRoom', name: runtimeType.toString(), error: e, stackTrace: s);
+    } catch (e) {
+      log(
+        'an error occured',
+        name: 'createRoom',
+        error: e,
+      );
       throw const Failure.serverError();
     }
   }
@@ -82,6 +86,11 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
     try {
       await _service.delete('rooms', roomId);
     } catch (e) {
+      log(
+        'an error occured',
+        name: 'deleteRoom',
+        error: e,
+      );
       throw const Failure.serverError();
     }
   }
@@ -100,7 +109,11 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
         ])
         .map((docs) => docs.map((e) => RoomDto.fromJson(e)).toList())
         .onErrorReturnWith((error, stackTrace) {
-          log('fetchRooms', error: error, stackTrace: stackTrace);
+          log(
+            'an error occured',
+            name: 'watchRooms',
+            error: error,
+          );
           throw const Failure.serverError();
         });
   }
@@ -112,7 +125,11 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
             whereConditions: [WhereCondition('id', whereIn: ids)])
         .map((docs) => docs.map((e) => MemberDto.fromJson(e)).toList())
         .onErrorReturnWith((error, stackTrace) {
-          log('fetchMembers', error: error, stackTrace: stackTrace);
+          log(
+            'an error occured',
+            name: 'watchMembers',
+            error: error,
+          );
           throw const Failure.serverError();
         });
   }
@@ -123,7 +140,11 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
       if (json == null) return null;
       return RoomDto.fromJson(json);
     }).onErrorReturnWith((error, stackTrace) {
-      log('fetchRoom', error: error, stackTrace: stackTrace);
+      log(
+        'an error occured',
+        name: 'watchRoom',
+        error: error,
+      );
       throw const Failure.serverError();
     });
   }
@@ -136,6 +157,11 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
         'enteredBy': {userId: true}
       });
     } catch (e) {
+      log(
+        'an error occured',
+        name: 'enterRoom',
+        error: e,
+      );
       throw const Failure.serverError();
     }
   }
@@ -148,6 +174,11 @@ class RoomRemoteDataSourceImpl implements RoomRemoteDataSource {
         'enteredBy': {userId: false}
       });
     } catch (e) {
+      log(
+        'an error occured',
+        name: 'exitRoom',
+        error: e,
+      );
       throw const Failure.serverError();
     }
   }
