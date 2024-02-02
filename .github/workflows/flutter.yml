@@ -10,6 +10,10 @@ jobs:
   flutter_test:
     name: Run flutter test and analyze
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        module:
+          - core
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v4
