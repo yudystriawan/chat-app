@@ -23,3 +23,8 @@ scripts:
   test:
     run: melos run test:selective_unit_test --no-select
     description: Run all Flutter tests in this project.
+  analyze:
+    run: melos exec -- flutter analyze .
+    description: Run `dart analyze` in all packages.
+  format:
+    run: melos exec -- dart format --set-exit-if-changed .
