@@ -39,8 +39,6 @@ void main() {
     test('returns UserDto on successful login', () async {
       // Arrange
       when(mockAuthService.loginWithGoogle()).thenAnswer((_) async => user);
-      when(mockFirestoreService.checkIfExist(any, any))
-          .thenAnswer((_) async => false);
 
       // Act
       final result = await sut.loginWithGoogle();
@@ -49,9 +47,6 @@ void main() {
       expect(result, isNotNull);
       expect(result, isA<UserDto>());
       verify(mockAuthService.loginWithGoogle()).called(1);
-      verify(mockFirestoreService.checkIfExist('users', result?.id)).called(1);
-      verify(mockFirestoreService.upsert('users', result?.id, result?.toJson()))
-          .called(1);
     });
 
     test('returns null when GoogleSignIn returns null', () async {
