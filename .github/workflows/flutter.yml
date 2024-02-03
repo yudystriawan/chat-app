@@ -85,7 +85,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/release/app-release.apk
+          path: build/app/outputs/flutter-apk/app-release.apk
   deploy_firebase:
     name: Deploy to Firebase App Distribution
     if: github.event_name == 'push'
