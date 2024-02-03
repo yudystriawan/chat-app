@@ -66,17 +66,18 @@ jobs:
       - name: Create key.properties
         run: |
           touch android/key.properties
-          echo "storePassword"=<storePassword>
+          echo "storePassword=<storePassword>
           keyPassword=<keyPassword>
           keyAlias=<keyAlias>
-          storeFile=../key.jks > ./android/key.properties
+          storeFile=../key.jks" > android/key.properties
       - name: Get dependencies
         run: melos run pub_get
       - name: Run build runner
         run: melos run build_runner
-      - name: Build app bundle
+      - name: Build appbundle
         run: flutter build appbundle
-      - uses: actions/upload-artifact@v1
+      - name: Store appbundle
+        uses: actions/upload-artifact@v1
         with:
           name: release-appbundle
           path: build/app/outputs/bundle/release/app-release.aab
@@ -86,7 +87,7 @@ jobs:
     needs: [build_appbundle]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
       - name: set up JDK 1.8
         uses: actions/setup-java@v4
         with:
