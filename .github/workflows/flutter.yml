@@ -81,11 +81,11 @@ jobs:
         run: melos run build_runner
       - name: Build appbundle
         run: flutter build appbundle
-      - name: Upload appbundle
+      - name: Upload apk
         uses: actions/upload-artifact@v4
         with:
-          name: release-appbundle
-          path: build/app/outputs/bundle/release/app-release.aab
+          name: release-apk
+          path: build/app/outputs/bundle/release/app-release.apk
   deploy_firebase:
     name: Deploy to Firebase App Distribution
     if: github.event_name == 'push'
@@ -98,14 +98,14 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Download artifact
+      - name: Download apk
         uses: actions/download-artifact@v4
         with:
-          name: release-appbundle
+          name: release-apk
       - name: Publish artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
           appId: ${{secrets.FIREBASE_ANDROID_APPID}}
           serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
           groups: testers
-          file: app-release.aab
+          file: app-release.apk
