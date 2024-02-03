@@ -71,9 +71,9 @@ jobs:
       - name: Create key.properties
         run: |
           touch android/key.properties
-          echo "storePassword=<storePassword>
-          keyPassword=<keyPassword>
-          keyAlias=<keyAlias>
+          echo "storePassword=${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+          keyPassword=${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+          keyAlias=release
           storeFile=../key.jks" > android/key.properties
       - name: Get dependencies
         run: melos run pub_get
