@@ -1,0 +1,16 @@
+name: chat-app
+
+packages:
+  - packages/*
+  - .
+
+scripts:
+  pub_get:
+    run: flutter pub get
+    description: Install all dependencies
+  build_runner:
+    run: flutter pub run build_runner build --delete-conflicting-outputs
+    exec:
+      concurrency: 1
+      orderDependents: true
+    description: Run code generation using build_runner

@@ -23,7 +23,7 @@ dependencies:
   
 
   core:
-    path: 'core'
+    path: 'packages/core'
   get_it: ^7.6.0
   equatable: ^2.0.5
   flutter_screenutil: ^5.8.4
@@ -50,6 +50,7 @@ dev_dependencies:
   freezed: ^2.4.1
   json_serializable: ^6.7.1
   injectable_generator: ^2.3.0
+  melos: ^4.0.0
 
 flutter:
   uses-material-design: true
