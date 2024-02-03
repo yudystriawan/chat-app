@@ -316,7 +316,7 @@ packages:
   core:
     dependency: "direct main"
     description:
-      path: core
+      path: "packages/core"
       relative: true
     source: path
     version: "0.0.1"
