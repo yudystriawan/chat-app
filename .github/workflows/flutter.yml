@@ -30,11 +30,11 @@ jobs:
       - name: Run build runner
         run: melos run build_runner
       - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
+        run: melos run format
       - name: Analyze project source
-        run: flutter analyze
+        run: melos run analyze
       - name: Run tests
-        run: dart test
+        run: melos run test
   build_appbundle:
     name: Build Android
     needs: [flutter_test]
