@@ -79,13 +79,15 @@ jobs:
         run: melos run pub_get
       - name: Run build runner
         run: melos run build_runner
-      - name: Build appbundle
-        run: flutter build appbundle
+      - name: Build apk
+        run: flutter build apk
       - name: Upload apk
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+
   deploy_firebase:
     name: Deploy to Firebase App Distribution
     if: github.event_name == 'push'
