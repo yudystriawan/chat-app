@@ -70,8 +70,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '235379009895',
     projectId: 'chat-app-179e2',
     storageBucket: 'chat-app-179e2.appspot.com',
-    androidClientId: '235379009895-a8nsv7rh4g4ek4mlsan4kt1h5bsgf4qo.apps.googleusercontent.com',
-    iosClientId: '235379009895-uf630n2mm8l3q9q173r47g7uoqcfdl4t.apps.googleusercontent.com',
+    androidClientId:
+        '235379009895-a8nsv7rh4g4ek4mlsan4kt1h5bsgf4qo.apps.googleusercontent.com',
+    iosClientId:
+        '235379009895-uf630n2mm8l3q9q173r47g7uoqcfdl4t.apps.googleusercontent.com',
     iosBundleId: 'com.deytri.chatApp',
   );
 }
