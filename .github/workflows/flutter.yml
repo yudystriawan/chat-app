@@ -57,12 +57,17 @@ jobs:
           java-version: "17"
         env:
           KEY_JKS: ${{secrets.RELEASE_KEYSTORE}}
+          GOOGLE_SERVICE_JSON: ${{secrets.GOOGLE_SERVICE_JSON}}
           SIGNIN_KEY_ALIAS: ${{secrets.RELEASE_KEYSTORE_ALIAS}}
           SIGNIN_KEY_PASSWORD: ${{secrets.RELEASE_KEYSTORE_PASSWORD}}
       - name: Decode Keystore
         run: |
           echo "${{secrets.RELEASE_KEYSTORE}}" > release.keystore.asc
           gpg -d --passphrase "${{secrets.RELEASE_KEYSTORE_PASSPHRASE}}" --batch release.keystore.asc > android/key.jks
+      - name: Decode google-services.json
+        run: |
+          echo "${{secrets.GOOGLE_SERVICE_JSON}}" > google-services.json.asc
+          gpg -d --passphrase "${{secrets.GOOGLE_SERVICE_JSON_PASSPHRASE}}" --batch google-services.json.asc > android/google-services.json
       - name: Create key.properties
         run: |
           touch android/key.properties
