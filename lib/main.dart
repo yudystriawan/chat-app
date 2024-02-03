@@ -170,6 +170,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         accountActorBloc
             .add(const AccountActorEvent.onlineStatusChanged(false));
         break;
+      default:
     }
 
     super.didChangeAppLifecycleState(state);
