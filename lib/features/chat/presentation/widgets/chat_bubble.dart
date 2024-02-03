@@ -15,11 +15,11 @@ import 'reply_chat_widget.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
-    Key? key,
+    super.key,
     required this.message,
     this.onSwipeRight,
     this.onReplyTapped,
-  }) : super(key: key);
+  });
 
   final Message message;
   final VoidCallback? onSwipeRight;

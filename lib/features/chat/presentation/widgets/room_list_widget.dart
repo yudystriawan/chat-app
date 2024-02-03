@@ -19,9 +19,9 @@ import 'room_list_tile.dart';
 
 class RoomListWidget extends StatelessWidget {
   const RoomListWidget({
-    Key? key,
+    super.key,
     required this.rooms,
-  }) : super(key: key);
+  });
 
   final KtList<Room> rooms;
 

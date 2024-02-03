@@ -7,12 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({
-    Key? key,
+    super.key,
     this.leading,
     required this.title,
     this.subtitle,
     this.trailing,
-  }) : super(key: key);
+  });
 
   final Widget? leading;
   final Widget title;

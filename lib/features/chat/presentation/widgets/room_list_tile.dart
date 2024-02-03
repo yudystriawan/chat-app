@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RoomListTile extends StatelessWidget {
   const RoomListTile({
-    Key? key,
+    super.key,
     required this.title,
     this.subtitle,
     this.imageUrl,
@@ -17,7 +17,7 @@ class RoomListTile extends StatelessWidget {
     this.chatCount,
     this.trailing,
     this.onTap,
-  }) : super(key: key);
+  });
 
   final Widget title;
   final Widget? subtitle;

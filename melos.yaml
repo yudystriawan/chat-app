@@ -14,3 +14,17 @@ scripts:
       concurrency: 1
       orderDependents: true
     description: Run code generation using build_runner
+  test:selective_unit_test:
+    run: melos exec --dir-exists="test" --fail-fast -- flutter test --no-pub --coverage
+    description: Run Flutter tests for a specific package in this project.
+    select-package:
+      flutter: true
+      dir-exists: test
+  test:
+    run: melos run test:selective_unit_test --no-select
+    description: Run all Flutter tests in this project.
+  analyze:
+    run: melos exec -- flutter analyze .
+    description: Run `dart analyze` in all packages.
+  format:
+    run: melos exec -- dart format --set-exit-if-changed .

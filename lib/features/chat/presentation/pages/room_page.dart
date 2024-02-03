@@ -25,9 +25,9 @@ import '../widgets/show_attachments_bottom_sheet.dart';
 @RoutePage()
 class RoomPage extends StatefulWidget implements AutoRouteWrapper {
   const RoomPage({
-    Key? key,
+    super.key,
     required this.roomId,
-  }) : super(key: key);
+  });
 
   final String roomId;
 

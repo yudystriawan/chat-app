@@ -13,10 +13,10 @@ import '../widgets/profile_form_widget.dart';
 @RoutePage()
 class ProfilePage extends StatelessWidget implements AutoRouteWrapper {
   const ProfilePage({
-    Key? key,
+    super.key,
     this.initialAccount,
     this.onResult,
-  }) : super(key: key);
+  });
 
   final Account? initialAccount;
   final Function(bool isSuccess)? onResult;

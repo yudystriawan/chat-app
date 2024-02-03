@@ -59,11 +59,10 @@ class _AttachmentItem extends StatelessWidget {
   final Widget label;
 
   const _AttachmentItem({
-    Key? key,
     this.onPressed,
     required this.icon,
     required this.label,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
