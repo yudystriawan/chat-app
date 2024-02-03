@@ -102,6 +102,7 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: release-appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
       - name: Ipload artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
