@@ -12,9 +12,9 @@ import 'contact_list_tile.dart';
 
 class ContactListWidget extends StatelessWidget {
   const ContactListWidget({
-    Key? key,
+    super.key,
     required this.contacts,
-  }) : super(key: key);
+  });
 
   final KtList<Contact> contacts;
 

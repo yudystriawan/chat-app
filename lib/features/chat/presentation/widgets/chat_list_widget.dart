@@ -19,9 +19,9 @@ class ChatListWidget extends HookWidget {
   final VoidCallback? onLoadMore;
 
   const ChatListWidget({
-    Key? key,
+    super.key,
     this.onLoadMore,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

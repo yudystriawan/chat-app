@@ -7,12 +7,12 @@ import '../../../../shared/show_image_dialog.dart';
 
 class ChatImageNetwork extends StatelessWidget {
   const ChatImageNetwork({
-    Key? key,
+    super.key,
     required this.imageUrl,
     this.height,
     this.width,
     this.borderRadius,
-  }) : super(key: key);
+  });
 
   final String imageUrl;
   final double? height;

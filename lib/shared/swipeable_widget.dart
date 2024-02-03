@@ -8,11 +8,11 @@ class SwipeableWidget extends StatefulWidget {
   final VoidCallback? onSwipeRight;
 
   const SwipeableWidget({
-    Key? key,
+    super.key,
     required this.child,
     this.onSwipeLeft,
     this.onSwipeRight,
-  }) : super(key: key);
+  });
 
   @override
   State<SwipeableWidget> createState() => _SwipeableWidgetState();

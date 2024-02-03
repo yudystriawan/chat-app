@@ -5,11 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PreferenceItemWidget extends StatelessWidget {
   const PreferenceItemWidget({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.onTapped,
-  }) : super(key: key);
+  });
 
   final IconData icon;
   final String label;

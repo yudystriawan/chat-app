@@ -7,10 +7,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AppBottomNavigationBar extends StatelessWidget {
   const AppBottomNavigationBar({
-    Key? key,
+    super.key,
     required this.onNavPressed,
     this.activeIndex = 0,
-  }) : super(key: key);
+  });
 
   final Function(int index) onNavPressed;
   final int activeIndex;
@@ -48,12 +48,11 @@ class AppBottomNavigationBar extends StatelessWidget {
 
 class _AppBottomNavigationItemWidget extends StatelessWidget {
   const _AppBottomNavigationItemWidget({
-    Key? key,
     required this.onPressed,
     this.isActive = false,
     required this.label,
     required this.icon,
-  }) : super(key: key);
+  });
 
   final VoidCallback onPressed;
   final bool isActive;

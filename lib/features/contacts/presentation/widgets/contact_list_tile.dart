@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ContactListTile extends StatelessWidget {
   const ContactListTile({
-    Key? key,
+    super.key,
     required this.title,
     this.subtitle,
     this.imageUrl,
@@ -17,7 +17,7 @@ class ContactListTile extends StatelessWidget {
     this.chatCount,
     this.trailing,
     this.onTap,
-  }) : super(key: key);
+  });
 
   final Widget title;
   final Widget? subtitle;

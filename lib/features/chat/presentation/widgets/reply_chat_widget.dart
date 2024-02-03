@@ -13,14 +13,14 @@ import '../../domain/entities/entity.dart';
 
 class ReplyChatWidget extends StatelessWidget {
   const ReplyChatWidget({
-    Key? key,
+    super.key,
     required this.message,
     this.onCloseReply,
     this.onTap,
     this.width,
     this.isReplyFromMyself = false,
     this.sentByMyself = false,
-  }) : super(key: key);
+  });
 
   final Message message;
   final VoidCallback? onCloseReply;
