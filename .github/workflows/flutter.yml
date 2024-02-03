@@ -41,60 +41,73 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+      - name: Setup Melos
+        uses: bluefireteam/melos-action@v3
+      - name: Setup JAVA
+        uses: actions/setup-java@v4
         with:
           distribution: oracle
           java-version: "17"
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: "stable"
         env:
           KEY_JKS: ${{secrets.RELEASE_KEYSTORE}}
+          GOOGLE_SERVICE_JSON: ${{secrets.GOOGLE_SERVICE_JSON}}
           SIGNIN_KEY_ALIAS: ${{secrets.RELEASE_KEYSTORE_ALIAS}}
           SIGNIN_KEY_PASSWORD: ${{secrets.RELEASE_KEYSTORE_PASSWORD}}
       - name: Decode Keystore
         run: |
-          echo "${{secrets.RELEASE_KEYSTORE}}" > key.jks.asc
-          gpg -d --passphrase "${{secrets.RELEASE_KEYSTORE_PASSPHRASE}}"
-          - - batch release.keystore.asc > android/key.jks
+          echo "${{secrets.RELEASE_KEYSTORE}}" > release.keystore.asc
+          gpg -d --passphrase "${{secrets.RELEASE_KEYSTORE_PASSPHRASE}}" --batch release.keystore.asc > android/key.jks
+      - name: Decode google-services.json
+        run: |
+          echo "${{secrets.GOOGLE_SERVICE_JSON}}" > google-services.json.asc
+          gpg -d --passphrase "${{secrets.GOOGLE_SERVICE_JSON_PASSPHRASE}}" --batch google-services.json.asc > android/app/google-services.json
       - name: Create key.properties
         run: |
           touch android/key.properties
-          echo "storePassword"=<storePassword>
-          keyPassword=<keyPassword>
-          keyAlias=<keyAlias>
-          storeFile=../key.jks > ./android/key.properties
+          echo "storePassword=${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+          keyPassword=${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+          keyAlias=${{secrets.RELEASE_KEYSTORE_ALIAS}}
+          storeFile=../key.jks" > android/key.properties
       - name: Get dependencies
-        run: flutter pub get
+        run: melos run pub_get
       - name: Run build runner
-        run: flutter pub run build_runner build --delete-conflicting-outputs
-      - name: Build app bundle
-        run: flutter build appbundle
-      - uses: actions/upload-artifact@v1
+        run: melos run build_runner
+      - name: Build apk
+        run: flutter build apk
+      - name: Upload apk
+        uses: actions/upload-artifact@v4
         with:
-          name: release-appbundle
-          path: build/app/outputs/bundle/release/app-release.aab
+          name: release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+
   deploy_firebase:
     name: Deploy to Firebase App Distribution
     if: github.event_name == 'push'
     needs: [build_appbundle]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: set up JDK 1.8
-        uses: actions/setup-java@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
         with:
-          distribution: oracle
           java-version: 1.8
-      - name: Download Artifact
-        uses: actions/download-artifact@master
+      - name: Download apk
+        uses: actions/download-artifact@v4
         with:
-          name: release-appbundle
-      - name: Upload Appbundle
-        uses: wzieba/Firebase-Distribution-Github-Action@v1.2.1
+          name: release-apk
+      - name: Publish artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
           appId: ${{secrets.FIREBASE_ANDROID_APPID}}
-          token: ${{secrets.FIREBASE_TOKEN}}
+          serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
           groups: testers
-          file: app-release.aab
+          file: app-release.apk
