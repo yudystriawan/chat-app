@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -47,11 +48,21 @@ class _SplashPageState extends State<SplashPage>
       body: Center(
         child: FadeTransition(
           opacity: _animation,
-          child: SvgPicture.asset(
-            'assets/icons/logo.svg',
-            package: 'core',
-            width: 56.w,
-            height: 56.w,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.asset(
+                'assets/icons/logo.svg',
+                package: 'core',
+                width: 56.w,
+                height: 56.w,
+              ),
+              4.verticalSpaceFromWidth,
+              Text(
+                'Chat App',
+                style: AppTypography.heading2.bold,
+              ),
+            ],
           ),
         ),
       ),
