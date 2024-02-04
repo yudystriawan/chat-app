@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:core/styles/buttons/primary_button.dart';
+import 'package:core/styles/image_render_widget.dart';
+import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../styles/buttons/primary_button.dart';
 import '../../../../utils/di/injection.dart';
 import '../blocs/sign_in_form/sign_in_form_bloc.dart';
 
@@ -38,13 +40,45 @@ class SignInPage extends StatelessWidget implements AutoRouteWrapper {
         ),
       ],
       child: Scaffold(
-        body: Center(
-          child: PrimaryButton(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.w),
-            onPressed: () => context
-                .read<SignInFormBloc>()
-                .add(const SignInFormEvent.signInWithGooglePressed()),
-            child: const Text('Sign in with Google'),
+        body: Container(
+          padding: EdgeInsets.symmetric(horizontal: 24.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ImageRender(
+                'packages/core/assets/illustration.png',
+                width: 262.w,
+                height: 271.w,
+              ),
+              42.verticalSpaceFromWidth,
+              Text(
+                'Connect easily with your family and friends over countries',
+                style: AppTypography.heading2,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        bottomNavigationBar: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Terms & Privacy Policy',
+                style: AppTypography.bodyText1,
+              ),
+              18.verticalSpaceFromWidth,
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                child: PrimaryButton(
+                  onPressed: () => context
+                      .read<SignInFormBloc>()
+                      .add(const SignInFormEvent.signInWithGooglePressed()),
+                  child: const Text('Sign in with Google'),
+                ),
+              ),
+            ],
           ),
         ),
       ),
