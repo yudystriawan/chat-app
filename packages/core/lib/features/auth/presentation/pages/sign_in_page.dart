@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:core/features/auth/presentation/widgets/terms_of_service.dart';
 import 'package:core/styles/bottom_sheet/bottom_sheet.dart';
 import 'package:core/styles/buttons/primary_button.dart';
+import 'package:core/styles/colors.dart';
 import 'package:core/styles/image_render_widget.dart';
 import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
@@ -62,31 +63,40 @@ class SignInPage extends StatelessWidget implements AutoRouteWrapper {
           ),
         ),
         bottomNavigationBar: SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: () => showAppBottomSheet(
-                  context,
-                  children: [const TermsOfService()],
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () => showAppBottomSheet(
+                    context,
+                    children: [const TermsOfService()],
+                  ),
+                  child: Text(
+                    'Terms & Privacy Policy',
+                    style: AppTypography.bodyText1,
+                  ),
                 ),
-                child: Text(
-                  'Terms & Privacy Policy',
-                  style: AppTypography.bodyText1,
+                18.verticalSpaceFromWidth,
+                SizedBox(
+                  width: double.infinity,
+                  child: PrimaryButton(
+                    onPressed: () => context
+                        .read<SignInFormBloc>()
+                        .add(const SignInFormEvent.signInWithGooglePressed()),
+                    child: const Text('Sign in with Google'),
+                  ),
                 ),
-              ),
-              18.verticalSpaceFromWidth,
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
-                child: PrimaryButton(
-                  onPressed: () => context
-                      .read<SignInFormBloc>()
-                      .add(const SignInFormEvent.signInWithGooglePressed()),
-                  child: const Text('Sign in with Google'),
-                ),
-              ),
-            ],
+                4.verticalSpaceFromWidth,
+                Text(
+                  "By clicking 'Sign in with Google' you agree to our Terms of Service and Privacy Policy.",
+                  style: AppTypography.metadata3
+                      .copyWith(color: NeutralColor.disabled),
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
           ),
         ),
       ),
