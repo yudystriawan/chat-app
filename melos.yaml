@@ -8,9 +8,6 @@ scripts:
   pub_get:
     run: flutter pub get
     description: Install all dependencies
-    exec:
-      concurrency: 1
-      orderDependents: true
   clean:
     run: flutter clean
     description: Clean all dependencies
