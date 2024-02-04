@@ -1,13 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:coolicons/coolicons.dart';
+import 'package:core/styles/bottom_sheet/bottom_sheet.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
 import 'package:core/styles/colors.dart';
 import 'package:core/styles/typography.dart';
 import 'package:core/utils/images/image_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../shared/bottom_sheet.dart';
 
 enum AttachmentType {
   camera,

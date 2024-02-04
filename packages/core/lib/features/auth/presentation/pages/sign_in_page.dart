@@ -1,4 +1,6 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:core/features/auth/presentation/widgets/terms_of_service.dart';
+import 'package:core/styles/bottom_sheet/bottom_sheet.dart';
 import 'package:core/styles/buttons/primary_button.dart';
 import 'package:core/styles/image_render_widget.dart';
 import 'package:core/styles/typography.dart';
@@ -63,9 +65,15 @@ class SignInPage extends StatelessWidget implements AutoRouteWrapper {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                'Terms & Privacy Policy',
-                style: AppTypography.bodyText1,
+              GestureDetector(
+                onTap: () => showAppBottomSheet(
+                  context,
+                  children: [const TermsOfService()],
+                ),
+                child: Text(
+                  'Terms & Privacy Policy',
+                  style: AppTypography.bodyText1,
+                ),
               ),
               18.verticalSpaceFromWidth,
               Container(
