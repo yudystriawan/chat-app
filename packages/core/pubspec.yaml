@@ -37,6 +37,8 @@ dependencies:
   path_provider: ^2.1.1
   rxdart: ^0.27.7
   uuid: ^3.0.7
+  sliver_tools: ^0.2.12
+  url_launcher: ^6.2.4
 
 dev_dependencies:
   flutter_test:
@@ -48,5 +50,7 @@ dev_dependencies:
   injectable_generator: ^2.3.0
   auto_route_generator: ^7.3.0
 
-
 flutter:
+  assets:
+    - assets/images/
+    - assets/icons/

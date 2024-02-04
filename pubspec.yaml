@@ -20,10 +20,9 @@ dependencies:
   mockito: ^5.4.2
   flutter_bloc: ^8.1.3
   injectable: ^2.2.0
-  
 
   core:
-    path: 'packages/core'
+    path: "packages/core"
   get_it: ^7.6.0
   equatable: ^2.0.5
   flutter_screenutil: ^5.8.4
@@ -33,12 +32,12 @@ dependencies:
   rxdart: ^0.27.7
   uuid: ^3.0.7
   bloc_concurrency: ^0.2.2
-  sliver_tools: ^0.2.12
   cached_network_image: ^3.2.3
   scroll_to_index: ^3.0.1
   bloc: ^8.1.2
   collection: ^1.17.1
   path: ^1.8.3
+  flutter_svg: ^2.0.9
 
 dev_dependencies:
   flutter_test:
@@ -51,6 +50,11 @@ dev_dependencies:
   json_serializable: ^6.7.1
   injectable_generator: ^2.3.0
   melos: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
 
-flutter:
+flutter: 
   uses-material-design: true
+  assets:
+    - packages/core/assets/images/
+    - packages/core/assets/icons/
+  

@@ -8,6 +8,12 @@ scripts:
   pub_get:
     run: flutter pub get
     description: Install all dependencies
+  clean:
+    run: flutter clean
+    description: Clean all dependencies
+    exec:
+      concurrency: 1
+      orderDependents: true
   build_runner:
     run: flutter pub run build_runner build --delete-conflicting-outputs
     exec:
@@ -28,3 +34,5 @@ scripts:
     description: Run `dart analyze` in all packages.
   format:
     run: melos exec -- dart format --set-exit-if-changed .
+  clean_and_get:
+    run: melos run clean && melos run pub_get --no-select
