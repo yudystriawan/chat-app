@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+
+import '../utils/urls/url_launcher.dart';
 
 class ClickableLinkWidget extends StatelessWidget {
   final String text;
@@ -19,8 +20,14 @@ class ClickableLinkWidget extends StatelessWidget {
     // Split the text by whitespace to identify individual words
     List<String> words = text.split(' ');
 
+    // Regular expression to match email addresses
+    RegExp emailRegExp =
+        RegExp(r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b');
+
     for (String word in words) {
-      if (word.contains('http://') || word.contains('https://')) {
+      bool isEmail = emailRegExp.hasMatch(word);
+      bool isUrl = word.contains('http://') || word.contains('https://');
+      if (isUrl || isEmail) {
         // If the word is a URL, make it clickable
         spans.add(
           TextSpan(
@@ -30,11 +37,14 @@ class ClickableLinkWidget extends StatelessWidget {
               decoration: TextDecoration.underline,
             ),
             recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                launchUrl(
-                  Uri.parse(_extractUrl(word)),
-                  mode: LaunchMode.externalApplication,
-                );
+              ..onTap = () async {
+                if (isUrl) {
+                  await launchUrl(Uri.parse(_extractUrl(word)));
+                  return;
+                } else if (isEmail) {
+                  await launchEmail(word);
+                  return;
+                }
               },
           ),
         );
