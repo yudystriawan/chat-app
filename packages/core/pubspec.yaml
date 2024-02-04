@@ -40,7 +40,6 @@ dependencies:
   sliver_tools: ^0.2.12
   url_launcher: ^6.2.4
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -54,3 +53,4 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - assets/icons/

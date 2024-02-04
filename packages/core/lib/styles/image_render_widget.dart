@@ -9,16 +9,18 @@ class ImageRender extends StatelessWidget {
     super.key,
     this.width,
     this.height,
+    this.package,
   });
 
   final String assetPath;
+  final String? package;
   final double? width;
   final double? height;
 
   @override
   Widget build(BuildContext context) {
     return Image(
-      image: AssetImage(assetPath),
+      image: AssetImage(assetPath, package: package),
       width: width,
       height: height,
       loadingBuilder: (_, child, loadingProgress) {

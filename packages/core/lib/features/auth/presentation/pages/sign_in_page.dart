@@ -49,7 +49,8 @@ class SignInPage extends StatelessWidget implements AutoRouteWrapper {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ImageRender(
-                'packages/core/assets/illustration.png',
+                'assets/illustration.png',
+                package: 'core/',
                 width: 262.w,
                 height: 271.w,
               ),
