@@ -79,13 +79,13 @@ jobs:
         run: melos run pub_get
       - name: Run build runner
         run: melos run build_runner
-      - name: Build apk
-        run: flutter build apk
-      - name: Upload apk
+      - name: Build artifact
+        run: flutter build appbundle
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          name: release-appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
           if-no-files-found: error
 
   deploy_firebase:
@@ -100,14 +100,14 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Download apk
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: release-apk
+          name: release-appbunlde
       - name: Publish artifact to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
         with:
           appId: ${{secrets.FIREBASE_ANDROID_APPID}}
           serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
           groups: testers
-          file: app-release.apk
+          file: app-release.aab
