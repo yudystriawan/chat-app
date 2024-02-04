@@ -18,28 +18,28 @@ class TermsOfService extends StatelessWidget {
         const TermsOfServiceContent(
           title: Text('1. Acceptance of Terms'),
           body: Text(
-            'By downloading, installing, or using [Your App Name], you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the app.',
+            'By downloading, installing, or using Chatapp, you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the app.',
           ),
         ),
         4.verticalSpaceFromWidth,
         const TermsOfServiceContent(
           title: Text('2. Google Account Integration'),
           body: Text(
-            "[Your App Name] utilizes Google Account sign-in for user authentication. By signing in with your Google Account, you agree to adhere to Google's Terms of Service (https://policies.google.com/terms) and Privacy Policy (https://policies.google.com/privacy).",
+            "Chatapp utilizes Google Account sign-in for user authentication. By signing in with your Google Account, you agree to adhere to Google's Terms of Service (https://policies.google.com/terms) and Privacy Policy (https://policies.google.com/privacy).",
           ),
         ),
         4.verticalSpaceFromWidth,
         const TermsOfServiceContent(
           title: Text('3. User Conduct'),
           body: Text(
-            'Users are solely responsible for their conduct while using [Your App Name]. Any violation of these Terms may result in the termination of your account.',
+            'Users are solely responsible for their conduct while using Chatapp. Any violation of these Terms may result in the termination of your account.',
           ),
         ),
         4.verticalSpaceFromWidth,
         const TermsOfServiceContent(
           title: Text('4. Intellectual Property'),
           body: Text(
-            'All content, features, and functionality in [Your App Name] are the exclusive property of [Your Company Name] and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.',
+            'All content, features, and functionality in Chatapp are the exclusive property of Chatapp and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.',
           ),
         ),
         4.verticalSpaceFromWidth,
@@ -53,21 +53,21 @@ class TermsOfService extends StatelessWidget {
         const TermsOfServiceContent(
           title: Text('6. Limitation of Liability'),
           body: Text(
-            '[Your Company Name] and its affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.',
+            'Chatapp and its affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.',
           ),
         ),
         4.verticalSpaceFromWidth,
         const TermsOfServiceContent(
           title: Text('7. Changes to Terms'),
           body: Text(
-            '[Your Company Name] and its affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.',
+            'Chatapp and its affiliates shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly.',
           ),
         ),
         4.verticalSpaceFromWidth,
         const TermsOfServiceContent(
           title: Text('8. Governing Law'),
           body: Text(
-            'These Terms are governed by and construed in accordance with the laws of [Your Country/State], without regard to its conflict of law principles.',
+            'These Terms are governed by and construed in accordance with the laws of Indonesia, without regard to its conflict of law principles.',
           ),
         ),
         24.verticalSpaceFromWidth,
@@ -79,14 +79,14 @@ class TermsOfService extends StatelessWidget {
         const TermsOfServiceContent(
           title: Text('1. Information We Collect'),
           body: Text(
-            '[Your App Name] collects and stores information you provide, including but not limited to your Google Account details, profile information, and chat history.',
+            'Chatapp collects and stores information you provide, including but not limited to your Google Account details, profile information, and chat history.',
           ),
         ),
         4.verticalSpaceFromWidth,
         const TermsOfServiceContent(
           title: Text('2. How We Use Your Information'),
           body: Text(
-            'We use the collected information to provide, maintain, and improve [Your App Name], as well as to enhance user experience and communicate with you.',
+            'We use the collected information to provide, maintain, and improve Chatapp, as well as to enhance user experience and communicate with you.',
           ),
         ),
         4.verticalSpaceFromWidth,
@@ -107,7 +107,7 @@ class TermsOfService extends StatelessWidget {
         const TermsOfServiceContent(
           title: Text('5. User Rights'),
           body: Text(
-            'You have the right to access, correct, or delete your personal information. Please contact us at [Your Contact Email] for any such requests.',
+            'You have the right to access, correct, or delete your personal information. Please contact us at yudistriawan@gmail.com for any such requests.',
           ),
         ),
         4.verticalSpaceFromWidth,
@@ -121,7 +121,7 @@ class TermsOfService extends StatelessWidget {
         const TermsOfServiceContent(
           title: Text('7. Contact Information'),
           body: Text(
-            'If you have any questions or concerns about our Terms of Service or Privacy Policy, please contact us at [Your Contact Email].',
+            'If you have any questions or concerns about our Terms of Service or Privacy Policy, please contact us at yudistriawan@gmail.com.',
           ),
         ),
       ],
