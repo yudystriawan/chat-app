@@ -32,7 +32,7 @@ class AccountActorBloc extends Bloc<AccountActorEvent, AccountActorState> {
 
     emit(failureOrSuccess.fold(
       (f) => AccountActorState.actionFailure(f),
-      (_) => const AccountActorState.actionSuccess(),
+      (_) => const AccountActorState.onlineStatusChanged(),
     ));
   }
 
@@ -46,7 +46,7 @@ class AccountActorBloc extends Bloc<AccountActorEvent, AccountActorState> {
 
     emit(failureOrSuccess.fold(
       (f) => AccountActorState.actionFailure(f),
-      (_) => const AccountActorState.actionSuccess(),
+      (_) => const AccountActorState.accountRemoved(),
     ));
   }
 }
