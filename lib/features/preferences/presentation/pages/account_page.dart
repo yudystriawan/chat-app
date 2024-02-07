@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/features/preferences/presentation/dialogs/show_confirmation_delete.dart';
 import 'package:core/styles/buttons/secondary_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,7 +21,11 @@ class AccountPage extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.w),
           child: SecondaryButton.error(
-            onPressed: () {},
+            onPressed: () =>
+                showConfirmationDeleteDialog(context).then((value) {
+              if (value == null || !value) return;
+              debugPrint('value: $value');
+            }),
             child: const Text('Delete this account!'),
           ),
         ),
