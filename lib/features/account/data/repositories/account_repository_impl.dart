@@ -99,8 +99,20 @@ class AccountRepositoryImpl implements AccountRepository {
   }
 
   @override
-  Future<Either<Failure, Unit>> removeAccount(String accountId) {
-    // TODO: implement removeAccount
-    throw UnimplementedError();
+  Future<Either<Failure, Unit>> removeAccount(String accountId) async {
+    try {
+      await _remoteDataSource.removeAccount(accountId);
+      return right(unit);
+    } on Failure catch (e) {
+      return left(e);
+    } catch (e, s) {
+      log(
+        'an error occured',
+        name: 'setOnlineStatus',
+        error: e,
+        stackTrace: s,
+      );
+      return left(const Failure.unexpectedError());
+    }
   }
 }

@@ -191,4 +191,31 @@ void main() {
       expect(result, equals(left(failure)));
     });
   });
+  group('removeAccount', () {
+    const accountId = 'user1';
+    test('should remove account data from remote data source', () async {
+      // Arrange
+      when(mockRemoteDataSource.removeAccount(any)).thenAnswer((_) async {});
+      // Act
+      final result = await sut.removeAccount(accountId);
+
+      // Assert
+      expect(result, right(unit));
+      verify(mockRemoteDataSource.removeAccount(accountId)).called(1);
+      verifyNoMoreInteractions(mockRemoteDataSource);
+    });
+
+    test('should return a failure when remove account status fails', () async {
+      // Arrange
+      when(mockRemoteDataSource.removeAccount(any))
+          .thenThrow((_) async => const Failure.unexpectedError());
+      // Act
+      final result = await sut.removeAccount(accountId);
+
+      // Assert
+      expect(result, left(const Failure.unexpectedError()));
+      verify(mockRemoteDataSource.removeAccount(accountId)).called(1);
+      verifyNoMoreInteractions(mockRemoteDataSource);
+    });
+  });
 }
