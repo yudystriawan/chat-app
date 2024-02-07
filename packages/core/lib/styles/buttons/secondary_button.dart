@@ -36,10 +36,9 @@ class SecondaryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDisabled = onPressed == null;
-    final hasColor = foregroundColor != null;
 
     final defaultTextColor =
-        (hasColor ? foregroundColor! : BrandColor.neutral).withOpacity(
+        (foregroundColor ?? BrandColor.neutral).withOpacity(
       isDisabled ? 0.5 : 1,
     );
 
@@ -60,7 +59,7 @@ class SecondaryButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(
-          color: (hasColor ? foregroundColor! : BrandColor.neutral)
+          color: (foregroundColor ?? BrandColor.neutral)
               .withOpacity(isDisabled ? 0.5 : 1),
           width: 2.w,
         ),
