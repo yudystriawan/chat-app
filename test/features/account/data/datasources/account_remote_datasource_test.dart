@@ -162,4 +162,29 @@ void main() {
           throwsA(const Failure.serverError()));
     });
   });
+
+  group('remove acccount', () {
+    const accountId = 'user1';
+    test('should remove account data from remote data source', () async {
+      // Arrange
+      when(mockFirestoreService.delete(any, any))
+          .thenAnswer((realInvocation) async {});
+      // Act
+      await sut.removeAccount(accountId);
+
+      // Assert
+      verify(mockFirestoreService.delete('users', accountId)).called(1);
+      verifyNoMoreInteractions(mockFirestoreService);
+    });
+
+    test('should return a failure when remove account status fails', () async {
+      // Arrange
+      when(mockFirestoreService.delete(any, any))
+          .thenThrow(const Failure.serverError());
+
+      // Act && Assert
+      expectLater(() => sut.removeAccount(accountId),
+          throwsA(const Failure.serverError()));
+    });
+  });
 }
