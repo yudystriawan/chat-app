@@ -1,5 +1,3 @@
-import '../blocs/member_watcher/member_watcher_bloc.dart';
-import 'chat_image.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/styles/buttons/ghost_button.dart';
 import 'package:core/styles/colors.dart';
@@ -10,6 +8,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kt_dart/collection.dart';
 
 import '../../domain/entities/entity.dart';
+import '../blocs/member_watcher/member_watcher_bloc.dart';
+import 'chat_image.dart';
 
 class ReplyChatWidget extends StatelessWidget {
   const ReplyChatWidget({
