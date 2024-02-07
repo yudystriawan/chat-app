@@ -26,6 +26,11 @@ class AccountRepositoryImpl implements AccountRepository {
     } on Failure catch (e) {
       return left(e);
     } catch (e) {
+      log(
+        'an error occured',
+        name: 'saveAccount',
+        error: e,
+      );
       return left(const Failure.unexpectedError());
     }
   }
@@ -38,6 +43,16 @@ class AccountRepositoryImpl implements AccountRepository {
       }
 
       return right<Failure, Account>(accountDto.toDomain());
+    }).onErrorReturnWith((error, stackTrace) {
+      if (error is Failure) return left(error);
+
+      log(
+        'an error occured',
+        name: 'watchAccount',
+        error: error,
+      );
+
+      return left(const Failure.unexpectedError());
     });
   }
 
@@ -54,6 +69,12 @@ class AccountRepositoryImpl implements AccountRepository {
       if (error is Failure) {
         return left<Failure, KtList<Account>>(error);
       }
+
+      log(
+        'an error occured',
+        name: 'watchAccounts',
+        error: error,
+      );
 
       return left<Failure, KtList<Account>>(const Failure.serverError());
     });
@@ -75,5 +96,11 @@ class AccountRepositoryImpl implements AccountRepository {
       );
       return left(const Failure.unexpectedError());
     }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> removeAccount(String accountId) {
+    // TODO: implement removeAccount
+    throw UnimplementedError();
   }
 }
