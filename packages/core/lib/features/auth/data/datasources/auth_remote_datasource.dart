@@ -16,12 +16,8 @@ abstract class AuthRemoteDataSource {
 @Injectable(as: AuthRemoteDataSource)
 class AuthFirebaseDataSource implements AuthRemoteDataSource {
   final AuthService _authService;
-  final FirestoreService _firestoreService;
 
-  AuthFirebaseDataSource(
-    this._authService,
-    this._firestoreService,
-  );
+  AuthFirebaseDataSource(this._authService);
 
   @override
   Future<UserDto?> loginWithGoogle() async {
@@ -67,18 +63,6 @@ class AuthFirebaseDataSource implements AuthRemoteDataSource {
         phoneNumber: user.phoneNumber,
         photoUrl: user.photoURL,
       );
-
-      // return _firestoreService.watch('users', user.uid).map((json) {
-      //   if (json != null) return UserDto.fromJson(json);
-
-      //   return UserDto(
-      //     id: user.uid,
-      //     email: user.email,
-      //     name: user.displayName,
-      //     phoneNumber: user.phoneNumber,
-      //     photoUrl: user.photoURL,
-      //   );
-      // });
     }).onErrorReturnWith((error, stackTrace) =>
         throw Failure.serverError(message: error.toString()));
   }
