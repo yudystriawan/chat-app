@@ -40,6 +40,10 @@ class AuthService {
         .map((user) => User.fromFirebase(user));
   }
 
+  Future<void> deleteCurrentUser() async {
+    return _firebaseAuth.currentUser?.delete();
+  }
+
   void useEmulator(String host, int port) =>
       _firebaseAuth.useAuthEmulator(host, port);
 
