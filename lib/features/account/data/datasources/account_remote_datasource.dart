@@ -109,12 +109,17 @@ class AccountFirebaseDataSourceImpl implements AccountRemoteDataSource {
     try {
       // remove user from users collection
       await _firestoreService.delete('users', accountId);
-    } catch (e, s) {
+
+      final currentUser = _authService.currentUser;
+      if (currentUser?.uid == accountId) {
+        // delete auth user
+        await _authService.deleteCurrentUser();
+      }
+    } catch (e) {
       log(
         'an error occured',
         name: 'removeAccount',
         error: e,
-        stackTrace: s,
       );
       throw const Failure.serverError();
     }
