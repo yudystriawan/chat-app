@@ -1,6 +1,5 @@
-import 'dart:developer';
-
 import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/features/account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
 import 'package:core/styles/typography.dart';
 import 'package:flutter/material.dart';
@@ -45,12 +44,14 @@ class _SplashPageState extends State<SplashPage>
 
   @override
   Widget build(BuildContext context) {
+    // this code is neccessary for triggering watch account
+    context.watch<AccountWatcherBloc>();
+
     return BlocListener<AuthBloc, AuthState>(
       listenWhen: (p, c) => p.status != c.status,
       listener: (context, state) {
-        log('status listen: ${state.status}');
         // Start the animation
-        _controller.forward();
+        if (!_controller.isAnimating) _controller.forward();
       },
       child: Scaffold(
         body: Center(
