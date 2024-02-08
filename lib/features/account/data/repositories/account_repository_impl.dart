@@ -87,12 +87,11 @@ class AccountRepositoryImpl implements AccountRepository {
       return right(unit);
     } on Failure catch (e) {
       return left(e);
-    } catch (e, s) {
+    } catch (e) {
       log(
         'an error occured',
         name: 'setOnlineStatus',
         error: e,
-        stackTrace: s,
       );
       return left(const Failure.unexpectedError());
     }
@@ -105,12 +104,11 @@ class AccountRepositoryImpl implements AccountRepository {
       return right(unit);
     } on Failure catch (e) {
       return left(e);
-    } catch (e, s) {
+    } catch (e) {
       log(
         'an error occured',
         name: 'setOnlineStatus',
         error: e,
-        stackTrace: s,
       );
       return left(const Failure.unexpectedError());
     }

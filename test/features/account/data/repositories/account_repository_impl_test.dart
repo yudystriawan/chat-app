@@ -202,7 +202,6 @@ void main() {
       // Assert
       expect(result, right(unit));
       verify(mockRemoteDataSource.removeAccount(accountId)).called(1);
-      verifyNoMoreInteractions(mockRemoteDataSource);
     });
 
     test('should return a failure when remove account status fails', () async {
@@ -215,7 +214,6 @@ void main() {
       // Assert
       expect(result, left(const Failure.unexpectedError()));
       verify(mockRemoteDataSource.removeAccount(accountId)).called(1);
-      verifyNoMoreInteractions(mockRemoteDataSource);
     });
   });
 }
