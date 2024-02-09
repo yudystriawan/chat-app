@@ -1,0 +1,53 @@
+name: Test with coverage
+
+on:
+  workflow_call:
+
+jobs:
+  coverage:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install lcov
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install lcov
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+      - name: Setup Melos
+        uses: bluefireteam/melos-action@v3
+      - name: Install dependencies for all packages
+        run: melos run pub_get
+      - name: Generate dart files
+        run: melos run build_runner
+      - name: Run tests with coverage
+        run: melos run test:coverage
+      - name: Publish test result
+        id: compute_test_result
+        uses: dorny/test-reporter@v1.8.0
+        with:
+          name: "Unit tests report"
+          path: "test_reports/*_test_report.json"
+          reporter: "flutter-json"
+          max-annotations: 50
+          token: ${{secrets.GITHUB_TOKEN}}
+      - name: Create passing test results badge
+        if: github.event_name == 'push' && github.event.ref=='refs/head/main'
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        with:
+          auth: ${{secrets.BADGE_GIST_TOKEN}}
+          gistID: ""
+          filename: "test-coverage-badge.json"
+          label: "Test coverage"
+          message: "${{env.coverage_percentage}} %"
+          namedLogo: Codecov
+          labelColor: "lightgrey"
+          valColorRange: ${{ env.coverage_percentage }}
+          minColorRange: 50
+          maxColorRange: 80
