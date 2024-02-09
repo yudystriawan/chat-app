@@ -1,0 +1,197 @@
+name: Build & Test
+
+permissions: write-all
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+    branches:
+      - "main"
+    paths-ignore:
+      - "**.md"
+      - "doc/**"
+      - ".git/"
+      - ".vscode/"
+
+jobs:
+  testAndCoverage:
+    name: Test
+    if: github.event.pull_request.draft == false
+    uses: ./github/workflows/test_with_coverage.yml
+    secrets: inherit
+
+  analyze:
+    name: Analyze
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+      - name: Setup Melos
+        uses: bluefireteam/melos-action@v3
+      - name: Install dependencies for all packages
+        run: melos run pub_get
+      - name: Generate dart files
+        run: melos run build_runner
+      - name: Run Dart analysis for root
+        uses: zgosalvez/github-actions-analyze-dart@v3.0.1
+      - name: Run Dart analysis for core package
+        uses: zgosalvez/github-actions-analyze-dart@v3.0.1
+        with:
+          working-directory: "${{github.workspace}}/packages/core/"
+
+  builds:
+    name: Build Android
+    if: github.event.pull_request.draft == false
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+      - name: Setup JAVA
+        uses: actions/setup-java@v4
+        with:
+          distribution: oracle
+          java-version: "17"
+          cache: "gradle"
+        id: java
+      - name: Setup Melos
+        uses: bluefireteam/melos-action@v3
+      - name: Install dependencies for all packages
+        run: melos run pub_get
+      - name: Generate dart files
+        run: melos run build_runner
+      - name: Build android app
+        run: |
+          flutter build appbundle --debug
+# on:
+#   push:
+#     branches:
+#       - main
+#   pull_request:
+#     branches:
+#       - develop
+# jobs:
+#   flutter_test:
+#     name: Run flutter test and analyze
+#     runs-on: ubuntu-latest
+#     concurrency:
+#       group: ${{github.workflow}}-${{github.head_ref}}
+#       cancel-in-progress: true
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+#       - name: Setup Flutter
+#         uses: subosito/flutter-action@v2
+#         with:
+#           channel: "stable"
+#           cache: true
+#       - name: Setup Melos
+#         uses: bluefireteam/melos-action@v3
+#       - name: Check flutter version
+#         run: flutter --version
+#       - name: Get dependencies
+#         run: melos run pub_get
+#       - name: Run build runner
+#         run: melos run build_runner
+#       - name: Verify formatting
+#         run: melos run format
+#       - name: Analyze project source
+#         run: melos run analyze
+#       - name: Run tests
+#         run: melos run test
+#   build_appbundle:
+#     name: Build Android
+#     needs: [flutter_test]
+#     runs-on: ubuntu-latest
+#     if: github.event_name == 'push'
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+#       - name: Setup Flutter
+#         uses: subosito/flutter-action@v2
+#         with:
+#           channel: "stable"
+#           cache: true
+#       - name: Setup Melos
+#         uses: bluefireteam/melos-action@v3
+#       - name: Setup JAVA
+#         uses: actions/setup-java@v4
+#         with:
+#           distribution: oracle
+#           java-version: "17"
+#         env:
+#           KEY_JKS: ${{secrets.RELEASE_KEYSTORE}}
+#           GOOGLE_SERVICE_JSON: ${{secrets.GOOGLE_SERVICE_JSON}}
+#           SIGNIN_KEY_ALIAS: ${{secrets.RELEASE_KEYSTORE_ALIAS}}
+#           SIGNIN_KEY_PASSWORD: ${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+#       - name: Decode Keystore
+#         run: |
+#           echo "${{secrets.RELEASE_KEYSTORE}}" > release.keystore.asc
+#           gpg -d --passphrase "${{secrets.RELEASE_KEYSTORE_PASSPHRASE}}" --batch release.keystore.asc > android/key.jks
+#       - name: Decode google-services.json
+#         run: |
+#           echo "${{secrets.GOOGLE_SERVICE_JSON}}" > google-services.json.asc
+#           gpg -d --passphrase "${{secrets.GOOGLE_SERVICE_JSON_PASSPHRASE}}" --batch google-services.json.asc > android/app/google-services.json
+#       - name: Create key.properties
+#         run: |
+#           touch android/key.properties
+#           echo "storePassword=${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+#           keyPassword=${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+#           keyAlias=${{secrets.RELEASE_KEYSTORE_ALIAS}}
+#           storeFile=../key.jks" > android/key.properties
+#       - name: Get dependencies
+#         run: melos run pub_get
+#       - name: Run build runner
+#         run: melos run build_runner
+#       - name: Build artifact
+#         run: flutter build appbundle
+#       - name: Upload artifact
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: release-appbundle
+#           path: build/app/outputs/bundle/release/app-release.aab
+#           if-no-files-found: error
+
+#   deploy_firebase:
+#     name: Deploy to Firebase App Distribution
+#     if: github.event_name == 'push'
+#     needs: [build_appbundle]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
+#       - name: Set up JDK 1.8
+#         uses: actions/setup-java@v1
+#         with:
+#           java-version: 1.8
+#       - name: Download artifact
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: release-appbunlde
+#       - name: Publish artifact to Firebase App Distribution
+#         uses: wzieba/Firebase-Distribution-Github-Action@v1.7.0
+#         with:
+#           appId: ${{secrets.FIREBASE_ANDROID_APPID}}
+#           serviceCredentialsFileContent: ${{secrets.CREDENTIAL_FILE_CONTENT}}
+#           groups: testers
+#           file: app-release.aab
