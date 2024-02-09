@@ -37,17 +37,3 @@ jobs:
           reporter: "flutter-json"
           max-annotations: 50
           token: ${{secrets.GITHUB_TOKEN}}
-      - name: Create passing test results badge
-        if: github.event_name == 'push' && github.event.ref=='refs/head/main'
-        uses: schneegans/dynamic-badges-action@v1.7.0
-        with:
-          auth: ${{secrets.BADGE_GIST_TOKEN}}
-          gistID: ""
-          filename: "test-coverage-badge.json"
-          label: "Test coverage"
-          message: "${{env.coverage_percentage}} %"
-          namedLogo: Codecov
-          labelColor: "lightgrey"
-          valColorRange: ${{ env.coverage_percentage }}
-          minColorRange: 50
-          maxColorRange: 80
