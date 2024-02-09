@@ -36,7 +36,7 @@ scripts:
         - test
     description: Run Flutter tests and publish local lcov coverage for a specific package
   test:combine-coverage:
-    run: MELOS_ROOT_PATH/scripts/combine-coverage.sh MELOS_ROOT_PATH
+    run: MELOS_ROOT_PATH/scripts/combine_coverage.sh MELOS_ROOT_PATH
     description: Combine individual lcov coverage into a single lcov coverage file
   analyze:
     run: melos exec -- flutter analyze .
