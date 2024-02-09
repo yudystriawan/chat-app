@@ -29,6 +29,15 @@ scripts:
   test:
     run: melos run test:selective_unit_test --no-select
     description: Run all Flutter tests in this project.
+  test:coverage:
+    run: MELOS_ROOT_PATH/scripts/test_with_coverage.sh MELOS_ROOT_PATH MELOS_PACKAGE_PATH MELOS_PACKAGE_NAME
+    select-package:
+      dir-exists:
+        - test
+    description: Run Flutter tests and publish local lcov coverage for a specific package
+  test:combine-coverage:
+    run: MELOS_ROOT_PATH/scripts/combine-coverage.sh MELOS_ROOT_PATH
+    description: Combine individual lcov coverage into a single lcov coverage file
   analyze:
     run: melos exec -- flutter analyze .
     description: Run `dart analyze` in all packages.
