@@ -80,9 +80,14 @@ jobs:
         run: melos run pub_get
       - name: Generate dart files
         run: melos run build_runner
+      - name: Decode google-services.json
+        run: |
+          echo "${{secrets.GOOGLE_SERVICE_JSON}}" > google-services.json.asc
+          gpg -d --passphrase "${{secrets.GOOGLE_SERVICE_JSON_PASSPHRASE}}" --batch google-services.json.asc > android/app/google-services.json
       - name: Build android app
         run: |
           flutter build appbundle --debug
+
 # on:
 #   push:
 #     branches:
