@@ -1,8 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
+import 'package:chat_app/features/account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../features/account/domain/entities/account.dart';
 import '../routes.gr.dart';
 
 class AccountGuard extends AutoRouteGuard {
@@ -11,14 +10,12 @@ class AccountGuard extends AutoRouteGuard {
     final context = router.navigatorKey.currentContext;
 
     if (context != null) {
-      final user = context.read<AuthBloc>().state.user;
+      final account = context.read<AccountWatcherBloc>().state.account;
 
-      if (user.username.isNotEmpty) {
+      if (account.username.isNotEmpty) {
         resolver.next();
         return;
       }
-
-      final account = Account.fromUser(user);
 
       resolver.redirect(ProfileRoute(
         initialAccount: account,

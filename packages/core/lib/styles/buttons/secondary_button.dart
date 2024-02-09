@@ -10,17 +10,35 @@ class SecondaryButton extends StatelessWidget {
     required this.onPressed,
     required this.child,
     this.padding,
+    this.foregroundColor,
   }) : super(key: key);
 
   final VoidCallback? onPressed;
   final Widget? child;
   final EdgeInsetsGeometry? padding;
+  final Color? foregroundColor;
+
+  factory SecondaryButton.error({
+    Key? key,
+    required VoidCallback onPressed,
+    required Widget child,
+    EdgeInsetsGeometry? padding,
+  }) {
+    return SecondaryButton(
+      key: key,
+      onPressed: onPressed,
+      padding: padding,
+      foregroundColor: AccentColor.danger,
+      child: child,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDisabled = onPressed == null;
 
-    final defaultTextColor = BrandColor.neutral.withOpacity(
+    final defaultTextColor =
+        (foregroundColor ?? BrandColor.neutral).withOpacity(
       isDisabled ? 0.5 : 1,
     );
 
@@ -41,7 +59,8 @@ class SecondaryButton extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30.r),
         border: Border.all(
-          color: BrandColor.neutral.withOpacity(isDisabled ? 0.5 : 1),
+          color: (foregroundColor ?? BrandColor.neutral)
+              .withOpacity(isDisabled ? 0.5 : 1),
           width: 2.w,
         ),
       ),

@@ -1,6 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:coolicons/coolicons.dart';
+import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
+import 'package:core/styles/buttons/ghost_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../routes/routes.gr.dart';
@@ -70,6 +73,19 @@ class PreferencesPage extends StatelessWidget {
               icon: Coolicons.mail,
               label: 'Invite Your Friends',
               onTapped: () {},
+            ),
+            Divider(
+              height: 16.w,
+            ),
+            16.verticalSpaceFromWidth,
+            Align(
+              alignment: Alignment.centerRight,
+              child: GhostButton(
+                onPressed: () =>
+                    context.read<AuthBloc>().add(const AuthEvent.signOut()),
+                padding: const EdgeInsets.symmetric(horizontal: 0),
+                child: const Text('Sign Out'),
+              ),
             ),
           ],
         ),

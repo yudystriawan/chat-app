@@ -48,7 +48,7 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
           .watchAll('users', whereConditions: whereConditions)
           .map((docs) => docs.map((e) => ContactDto.fromJson(e)).toList());
     }).onErrorReturnWith((error, stackTrace) {
-      log('error occured', error: error, stackTrace: stackTrace);
+      log('an error occured', error: error, name: 'watchContacts');
       throw Failure.serverError(message: error.toString());
     });
   }
