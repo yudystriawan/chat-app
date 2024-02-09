@@ -17,9 +17,9 @@ flutter test \
 
 escapedPath="$(echo $PACKAGE_PATH | sed 's/\//\\\//g')"
 
-# Requires gsed on MacOS machines because otherwise sed is not the same...
-if [[ "$OSTYPE" =~ ^darwin ]]; then
-    gsed -i "s/^SF:lib/SF:$escapedPath\/lib/g" $PACKAGE_LCOV_INFO_PATH
-else
-    sed -i "s/^SF:lib/SF:$escapedPath\/lib/g" $PACKAGE_LCOV_INFO_PATH
-fi
+# # Requires gsed on MacOS machines because otherwise sed is not the same...
+# if [[ "$OSTYPE" =~ ^darwin ]]; then
+#     gsed -i "s/^SF:lib/SF:$escapedPath\/lib/g" $PACKAGE_LCOV_INFO_PATH
+# else
+#     sed -i "s/^SF:lib/SF:$escapedPath\/lib/g" $PACKAGE_LCOV_INFO_PATH
+# fi
