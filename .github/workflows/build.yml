@@ -14,7 +14,7 @@ on:
       - synchronize
       - ready_for_review
     branches:
-      - "develop"
+      - "main"
     paths-ignore:
       - "**.md"
       - "doc/**"
