@@ -13,7 +13,7 @@ on:
       - ".vscode/"
 
 jobs:
-  tesnAndCoverage:
+  testAndCoverage:
     name: Test
     uses: ./.github/workflows/test_with_coverage.yml
     secrets: inherit
