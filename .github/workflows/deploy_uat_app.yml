@@ -42,6 +42,13 @@ jobs:
         uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Show info new release published
+        if: steps.semantic_release_info.outputs.new_release_published == true
+        run: |
+          echo ${{ steps.semantic_release_info.outputs.new_release_version }}
+          echo ${{ steps.semantic_release_info.outputs.new_release_major_version }}
+          echo ${{ steps.semantic_release_info.outputs.new_release_minor_version }}
+          echo ${{ steps.semantic_release_info.outputs.new_release_patch_version }}
       - name: Calculate complete UAT version for next version
         id: get_new_pubspec_version
         run: |
