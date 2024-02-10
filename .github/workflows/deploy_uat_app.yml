@@ -13,11 +13,6 @@ on:
       - ".vscode/"
 
 jobs:
-  tesnAndCoverage:
-    name: Test
-    uses: ./.github/workflows/test_with_coverage.yml
-    secrets: inherit
-
   gitRelease:
     name: Create git release for UAT app
     runs-on: ubuntu-latest
@@ -36,16 +31,23 @@ jobs:
           fallback: 1.0.0
       - name: Prepare semantic release configuration
         run: |
-          mv .releaserc.uat.json .releaserc.json
+          cp .releaserc.uat.json .releaserc.json
       - name: Get next UAT release semver version
         id: semantic_release_info
         uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Show info new release published
+        if: steps.semantic_release_info.outputs.new_release_published == true
+        run: |
+          echo ${{ steps.semantic_release_info.outputs.new_release_version }}
+          echo ${{ steps.semantic_release_info.outputs.new_release_major_version }}
+          echo ${{ steps.semantic_release_info.outputs.new_release_minor_version }}
+          echo ${{ steps.semantic_release_info.outputs.new_release_patch_version }}
       - name: Calculate complete UAT version for next version
         id: get_new_pubspec_version
         run: |
-          last_uat_release=$(echo "${{ steps.get_latest_uat_release.outputs.tag }}" | sed -E "s/release\/uat\/(.*)/\1/")
+          last_uat_release=$(echo "${{ steps.get_latest_uat_release.outputs.tag }}" | sed -E "s/(.*)/\1/")
           next_pubspec_version=$(./scripts/semver.sh "$last_uat_release" "${{ steps.semantic_release_info.outputs.new_release_version }}")
           echo "next_pubspec_version=$next_pubspec_version" >> $GITHUB_OUTPUT
       - name: Create new UAT release tag
