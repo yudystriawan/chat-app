@@ -10,7 +10,12 @@ else
     nextVersion="$2"
 fi
 
+echo "params1: $1"
+echo "params2: $2"
+echo "nextVersion: $nextVersion"
+
 LAST_UAT_BUILD_NUMBER=$(echo $lastVersion | sed -E "s/$RE/\4/")
+
 
 NEXT_VERSION_MAJOR=$(echo $nextVersion | sed -E "s/$RE/\1/")
 NEXT_VERSION_MINOR=$(echo $nextVersion | sed -E "s/$RE/\2/")
