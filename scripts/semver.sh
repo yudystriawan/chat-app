@@ -13,8 +13,6 @@ fi
 
 # Extract the last build number
 LAST_UAT_BUILD_NUMBER=$(echo "$lastVersion" | sed -E "s/$RE/\4/")
-echo "lastVersion: $lastVersion"
-echo "lastUatBuildNumber: $LAST_UAT_BUILD_NUMBER"
 
 # Extract major, minor, and patch components from nextVersion
 NEXT_VERSION_MAJOR=$(echo "$nextVersion" | sed -E "s/$RE/\1/")
