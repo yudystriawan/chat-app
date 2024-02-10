@@ -25,6 +25,8 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{secrets.GITHUB_TOKEN}}
+      - name: Pull main branch
+        run: git pull origin
       - name: Get latest PROD release
         id: get_latest_prod_release
         uses: "WyriHaximus/github-action-get-previous-tag@v1.4.0"
@@ -50,6 +52,7 @@ jobs:
         with:
           commit_message: "chore(*): bump to version ${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }} [skip ci]"
           push_options: ""
+          
       - name: Create new UAT release tag
         uses: rickstaa/action-create-tag@v1.7.2
         with:
