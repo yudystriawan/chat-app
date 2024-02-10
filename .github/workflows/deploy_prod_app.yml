@@ -1,0 +1,57 @@
+name: Build & Deploy Prod Release
+
+permissions: write-all
+
+on: workflow_dispatch
+
+jobs:
+  tesnAndCoverage:
+    name: Test
+    uses: ./.github/workflows/test_with_coverage.yml
+    secrets: inherit
+
+  gitRelease:
+    name: Create git release for UAT app
+    runs-on: ubuntu-latest
+    outputs:
+      new_pubspec_version: "${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }}"
+    steps:
+      - name: 👁️ Check branch validity
+        if: github.ref != 'refs/heads/main'
+        run: |
+          echo "Error: you tried to create a release from '${{ github.ref }}' branch but production releases can only be created from 'main' branch"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{secrets.GITHUB_TOKEN}}
+      - name: Get latest PROD release
+        id: get_latest_prod_release
+        uses: "WyriHaximus/github-action-get-previous-tag@v1.4.0"
+        with:
+          prefix: "v"
+          fallback: 1.0.0
+      - name: Prepare semantic release configuration
+        run: |
+          mv .releaserc.prod.json .releaserc.json
+      - name: Get next Prod release semver version
+        id: semantic_release_info
+        uses: cycjimmy/semantic-release-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Edit pubspec version
+        id: get_new_pubspec_version
+        run: |
+          last_prod_release=$(echo "${{ steps.get_latest_prod_release.outputs.tag }}" | sed -E "s/release\/prod\/(.*)/\1/")
+          next_pubspec_version=$(./scripts/semver.sh "$last_prod_release" "${{ steps.semantic_release_info.outputs.new_release_version }}")
+          sed -Ei "s/^version: (.*)/version: $next_pubspec_version/" app/pubspec.yaml
+      - name: 🔀 Push bump commit with changelog to repository
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(*): bump to version ${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }} [skip ci]"
+      - name: Create new UAT release tag
+        uses: rickstaa/action-create-tag@v1.7.2
+        with:
+          tag: "v${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }}-dev"
+          message: "UAT release ${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
