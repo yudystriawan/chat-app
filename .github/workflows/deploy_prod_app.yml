@@ -44,7 +44,7 @@ jobs:
         run: |
           last_prod_release=$(echo "${{ steps.get_latest_prod_release.outputs.tag }}" | sed -E "s/release\/prod\/(.*)/\1/")
           next_pubspec_version=$(./scripts/semver.sh "$last_prod_release" "${{ steps.semantic_release_info.outputs.new_release_version }}")
-          sed -Ei "s/^version: (.*)/version: $next_pubspec_version/" app/pubspec.yaml
+          sed -Ei "s/^version: (.*)/version: $next_pubspec_version/" pubspec.yaml
       - name: 🔀 Push bump commit with changelog to repository
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
