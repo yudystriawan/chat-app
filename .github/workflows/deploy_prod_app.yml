@@ -5,11 +5,6 @@ permissions: write-all
 on: workflow_dispatch
 
 jobs:
-  # testAndCoverage:
-  #   name: Test
-  #   uses: ./.github/workflows/test_with_coverage.yml
-  #   secrets: inherit
-
   gitRelease:
     name: Create git release for Prod app
     runs-on: ubuntu-latest
@@ -37,7 +32,7 @@ jobs:
           fallback: 1.0.0
       - name: Prepare semantic release configuration
         run: |
-          mv .releaserc.prod.json .releaserc.json
+          cp .releaserc.prod.json .releaserc.json
       - name: Get next Prod release semver version
         id: semantic_release_info
         uses: cycjimmy/semantic-release-action@v4

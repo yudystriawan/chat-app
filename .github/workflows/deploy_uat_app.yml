@@ -13,11 +13,6 @@ on:
       - ".vscode/"
 
 jobs:
-  # testAndCoverage:
-  #   name: Test
-  #   uses: ./.github/workflows/test_with_coverage.yml
-  #   secrets: inherit
-
   gitRelease:
     name: Create git release for UAT app
     runs-on: ubuntu-latest
@@ -36,7 +31,7 @@ jobs:
           fallback: 1.0.0
       - name: Prepare semantic release configuration
         run: |
-          mv .releaserc.uat.json .releaserc.json
+          cp .releaserc.uat.json .releaserc.json
       - name: Get next UAT release semver version
         id: semantic_release_info
         uses: cycjimmy/semantic-release-action@v4
