@@ -11,7 +11,7 @@ jobs:
   #   secrets: inherit
 
   gitRelease:
-    name: Create git release for UAT app
+    name: Create git release for Prod app
     runs-on: ubuntu-latest
     outputs:
       new_pubspec_version: "${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }}"
