@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       new_pubspec_version: "${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }}"
+    permissions: write-all
     steps:
       - name: Check branch validity
         if: github.ref != 'refs/heads/main'
