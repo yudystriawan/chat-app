@@ -51,8 +51,6 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "chore(*): bump to version ${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }} [skip ci]"
-          push_options: ""
-          
       - name: Create new UAT release tag
         uses: rickstaa/action-create-tag@v1.7.2
         with:
