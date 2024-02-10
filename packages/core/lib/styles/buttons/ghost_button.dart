@@ -11,6 +11,7 @@ class GhostButton extends StatelessWidget {
     required this.child,
     this.padding,
     this.backgroundColor,
+    this.foregroundColor,
     this.borderRadius,
   }) : super(key: key);
 
@@ -18,14 +19,36 @@ class GhostButton extends StatelessWidget {
   final Widget? child;
   final EdgeInsetsGeometry? padding;
   final Color? backgroundColor;
+  final Color? foregroundColor;
   final BorderRadius? borderRadius;
+
+  factory GhostButton.error({
+    Key? key,
+    required VoidCallback? onPressed,
+    required Widget? child,
+    EdgeInsetsGeometry? padding,
+    Color? backgroundColor,
+    Color? foregroundColor,
+    BorderRadius? borderRadius,
+  }) {
+    return GhostButton(
+      key: key,
+      onPressed: onPressed,
+      backgroundColor: backgroundColor,
+      padding: padding,
+      foregroundColor: AccentColor.danger,
+      borderRadius: borderRadius,
+      child: child,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDisabled = onPressed == null;
 
     final defaultTextStyle = AppTypography.subHeading2.copyWith(
-      color: BrandColor.neutral.withOpacity(isDisabled ? 0.5 : 1),
+      color: (foregroundColor ?? BrandColor.neutral)
+          .withOpacity(isDisabled ? 0.5 : 1),
     );
 
     final defaultBorderRadius = BorderRadius.circular(30.r);

@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
-import '../../../domain/usecases/find_contact.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:injectable/injectable.dart';
 
 import '../../../domain/entities/contact.dart';
+import '../../../domain/usecases/find_contact.dart';
 
 part 'contact_loader_bloc.freezed.dart';
 part 'contact_loader_event.dart';

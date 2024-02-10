@@ -1,10 +1,11 @@
-import '../entities/contact.dart';
-import '../repositories/contact_repository.dart';
 import 'package:core/utils/errors/failure.dart';
 import 'package:core/utils/usecases/usecase.dart';
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:injectable/injectable.dart';
+
+import '../entities/contact.dart';
+import '../repositories/contact_repository.dart';
 
 @injectable
 class FindContact implements Usecase<Contact, FindContactParams> {

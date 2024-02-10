@@ -10,23 +10,18 @@ import 'auth_remote_datasource_test.mocks.dart';
 
 @GenerateMocks([
   AuthService,
-  FirestoreService,
   User,
 ])
 void main() {
   late MockAuthService mockAuthService;
-  late MockFirestoreService mockFirestoreService;
   late AuthFirebaseDataSource sut;
 
   final user = MockUser();
 
   setUp(() {
     mockAuthService = MockAuthService();
-    mockFirestoreService = MockFirestoreService();
-    sut = AuthFirebaseDataSource(
-      mockAuthService,
-      mockFirestoreService,
-    );
+
+    sut = AuthFirebaseDataSource(mockAuthService);
 
     when(user.uid).thenReturn('123');
     when(user.email).thenReturn('example.com');
@@ -58,8 +53,6 @@ void main() {
 
       // Assert
       expect(userDto, isNull);
-      verifyNever(
-          mockFirestoreService.upsert(any, userDto?.id, userDto?.toJson()));
     });
   });
 
@@ -81,19 +74,6 @@ void main() {
       // Arrange
       when(mockAuthService.watchCurrentUser())
           .thenAnswer((_) => Stream.value(user));
-
-      when(mockFirestoreService.watch(any, any)).thenAnswer(
-        (_) => Stream.value({
-          'id': '123',
-          'username': 'john_doe',
-          'bio': 'A short bio',
-          'name': 'John Doe',
-          'email': 'john@example.com',
-          'photoUrl': 'https://example.com/photo.jpg',
-          'phoneNumber': '1234567890',
-          'contacts': ['contact1', 'contact2'],
-        }),
-      );
 
       // Act
       final stream = sut.watchCurrentUser();

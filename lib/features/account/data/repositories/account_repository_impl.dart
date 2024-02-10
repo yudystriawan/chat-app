@@ -26,6 +26,11 @@ class AccountRepositoryImpl implements AccountRepository {
     } on Failure catch (e) {
       return left(e);
     } catch (e) {
+      log(
+        'an error occured',
+        name: 'saveAccount',
+        error: e,
+      );
       return left(const Failure.unexpectedError());
     }
   }
@@ -38,6 +43,16 @@ class AccountRepositoryImpl implements AccountRepository {
       }
 
       return right<Failure, Account>(accountDto.toDomain());
+    }).onErrorReturnWith((error, stackTrace) {
+      if (error is Failure) return left(error);
+
+      log(
+        'an error occured',
+        name: 'watchAccount',
+        error: error,
+      );
+
+      return left(const Failure.unexpectedError());
     });
   }
 
@@ -55,6 +70,12 @@ class AccountRepositoryImpl implements AccountRepository {
         return left<Failure, KtList<Account>>(error);
       }
 
+      log(
+        'an error occured',
+        name: 'watchAccounts',
+        error: error,
+      );
+
       return left<Failure, KtList<Account>>(const Failure.serverError());
     });
   }
@@ -66,12 +87,28 @@ class AccountRepositoryImpl implements AccountRepository {
       return right(unit);
     } on Failure catch (e) {
       return left(e);
-    } catch (e, s) {
+    } catch (e) {
       log(
         'an error occured',
         name: 'setOnlineStatus',
         error: e,
-        stackTrace: s,
+      );
+      return left(const Failure.unexpectedError());
+    }
+  }
+
+  @override
+  Future<Either<Failure, Unit>> removeAccount(String accountId) async {
+    try {
+      await _remoteDataSource.removeAccount(accountId);
+      return right(unit);
+    } on Failure catch (e) {
+      return left(e);
+    } catch (e) {
+      log(
+        'an error occured',
+        name: 'setOnlineStatus',
+        error: e,
       );
       return left(const Failure.unexpectedError());
     }

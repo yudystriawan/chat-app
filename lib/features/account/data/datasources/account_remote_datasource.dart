@@ -12,6 +12,7 @@ abstract class AccountRemoteDataSource {
   Stream<AccountDto?> watchCurrentAccount();
   Stream<List<AccountDto>?> watchAccounts({String? username});
   Future<void> updateOnlineStatus(bool status);
+  Future<void> removeAccount(String accountId);
 }
 
 @Injectable(as: AccountRemoteDataSource)
@@ -98,6 +99,27 @@ class AccountFirebaseDataSourceImpl implements AccountRemoteDataSource {
         name: 'updateOnlineStatus',
         error: e,
         stackTrace: s,
+      );
+      throw const Failure.serverError();
+    }
+  }
+
+  @override
+  Future<void> removeAccount(String accountId) async {
+    try {
+      // remove user from users collection
+      await _firestoreService.delete('users', accountId);
+
+      final currentUser = _authService.currentUser;
+      if (currentUser?.uid == accountId) {
+        // delete auth user
+        await _authService.deleteCurrentUser();
+      }
+    } catch (e) {
+      log(
+        'an error occured',
+        name: 'removeAccount',
+        error: e,
       );
       throw const Failure.serverError();
     }
