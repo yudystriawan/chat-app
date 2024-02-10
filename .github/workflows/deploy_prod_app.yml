@@ -16,13 +16,14 @@ jobs:
     outputs:
       new_pubspec_version: "${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }}"
     steps:
-      - name: 👁️ Check branch validity
+      - name: Check branch validity
         if: github.ref != 'refs/heads/main'
         run: |
           echo "Error: you tried to create a release from '${{ github.ref }}' branch but production releases can only be created from 'main' branch"
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           token: ${{secrets.GITHUB_TOKEN}}
       - name: Pull main branch
         run: git pull origin
