@@ -1,4 +1,4 @@
-name: Build and deploy android app
+name: Build and deploy Android app
 
 on:
   workflow_call:
@@ -55,7 +55,7 @@ jobs:
           storeFile=../key.jks" > android/key.properties
       - name: Edit pubspec version
         run: |
-          sed -Ei "s/^version: (.*)/version: ${{ inputs.new-pubspec-version }}/" app/pubspec.yaml
+          sed -Ei "s/^version: (.*)/version: ${{ inputs.new-pubspec-version }}/" pubspec.yaml
       - name: Create Android appbundle release
         run: |
           mkdir debug-symbols
