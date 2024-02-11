@@ -70,7 +70,7 @@ jobs:
         id: get_google_play_service_account
         run: |
           echo "${{secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON}}" > google-play-service-account.json.asc
-          google_play_service_account_json=$(gpg -d --passphrase "${{secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_PASSPHRASE}}" --batch google-play-service-account.json)
+          google_play_service_account_json=$(gpg -d --passphrase "${{secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_PASSPHRASE}}" --batch google-play-service-account.json.asc > google-play-service-account.json)
           echo "google_play_service_account_json=$google_play_service_account_json" >> $GITHUB_OUTPUT
       - name: Upload Android Release to Play Store
         uses: r0adkll/upload-google-play@v1.1.3
