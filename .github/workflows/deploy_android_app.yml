@@ -1,0 +1,83 @@
+name: Build and deploy android app
+
+on:
+  workflow_call:
+    inputs:
+      package-name:
+        required: true
+        type: string
+      release-status:
+        required: true
+        type: string
+      new-pubspec-version:
+        required: true
+        type: string
+
+jobs:
+  deployAndroid:
+    name: Build & deploy Android release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          cache: true
+      - name: Setup JAVA
+        uses: actions/setup-java@v4
+        with:
+          distribution: oracle
+          java-version: "17"
+          cache: "gradle"
+        id: java
+      - name: Setup Melos
+        uses: bluefireteam/melos-action@v3
+      - name: Install dependencies for all packages
+        run: melos run pub_get
+      - name: Generate dart files
+        run: melos run build_runner
+      - name: Decode google-services.json
+        run: |
+          echo "${{secrets.GOOGLE_SERVICE_JSON}}" > google-services.json.asc
+          gpg -d --passphrase "${{secrets.GOOGLE_SERVICE_JSON_PASSPHRASE}}" --batch google-services.json.asc > android/app/google-services.json
+      - name: Decode Keystore
+        run: |
+          echo "${{secrets.RELEASE_KEYSTORE}}" > release.keystore.asc
+          gpg -d --passphrase "${{secrets.RELEASE_KEYSTORE_PASSPHRASE}}" --batch release.keystore.asc > android/key.jks
+      - name: Create key.properties
+        run: |
+          touch android/key.properties
+          echo "storePassword=${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+          keyPassword=${{secrets.RELEASE_KEYSTORE_PASSWORD}}
+          keyAlias=${{secrets.RELEASE_KEYSTORE_ALIAS}}
+          storeFile=../key.jks" > android/key.properties
+      - name: Edit pubspec version
+        run: |
+          sed -Ei "s/^version: (.*)/version: ${{ inputs.new-pubspec-version }}/" app/pubspec.yaml
+      - name: Create Android appbundle release
+        run: |
+          mkdir debug-symbols
+          flutter build appbundle --release
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-appbundle
+          path: build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: error
+      - name: Decode Google service account
+        id: get_google_play_service_account
+        run: |
+          echo "${{secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON}}" > google-play-service-account.json.asc
+          google_play_service_account_json=$(gpg -d --passphrase "${{secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_PASSPHRASE}}" --batch google-play-service-account.json)
+          echo "google_play_service_account_json=$google_play_service_account_json" >> $GITHUB_OUTPUT
+      - name: Upload Android Release to Play Store
+        uses: r0adkll/upload-google-play@v1.1.3
+        with:
+          packageName: ${{ inputs.package-name }}
+          track: internal
+          status: ${{ inputs.release-status }}
+          releaseFiles: ${{ github.workspace }}/app/build/app/outputs/bundle/release/app-release.aab
+          serviceAccountJsonPlainText: ${{steps.get_google_play_service_account.outputs.google_play_service_account_json}}
+          
