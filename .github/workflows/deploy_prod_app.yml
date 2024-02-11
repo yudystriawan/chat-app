@@ -55,3 +55,13 @@ jobs:
           tag: "v${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }}-dev"
           message: "UAT release ${{ steps.get_new_pubspec_version.outputs.next_pubspec_version }}"
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  deployProd:
+    name: Deplod Prod
+    uses: ./.github/workflows/deploy_android_app.yml
+    needs: gitRelease
+    secrets: inherit
+    with:
+      package-name: com.deytri.chat_app
+      new-pubspec-version: ${{needs.gitRelease.outputs.new_pubspec_version}}
+      release-status: completed
