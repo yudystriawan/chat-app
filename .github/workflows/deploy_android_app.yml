@@ -70,7 +70,7 @@ jobs:
         uses: r0adkll/upload-google-play@v1.1.3
         with:
           packageName: ${{ inputs.package-name }}
-          track: qa
+          track: internal
           status: ${{ inputs.release-status }}
           releaseFiles: build/app/outputs/bundle/release/app-release.aab
           serviceAccountJsonPlainText: ${{secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON}}
