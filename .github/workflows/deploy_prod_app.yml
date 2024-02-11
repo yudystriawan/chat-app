@@ -64,4 +64,4 @@ jobs:
     with:
       package-name: com.deytri.chat_app
       new-pubspec-version: ${{needs.gitRelease.outputs.new_pubspec_version}}
-      release-status: completed
+      release-status: draft
