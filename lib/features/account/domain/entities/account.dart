@@ -16,6 +16,7 @@ class Account with _$Account, BaseUser {
     required String photoUrl,
     required String phoneNumber,
     required KtList<String> contacts,
+    DateTime? expiredAt,
   }) = _Account;
 
   factory Account.empty() => const Account(
