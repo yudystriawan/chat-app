@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:chat_app/features/account/presentation/blocs/account_watcher/account_watcher_bloc.dart';
+import 'package:chat_app/shared/show_info_dialog.dart';
 import 'package:chat_app/shared/types/date_extensions.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
@@ -52,7 +53,11 @@ class PreferencesPage extends StatelessWidget {
                                 ),
                               ),
                               GhostButton(
-                                onPressed: () {},
+                                onPressed: () => showInfoDialog(
+                                  context,
+                                  content:
+                                      'Please note that this account is temporary and will be deleted at the designated time. Any data you have entered or modified may be lost after deletion.',
+                                ),
                                 child: Icon(
                                   Coolicons.info_circle_outline,
                                   size: 16.w,
