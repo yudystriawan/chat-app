@@ -1,3 +1,4 @@
+import 'package:core/core.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kt_dart/collection.dart';
 
@@ -18,6 +19,7 @@ class AccountDto with _$AccountDto {
     String? photoUrl,
     String? phoneNumber,
     List<String>? contacts,
+    @ServerTimestampConverter() ServerTimestamp? expiredAt,
   }) = _AccountDto;
 
   factory AccountDto.fromJson(Map<String, dynamic> json) =>
@@ -47,6 +49,7 @@ class AccountDto with _$AccountDto {
       photoUrl: photoUrl ?? empty.photoUrl,
       phoneNumber: phoneNumber ?? empty.phoneNumber,
       contacts: contacts?.toImmutableList() ?? empty.contacts,
+      expiredAt: expiredAt?.toDate(),
     );
   }
 }

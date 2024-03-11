@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:chat_app/routes/guards/expiration_guard.dart';
 import 'package:core/core.dart' as core;
 import 'package:core/utils/routes/guards/auth_guard.dart';
 import 'package:core/utils/routes/router.gm.dart';
@@ -18,6 +19,7 @@ class AppRouter extends $AppRouter {
         page: HomeRoute.page,
         guards: [
           AuthGuard(),
+          ExpirationGuard(),
           AccountGuard(),
         ],
         children: [
@@ -27,10 +29,23 @@ class AppRouter extends $AppRouter {
         ],
       ),
       AutoRoute(page: SignInRoute.page),
-      AutoRoute(page: ProfileRoute.page),
-      AutoRoute(page: AccountRoute.page),
-      AutoRoute(page: AddContactRoute.page),
-      AutoRoute(page: RoomRoute.page),
+      AutoRoute(
+        page: ProfileRoute.page,
+        guards: [ExpirationGuard()],
+      ),
+      AutoRoute(
+        page: AccountRoute.page,
+        guards: [ExpirationGuard()],
+      ),
+      AutoRoute(
+        page: AddContactRoute.page,
+        guards: [ExpirationGuard()],
+      ),
+      AutoRoute(
+        page: RoomRoute.page,
+        guards: [ExpirationGuard()],
+      ),
+      AutoRoute(page: AccountExpiredRoute.page)
     ];
   }
 }

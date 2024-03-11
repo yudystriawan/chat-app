@@ -20,7 +20,7 @@ void main() {
 
   final user = MockUser();
 
-  const accountDto = AccountDto(
+  final accountDto = AccountDto(
     id: '1',
     username: 'test_user',
     bio: 'Test bio',
@@ -29,6 +29,7 @@ void main() {
     photoUrl: 'https://example.com/test_photo.jpg',
     phoneNumber: '+1234567890',
     contacts: ['contact1', 'contact2'],
+    expiredAt: ServerTimestamp.create(),
   );
 
   final listAccountDto = [

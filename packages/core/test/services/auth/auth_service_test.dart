@@ -80,12 +80,14 @@ void main() {
     test('sign out both GoogleSignIn and FirebaseAuth', () async {
       // Arrange
       when(mockGoogleSignIn.signOut()).thenAnswer((_) async => null);
+      when(mockGoogleSignIn.disconnect()).thenAnswer((_) => Future.value());
       when(mockFirebaseAuth.signOut()).thenAnswer((_) async {});
 
       // Act
       await sut.signOut();
 
       // Assert
+      verify(mockGoogleSignIn.disconnect()).called(1);
       verify(mockGoogleSignIn.signOut()).called(1);
       verify(mockFirebaseAuth.signOut()).called(1);
     });
