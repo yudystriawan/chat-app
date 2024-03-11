@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:chat_app/features/account/presentation/blocs/account_actor/account_actor_bloc.dart';
+import 'package:chat_app/routes/routes.gr.dart';
 import 'package:coolicons/coolicons.dart';
 import 'package:core/core.dart';
 import 'package:core/features/auth/presentation/blocs/auth/auth_bloc.dart';
@@ -12,22 +13,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 @RoutePage()
 class AccountExpiredPage extends StatelessWidget implements AutoRouteWrapper {
-  const AccountExpiredPage({
-    super.key,
-    this.onAccountRemoved,
-  });
-
-  final Function(bool accountRemoved)? onAccountRemoved;
+  const AccountExpiredPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AccountActorBloc, AccountActorState>(
       listener: (context, state) {
         state.maybeMap(
-          orElse: () => onAccountRemoved?.call(false),
+          orElse: () {},
           accountRemoved: (_) {
             context.read<AuthBloc>().add(const AuthEvent.signOut());
-            onAccountRemoved?.call(true);
+            context.router.replaceAll([const HomeRoute()]);
           },
         );
       },
