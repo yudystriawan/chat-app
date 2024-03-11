@@ -15,8 +15,8 @@ class ExpirationGuard extends AutoRouteGuard {
     final currentTime = DateTime.now();
     final expirationTime = account.expiredAt;
 
-    if (account.expiredAt != null && currentTime.isBefore(expirationTime!)) {
-      resolver.redirect(AccountExpiredRoute());
+    if (account.expiredAt != null && currentTime.isAfter(expirationTime!)) {
+      resolver.redirect(const AccountExpiredRoute());
       return;
     }
 
